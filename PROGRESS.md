@@ -41,12 +41,11 @@
   verified locally (migrations, admin creation, argon2, host routing). Post-deploy
   hunt: Next.js server-action POSTs 404 on this server's Node 22 (and on 24 — works
   on 25), so all mutations were rebuilt as JSON route handlers; the full login flow
-  is proven on Node 22 in Docker with a real browser.
+  is proven on Node 22 in Docker with a real browser. **Login verified in production
+  by the founder (iPhone, Safari) — Phase 1 complete.**
 
 ## Next
 
-- **Finish P3 Phase 1 on the server:** push → Action green → `update.sh` (runs the
-  first migrations) → `node create-admin.mjs` on cPanel → log in on the iPhone.
 - **P3 Phase 2 — Businesses and payments:** schema + migrations, due-date logic
   (Europe/London) with tests, 6-char references, the daily job + cron endpoint,
   idempotency tests.
