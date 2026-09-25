@@ -28,9 +28,24 @@ step() { printf '%s==>%s %s\n' "$B" "$N" "$1"; }
 ok()   { printf '%s ✔%s %s\n' "$G" "$N" "$1"; }
 warn() { printf '%s !%s %s\n' "$Y" "$N" "$1"; }
 
+# On this shared host, git/curl sometimes fail to even start under momentary
+# resource pressure ("cannot fork", "getaddrinfo() thread failed to start").
+# Retry up to 5 times with a pause instead of giving up on the first squeeze.
+try_hard() {
+  local attempt=1
+  until "$@"; do
+    attempt=$((attempt + 1))
+    if [ "$attempt" -gt 5 ]; then
+      return 1
+    fi
+    warn "attempt $((attempt - 1)) failed — trying again in 5 seconds..."
+    sleep 5 || true
+  done
+}
+
 step "Updating the sites repo ($SITES_REPO)"
 cd "$SITES_REPO"
-git pull --ff-only
+try_hard git pull --ff-only
 ok "Sites repo up to date"
 
 step "Updating the homepage (pykk.uk)"
@@ -52,7 +67,7 @@ fi
 
 step "Updating the app ($APP_DIR)"
 cd "$APP_DIR"
-git fetch origin deploy
+try_hard git fetch origin deploy
 git reset --hard origin/deploy
 ok "App updated to commit $(git rev-parse --short HEAD)"
 
