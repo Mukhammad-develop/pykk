@@ -59,9 +59,13 @@ export function pathAllowedOnHost(
 }
 
 // The IP allowlist may guard admin paths, but must never block the public
-// ones (clients pay there) or /healthz.
+// ones (clients pay there), /healthz, or the secret-protected cron endpoint.
 export function allowlistAppliesTo(pathname: string): boolean {
-  return !isHealthPath(pathname) && !isPublicPath(pathname)
+  return (
+    !isHealthPath(pathname) &&
+    !isPublicPath(pathname) &&
+    !pathname.startsWith('/internal/')
+  )
 }
 
 export function ipAllowed(clientIp: string | null, allowlist: string): boolean {

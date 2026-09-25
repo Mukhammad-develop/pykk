@@ -44,11 +44,26 @@
   is proven on Node 22 in Docker with a real browser. **Login verified in production
   by the founder (iPhone, Safari) — Phase 1 complete.**
 
+- **P3 Phase 2 — Businesses and the payment engine** (25 Sep 2026): `businesses` and
+  `payments` tables (plus `costs`, `settings` and stub tables for the statistics
+  phase); due-date engine on the Europe/London calendar (month-end clamping, leap
+  years, clock changes — all unit-tested); 6-char crypto references with collision
+  retry; the daily job (creates bills 7 days before due, marks overdues) proven
+  idempotent by DB tests; `POST /internal/cron/daily` (CRON_SECRET) plus a
+  start.js safety-net run on every boot; "Add business" screen (records the first
+  month as paid, anchors billing); home page with businesses + latest payments and
+  a "Run daily job now" button; CI now runs DB-backed tests against a MariaDB
+  service. 56 tests pass; full flow rehearsed on Node 22 (login → add business →
+  job creates the bill → visible in the list).
+
 ## Next
 
-- **P3 Phase 2 — Businesses and payments:** schema + migrations, due-date logic
-  (Europe/London) with tests, 6-char references, the daily job + cron endpoint,
-  idempotency tests.
+- **Finish P3 Phase 2 on the server:** push → Action green → `update.sh` (applies
+  the new tables) → on the iPhone: add a business → "Run daily job now" → see the
+  scheduled bill appear. Also add the 06:00 cPanel Cron Job (DEPLOY.md step 9).
+- **P3 Phase 3 — The Today page:** summary cards, the "links to create" table with
+  paste-link validation, Mark paid / Waive / Void / Undo, Copy message for client,
+  mobile layout.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
   new could follow them.
 

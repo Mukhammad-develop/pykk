@@ -21,6 +21,26 @@ jobs:
     defaults:
       run:
         working-directory: web
+    env:
+      # Used by the database-backed tests (Vitest skips them when unset)
+      DATABASE_URL: mysql://pykk:pykk-ci-test@127.0.0.1:3306/pykk
+
+    # A throwaway database so the daily-job idempotency tests run in CI too
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MYSQL_DATABASE: pykk
+          MYSQL_USER: pykk
+          MYSQL_PASSWORD: pykk-ci-test
+          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=20
 
     steps:
       - name: Check out the repo
@@ -48,6 +68,9 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Migrate the test database
+        run: pnpm db:migrate
 
       - name: Test
         run: pnpm test

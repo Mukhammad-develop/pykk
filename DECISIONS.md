@@ -2,6 +2,21 @@
 
 Short reasons for technical choices, newest first.
 
+- **Billing dates are ISO strings, never instants.** All due-date logic works on
+  'YYYY-MM-DD' strings on the Europe/London calendar; "today" comes from `Intl`
+  with the London timezone. UK clock changes can't shift a due date (unit-tested
+  on both transition weekends).
+- **The startup safety net is a loopback fetch in `start.js`, not Next
+  instrumentation.** `instrumentation.ts` gets bundled for the edge runtime, which
+  refuses `node:` imports from the DB layer; `start.js` simply POSTs to
+  `/internal/cron/daily` (with `CRON_SECRET`) a few seconds after boot. To make
+  that reachable, `start.js` forces `HOSTNAME=0.0.0.0` — otherwise the standalone
+  server binds to the machine hostname only and loopback fails (true in Docker
+  and under Passenger).
+- **CI runs the DB-backed tests against a MariaDB 10.11 service container** (the
+  workflow migrates it first); on the Mac, `vitest.config.ts` loads `.env.local`
+  so the same tests hit the Docker dev database. Tests skip cleanly with no
+  `DATABASE_URL`.
 - **JSON route handlers for all mutations; no server actions.** Deep in the P3.1
   deploy we found Next.js server-action POSTs (multipart bodies with `$ACTION_`
   fields) dying with "Failed to find Server Action" 404s on this server's Node

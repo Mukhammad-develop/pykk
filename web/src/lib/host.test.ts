@@ -98,9 +98,13 @@ describe('allowlistAppliesTo', () => {
     expect(allowlistAppliesTo('/pv.js')).toBe(false)
     expect(allowlistAppliesTo('/healthz')).toBe(false)
   })
+  it('never applies to the secret-protected cron endpoint', () => {
+    expect(allowlistAppliesTo('/internal/cron/daily')).toBe(false)
+  })
   it('applies to admin paths', () => {
     expect(allowlistAppliesTo('/')).toBe(true)
     expect(allowlistAppliesTo('/settings')).toBe(true)
+    expect(allowlistAppliesTo('/api/businesses')).toBe(true)
   })
 })
 

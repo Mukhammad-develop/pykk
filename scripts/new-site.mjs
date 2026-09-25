@@ -14,7 +14,8 @@ import { join } from 'node:path'
 const TEMPLATES_DIR = join('sites', '_templates')
 const SITES_DIR = 'sites'
 const PUBLIC_APP_HOST = process.env.PUBLIC_APP_HOST || 'admin.pykk.uk'
-const RESERVED = ['www', 'admin', 'app', 'api', 'mail', 'webmail', 'cpanel', 'ftp', 'pay', 'status', 'pykk']
+// Keep this list in sync with web/src/lib/slug.ts
+const RESERVED = ['www', 'admin', 'app', 'api', 'mail', 'webmail', 'cpanel', 'ftp', 'pay', 'status', 'pykk', 'internal']
 const NOINDEX = '<meta name="robots" content="noindex">'
 
 function fail(message) {

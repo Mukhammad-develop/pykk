@@ -144,13 +144,15 @@ cPanel → **SSL/TLS Status** → tick `admin.pykk.uk` and `app.pykk.uk` → **R
 Give it a few minutes, then open **https://admin.pykk.uk** — you should see a padlock and
 "PYKK is running".
 
-### 9. Daily cron job — skip for now
+### 9. Daily cron job
 
-This only works once the admin panel phase is live. When it is: cPanel → **Cron Jobs →
-Add New Cron Job**, set it to run **Once a day at 06:00** (`0 6 * * *`), command:
+The daily billing job creates upcoming bills (7 days before they're due) and marks
+overdues. It also runs by itself on every app start, but the cron job is the reliable
+daily trigger. In cPanel → **Cron Jobs → Add New Cron Job**, choose **Once a day** and
+set it to **06:00** (`0 6 * * *`), with this command:
 
 ```
-curl -fsS -H "Authorization: Bearer PASTE_YOUR_CRON_SECRET" https://admin.pykk.uk/api/cron/daily >/dev/null 2>&1
+curl -fsS -H "Authorization: Bearer PASTE_YOUR_CRON_SECRET" https://admin.pykk.uk/internal/cron/daily >/dev/null 2>&1
 ```
 
 (Replace `PASTE_YOUR_CRON_SECRET` with the `CRON_SECRET` value from your `.env`.)
