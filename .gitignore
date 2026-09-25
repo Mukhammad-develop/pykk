@@ -1,0 +1,14 @@
+# Dependencies and builds
+node_modules/
+.next/
+release/
+
+# Secrets — never commit these
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Temp and OS junk
+tmp/
+.DS_Store
