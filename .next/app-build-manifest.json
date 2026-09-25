@@ -12,7 +12,7 @@
       "static/chunks/4bd1b696-c023c6e3521b1417.js",
       "static/chunks/255-2dbbf79f36f0dfa2.js",
       "static/chunks/main-app-ddc50f308de6c4ca.js",
-      "static/css/e73218cf107ebe88.css",
+      "static/css/2f12b7d58c2f2894.css",
       "static/chunks/app/layout-e7adb382828347ec.js"
     ],
     "/healthz/route": [
@@ -28,6 +28,13 @@
       "static/chunks/255-2dbbf79f36f0dfa2.js",
       "static/chunks/main-app-ddc50f308de6c4ca.js",
       "static/chunks/app/pv.js/route-10acc6d459f41d8c.js"
+    ],
+    "/login/page": [
+      "static/chunks/webpack-4e6bf084ac60582b.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-2dbbf79f36f0dfa2.js",
+      "static/chunks/main-app-ddc50f308de6c4ca.js",
+      "static/chunks/app/login/page-f35669b344805b37.js"
     ],
     "/page": [
       "static/chunks/webpack-4e6bf084ac60582b.js",

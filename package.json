@@ -7,24 +7,40 @@
     "build": "next build",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "admin:create": "tsx src/scripts/create-admin.ts",
+    "bundle:server": "esbuild src/scripts/migrate.ts --bundle --platform=node --format=esm --packages=external --outfile=deploy/migrate.mjs && esbuild src/scripts/create-admin.ts --bundle --platform=node --format=esm --packages=external --outfile=deploy/create-admin.mjs"
   },
   "engines": {
     "node": ">=22"
   },
   "packageManager": "pnpm@10.26.1",
+  "pnpm": {
+    "onlyBuiltDependencies": ["argon2", "esbuild"]
+  },
   "dependencies": {
+    "argon2": "^0.44.0",
+    "drizzle-orm": "^0.44.0",
+    "mysql2": "^3.11.0",
     "next": "^15.5.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.0",
+    "esbuild": "^0.25.0",
     "eslint": "^9",
     "eslint-config-next": "^15.5.0",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.19.0",
     "typescript": "^5",
     "vitest": "^3"
   }

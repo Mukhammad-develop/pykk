@@ -39,6 +39,12 @@
       "namedRegex": "^/healthz(?:/)?$"
     },
     {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
       "page": "/pv.js",
       "regex": "^/pv\\.js(?:/)?$",
       "routeKeys": {},
