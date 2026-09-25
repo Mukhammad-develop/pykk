@@ -1,0 +1,192 @@
+<!-- PYKK template: beauty — tokens like {{SITE_NAME}} are filled by scripts/new-site.mjs -->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>{{SITE_NAME}} — Beauty salon &amp; spa</title>
+  <meta name="description" content="{{SITE_NAME}} is a calm, welcoming beauty salon offering relaxing treatments to help you look and feel your best.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top">{{SITE_NAME}}</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" aria-label="Main navigation">
+        <ul class="nav-list" id="site-nav">
+          <li><a href="#services">Treatments</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#visit">Visit</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" aria-label="Welcome">
+    <div class="container">
+      <p class="kicker">Beauty &middot; Wellbeing &middot; Calm</p>
+      <h1>A little time for yourself</h1>
+      <p class="hero-line">A friendly neighbourhood salon where every visit leaves you feeling refreshed and renewed.</p>
+      <a class="btn btn-primary" href="#contact">Book your visit</a>
+    </div>
+  </section>
+
+  <main id="main">
+    <section id="services" class="section">
+      <div class="container">
+        <h2>Treatments &amp; prices</h2>
+        <p class="section-intro">Choose from our most popular treatments, each carried out with care in a peaceful setting.</p>
+        <ul class="card-grid">
+          <li class="card">
+            <h3>Signature facial</h3>
+            <p>A relaxing facial tailored to your skin, leaving it soft, smooth and glowing.</p>
+            <p class="price">[[NEEDS INFO: price]]</p>
+          </li>
+          <li class="card">
+            <h3>Relaxing massage</h3>
+            <p>Gentle, soothing massage to ease tension and help you properly unwind.</p>
+            <p class="price">[[NEEDS INFO: price]]</p>
+          </li>
+          <li class="card">
+            <h3>Manicure</h3>
+            <p>Neat, tidy nails with careful shaping, cuticle care and polish.</p>
+            <p class="price">[[NEEDS INFO: price]]</p>
+          </li>
+          <li class="card">
+            <h3>Pedicure</h3>
+            <p>A refreshing treatment for tired feet, finished with a perfect polish.</p>
+            <p class="price">[[NEEDS INFO: price]]</p>
+          </li>
+          <li class="card">
+            <h3>Waxing</h3>
+            <p>Quick, gentle hair removal with smooth, lasting results.</p>
+            <p class="price">[[NEEDS INFO: price]]</p>
+          </li>
+          <li class="card">
+            <h3>Lash &amp; brow styling</h3>
+            <p>Shaping and tinting to frame your eyes beautifully.</p>
+            <p class="price">[[NEEDS INFO: price]]</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="gallery" class="section">
+      <div class="container">
+        <h2>Gallery</h2>
+        <p class="section-intro">A glimpse inside the salon and the treatments we offer.</p>
+        <ul class="gallery-grid">
+          <li>
+            <figure>
+              <div class="ph" role="img" aria-label="Placeholder image"></div>
+              <figcaption>[[NEEDS INFO: photo of the treatment room]]</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <div class="ph" role="img" aria-label="Placeholder image"></div>
+              <figcaption>[[NEEDS INFO: photo of a manicure in progress]]</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <div class="ph" role="img" aria-label="Placeholder image"></div>
+              <figcaption>[[NEEDS INFO: photo of the salon interior]]</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <div class="ph" role="img" aria-label="Placeholder image"></div>
+              <figcaption>[[NEEDS INFO: photo of a facial treatment]]</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <div class="ph" role="img" aria-label="Placeholder image"></div>
+              <figcaption>[[NEEDS INFO: photo of the reception area]]</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <div class="ph" role="img" aria-label="Placeholder image"></div>
+              <figcaption>[[NEEDS INFO: photo of your favourite products]]</figcaption>
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="container">
+        <h2>About us</h2>
+        <p class="section-intro">Welcome to {{SITE_NAME}} — a calm, friendly beauty salon where you can switch off from the everyday and enjoy a little pampering in peaceful surroundings.</p>
+        <ul class="info-list">
+          <li>[[NEEDS INFO: who owns or runs the salon]]</li>
+          <li>[[NEEDS INFO: the treatments you specialise in]]</li>
+          <li>[[NEEDS INFO: qualifications or experience you'd like to mention]]</li>
+          <li>[[NEEDS INFO: what makes your salon special]]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="visit" class="section">
+      <div class="container">
+        <h2>Visit us</h2>
+        <p class="section-intro">We look forward to welcoming you. Our current opening hours are below.</p>
+        <table class="hours">
+          <caption class="visually-hidden">Opening hours</caption>
+          <tbody>
+            <tr><th scope="row">Monday</th><td>[[NEEDS INFO: Monday hours]]</td></tr>
+            <tr><th scope="row">Tuesday</th><td>[[NEEDS INFO: Tuesday hours]]</td></tr>
+            <tr><th scope="row">Wednesday</th><td>[[NEEDS INFO: Wednesday hours]]</td></tr>
+            <tr><th scope="row">Thursday</th><td>[[NEEDS INFO: Thursday hours]]</td></tr>
+            <tr><th scope="row">Friday</th><td>[[NEEDS INFO: Friday hours]]</td></tr>
+            <tr><th scope="row">Saturday</th><td>[[NEEDS INFO: Saturday hours]]</td></tr>
+            <tr><th scope="row">Sunday</th><td>[[NEEDS INFO: Sunday hours]]</td></tr>
+          </tbody>
+        </table>
+        <p class="address">[[NEEDS INFO: address]]</p>
+        <a class="btn btn-outline" href="#">Get directions</a>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container">
+        <h2>Contact us</h2>
+        <p class="section-intro">Ready to book, or have a question? Get in touch — we're always happy to help.</p>
+        <div class="contact-actions">
+          <a class="btn btn-primary" href="tel:[[NEEDS INFO: phone]]">Call us</a>
+          <a class="btn btn-outline" href="mailto:[[NEEDS INFO: email]]">Email us</a>
+          <a class="btn btn-outline" href="https://wa.me/">[[NEEDS INFO: WhatsApp number]]</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band" aria-label="Treat yourself">
+      <div class="container">
+        <div class="cta-card">
+          <h2>Treat yourself today</h2>
+          <p>Take a break from the everyday — your moment of calm is waiting.</p>
+          <a class="btn" href="#contact">Book an appointment</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; {{SITE_NAME}}. All rights reserved.</p>
+      <p>Website by <a href="https://pykk.uk">PYKK</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+  <script src="https://{{PUBLIC_APP_HOST}}/pv.js" data-site="{{SITE_SLUG}}" defer></script>
+</body>
+</html>

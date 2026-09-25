@@ -2,6 +2,22 @@
 
 Short reasons for technical choices, newest first.
 
+- **Mac-side tooling lives in a root `package.json`** (html-validate, Playwright, axe,
+  sharp, node-html-parser). It's dev-only and never deployed — the server only receives
+  `sites/` files and the built app. Playwright browsers install via
+  `npx playwright install chromium` on the Mac.
+- **`outputFileTracingRoot` pinned to `web/`.** Once the repo root got its own lockfile
+  (for the tooling), Next.js inferred a monorepo layout and nested the standalone output;
+  pinning keeps the release layout deterministic (`standalone/server.js`).
+- **Generated files are excluded from ESLint** (`next-env.d.ts`) — `next typegen`
+  regenerates it, and its triple-slash reference is intentional.
+- **`tel-non-breaking` rule disabled in `check-site.mjs`.** It mistook the
+  `[[NEEDS INFO: phone]]` placeholders for real phone numbers; non-breaking spaces are
+  used when real numbers are filled in.
+- **Automatic client subdomains via `uapi`** in `update.sh` (host confirmed it works):
+  `SubDomain::listsubdomains` to check, `SubDomain::addsubdomain` to create with the
+  site's folder as document root, `SSL::start_autossl_check` after creations. Manual
+  click-steps printed as the fallback.
 - **`node-linker=hoisted` in `web/.npmrc` (flat node_modules).** pnpm's default
   symlinked layout broke inside the standalone release on its way through git to the
   server — Next.js then failed to boot with `Cannot find module 'styled-jsx/package.json'`

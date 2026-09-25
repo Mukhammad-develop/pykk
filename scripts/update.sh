@@ -16,6 +16,7 @@ SITES_REPO="$HOME/pykk"   # clone of the main branch (client sites + scripts)
 APP_DIR="$HOME/pykk-web"  # clone of the deploy branch (the running app)
 APP_URL="https://admin.pykk.uk"
 HOMEPAGE_DIR="$HOME/pykk.uk"  # document root of the live homepage
+ROOT_DOMAIN="pykk.uk"         # client sites live at {slug}.$ROOT_DOMAIN
 # ---------------------------------------------------------------------------
 
 if [ -t 1 ]; then
@@ -92,6 +93,49 @@ if command -v cloudlinux-selector >/dev/null 2>&1; then
   fi
 fi
 
+step "Checking client subdomains"
+# For every folder in sites/ (except names starting with _), make sure
+# {slug}.$ROOT_DOMAIN exists and points at that folder. Fully automatic when
+# the uapi command is available; otherwise prints the manual cPanel steps.
+SUBDOMAINS_CREATED=0
+if command -v uapi >/dev/null 2>&1; then
+  EXISTING="$(uapi SubDomain listsubdomains --output=json 2>/dev/null || true)"
+  for site_dir in "$SITES_REPO"/sites/*/; do
+    [ -d "$site_dir" ] || continue
+    slug="$(basename "$site_dir")"
+    case "$slug" in _*) continue ;; esac
+    if ! printf '%s' "$slug" | grep -qE '^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$'; then
+      warn "Skipping $slug — not a valid subdomain name"
+      continue
+    fi
+    if printf '%s' "$EXISTING" | grep -qF "$slug.$ROOT_DOMAIN"; then
+      echo "  $slug.$ROOT_DOMAIN already exists"
+      continue
+    fi
+    echo "  Creating $slug.$ROOT_DOMAIN ..."
+    OUT="$(uapi SubDomain addsubdomain domain="$slug" rootdomain="$ROOT_DOMAIN" dir="pykk/sites/$slug" --output=json 2>&1)" || true
+    if printf '%s' "$OUT" | grep -qF '"status":1'; then
+      ok "Created $slug.$ROOT_DOMAIN (document root pykk/sites/$slug)"
+      SUBDOMAINS_CREATED=$((SUBDOMAINS_CREATED + 1))
+    else
+      warn "Could not create $slug.$ROOT_DOMAIN — uapi said:"
+      printf '%s\n' "$OUT" | sed 's/^/    /'
+    fi
+  done
+  if [ "$SUBDOMAINS_CREATED" -gt 0 ]; then
+    uapi SSL start_autossl_check >/dev/null 2>&1 || true
+    ok "AutoSSL check started for the new subdomains (padlocks can take a few minutes)"
+  fi
+else
+  warn "uapi not available — create any missing subdomains by hand:"
+  for site_dir in "$SITES_REPO"/sites/*/; do
+    [ -d "$site_dir" ] || continue
+    slug="$(basename "$site_dir")"
+    case "$slug" in _*) continue ;; esac
+    echo "    $slug.$ROOT_DOMAIN → cPanel → Domains → Create A New Domain → untick 'Share document root' → document root: pykk/sites/$slug → Submit"
+  done
+fi
+
 step "Health check"
 sleep 3
 if curl -fsS --max-time 15 "$APP_URL/healthz"; then
@@ -103,3 +147,9 @@ fi
 
 echo
 ok "Update complete"
+echo "  App version:        $(head -n 1 "$APP_DIR/VERSION.txt" 2>/dev/null || echo 'unknown')"
+echo "  Sites repo:         up to date"
+echo "  Subdomains created: $SUBDOMAINS_CREATED"
+if [ "$SUBDOMAINS_CREATED" -gt 0 ]; then
+  echo "  Note: padlocks for new subdomains appear after AutoSSL finishes (a few minutes)"
+fi

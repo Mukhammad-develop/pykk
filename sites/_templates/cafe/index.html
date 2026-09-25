@@ -1,0 +1,169 @@
+<!-- PYKK template: cafe — tokens like {{SITE_NAME}} are filled by scripts/new-site.mjs -->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{{SITE_NAME}} — Café &amp; coffee shop</title>
+<meta name="description" content="{{SITE_NAME}} is a friendly neighbourhood café serving fresh coffee, homemade cakes and light lunches. See the menu, opening hours and how to find us.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">{{SITE_NAME}}</a>
+    <nav aria-label="Main">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-list">Menu</button>
+      <ul class="nav-list" id="nav-list" role="list">
+        <li><a href="#services">Menu</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#visit">Visit us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top" aria-label="Welcome">
+  <div class="wrap">
+    <p class="hero-kicker">A friendly neighbourhood café</p>
+    <h1>{{SITE_NAME}}</h1>
+    <p class="hero-line">Fresh coffee, homemade cakes and a warm welcome, right on your doorstep.</p>
+    <a class="btn btn-stamp" href="#contact">Get in touch</a>
+  </div>
+</section>
+
+<main id="main">
+
+  <section class="section" id="services" aria-labelledby="services-heading">
+    <div class="wrap">
+      <h2 id="services-heading">Menu &amp; prices</h2>
+      <p>Simple, honest food and drink, made fresh. Ask in the café about today's specials.</p>
+      <ul class="menu-list" role="list">
+        <li><span class="menu-item">Fresh filter coffee</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+        <li><span class="menu-item">Cappuccino or latte</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+        <li><span class="menu-item">Pot of tea</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+        <li><span class="menu-item">Hot chocolate</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+        <li><span class="menu-item">Homemade cake or traybake</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+        <li><span class="menu-item">Toasted sandwich</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+        <li><span class="menu-item">Soup of the day with crusty bread</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+        <li><span class="menu-item">Full cooked breakfast</span><span class="leader" aria-hidden="true"></span><span class="menu-price">[[NEEDS INFO: price]]</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="gallery" aria-labelledby="gallery-heading">
+    <div class="wrap">
+      <h2 id="gallery-heading">Gallery</h2>
+      <p>A little look around the café.</p>
+      <ul class="gallery" role="list">
+        <li>
+          <figure>
+            <div class="ph" aria-hidden="true"></div>
+            <figcaption>[[NEEDS INFO: photo of the coffee counter]]</figcaption>
+          </figure>
+        </li>
+        <li>
+          <figure>
+            <div class="ph" aria-hidden="true"></div>
+            <figcaption>[[NEEDS INFO: photo of homemade cakes]]</figcaption>
+          </figure>
+        </li>
+        <li>
+          <figure>
+            <div class="ph" aria-hidden="true"></div>
+            <figcaption>[[NEEDS INFO: photo of the seating area]]</figcaption>
+          </figure>
+        </li>
+        <li>
+          <figure>
+            <div class="ph" aria-hidden="true"></div>
+            <figcaption>[[NEEDS INFO: photo of a freshly poured coffee]]</figcaption>
+          </figure>
+        </li>
+        <li>
+          <figure>
+            <div class="ph" aria-hidden="true"></div>
+            <figcaption>[[NEEDS INFO: photo of the café front]]</figcaption>
+          </figure>
+        </li>
+        <li>
+          <figure>
+            <div class="ph" aria-hidden="true"></div>
+            <figcaption>[[NEEDS INFO: photo of a light lunch plate]]</figcaption>
+          </figure>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="about" aria-labelledby="about-heading">
+    <div class="wrap">
+      <h2 id="about-heading">About us</h2>
+      <p>Welcome to {{SITE_NAME}} — a friendly neighbourhood spot where the coffee is always fresh and there's time for a chat. Whether you're after a quiet cuppa, a slice of cake or lunch with a friend, you're very welcome here.</p>
+      <ul class="info-list">
+        <li>[[NEEDS INFO: a sentence or two about the café's story]]</li>
+        <li>[[NEEDS INFO: what makes the café special]]</li>
+        <li>[[NEEDS INFO: dietary options, e.g. vegetarian or gluten-free choices]]</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="visit" aria-labelledby="visit-heading">
+    <div class="wrap">
+      <h2 id="visit-heading">Visit us</h2>
+      <h3>Opening hours</h3>
+      <table class="hours">
+        <tbody>
+          <tr><th scope="row">Monday</th><td>[[NEEDS INFO: Monday opening hours]]</td></tr>
+          <tr><th scope="row">Tuesday</th><td>[[NEEDS INFO: Tuesday opening hours]]</td></tr>
+          <tr><th scope="row">Wednesday</th><td>[[NEEDS INFO: Wednesday opening hours]]</td></tr>
+          <tr><th scope="row">Thursday</th><td>[[NEEDS INFO: Thursday opening hours]]</td></tr>
+          <tr><th scope="row">Friday</th><td>[[NEEDS INFO: Friday opening hours]]</td></tr>
+          <tr><th scope="row">Saturday</th><td>[[NEEDS INFO: Saturday opening hours]]</td></tr>
+          <tr><th scope="row">Sunday</th><td>[[NEEDS INFO: Sunday opening hours]]</td></tr>
+        </tbody>
+      </table>
+      <h3>Address</h3>
+      <p>[[NEEDS INFO: address]]</p>
+      <p><a class="directions" href="#">Get directions</a></p>
+    </div>
+  </section>
+
+  <section class="section" id="contact" aria-labelledby="contact-heading">
+    <div class="wrap">
+      <h2 id="contact-heading">Contact us</h2>
+      <p>Give us a ring, drop us an email or send a message on WhatsApp — we're happy to help.</p>
+      <ul class="contact-list" role="list">
+        <li><a class="btn btn-call" href="tel:[[NEEDS INFO: phone]]">Call us</a></li>
+        <li>Email: <a href="mailto:[[NEEDS INFO: email]]">[[NEEDS INFO: email]]</a></li>
+        <li>WhatsApp: <a href="https://wa.me/">[[NEEDS INFO: WhatsApp number]]</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="band-heading">
+    <div class="wrap">
+      <h2 id="band-heading">Fancy a cuppa?</h2>
+      <p>Pop in and say hello — the kettle's always on.</p>
+      <a class="btn btn-stamp btn-stamp-light" href="#contact">Get in touch</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>&copy; {{SITE_NAME}}. All rights reserved.</p>
+    <p>Website by <a href="https://pykk.uk">PYKK</a></p>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+<script src="https://{{PUBLIC_APP_HOST}}/pv.js" data-site="{{SITE_SLUG}}" defer></script>
+</body>
+</html>

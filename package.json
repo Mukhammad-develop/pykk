@@ -1,0 +1,22 @@
+{
+  "name": "pykk-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mac-side tooling for PYKK client sites (new-site, check-site). Never deployed.",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.26.1",
+  "scripts": {
+    "new-site": "node scripts/new-site.mjs",
+    "check-site": "node scripts/check-site.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "^4.10.2",
+    "html-validate": "^9.5.3",
+    "node-html-parser": "^7.0.1",
+    "playwright": "^1.49.1",
+    "sharp": "^0.33.5"
+  }
+}

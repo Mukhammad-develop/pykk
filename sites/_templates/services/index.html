@@ -1,0 +1,178 @@
+<!-- PYKK template: services — tokens like {{SITE_NAME}} are filled by scripts/new-site.mjs -->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{{SITE_NAME}} — Reliable local services</title>
+<meta name="description" content="{{SITE_NAME}} — friendly, reliable local services with clear prices. See what we do, our opening hours and how to get in touch.">
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">{{SITE_NAME}}</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#services">Services &amp; prices</a></li>
+        <li><a href="#gallery">Our work</a></li>
+        <li><a href="#about">About us</a></li>
+        <li><a href="#visit">Visit us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" aria-label="Welcome">
+  <div class="wrap">
+    <h1>Good work, fair prices, no fuss</h1>
+    <p class="hero-line">{{SITE_NAME}} is your friendly local team for dependable services, done properly and priced clearly.</p>
+    <a class="btn btn-primary" href="#contact">Get in touch</a>
+  </div>
+</section>
+
+<main id="main">
+
+  <section id="services" class="section">
+    <div class="wrap">
+      <h2>Services &amp; prices</h2>
+      <p>Every job is quoted clearly before we start, so you always know where you stand. If what you need isn't listed below, just ask.</p>
+
+      <div class="cards">
+        <article class="card">
+          <h3>Repairs &amp; fixes</h3>
+          <p>Quick, tidy repairs for everyday problems, big or small.</p>
+          <p class="price">[[NEEDS INFO: price]]</p>
+        </article>
+        <article class="card">
+          <h3>Installations</h3>
+          <p>Careful fitting and installation, finished to a high standard.</p>
+          <p class="price">[[NEEDS INFO: price]]</p>
+        </article>
+        <article class="card">
+          <h3>Routine maintenance</h3>
+          <p>Regular check-ups and upkeep to keep everything running smoothly.</p>
+          <p class="price">[[NEEDS INFO: price]]</p>
+        </article>
+      </div>
+
+      <table class="table price-table">
+        <caption class="visually-hidden">Full list of services and prices</caption>
+        <thead>
+          <tr><th scope="col">Service</th><th scope="col">Price</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Call-out visit</td><td>[[NEEDS INFO: price]]</td></tr>
+          <tr><td>Standard repair</td><td>[[NEEDS INFO: price]]</td></tr>
+          <tr><td>Installation</td><td>[[NEEDS INFO: price]]</td></tr>
+          <tr><td>Maintenance visit</td><td>[[NEEDS INFO: price]]</td></tr>
+          <tr><td>Quote for larger jobs</td><td>[[NEEDS INFO: price]]</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="gallery" class="section section-tint">
+    <div class="wrap">
+      <h2>Our work</h2>
+      <p>A few examples of what we do for local customers.</p>
+      <div class="gallery-grid">
+        <figure class="ph">
+          <div class="ph-box" aria-hidden="true"></div>
+          <figcaption>[[NEEDS INFO: photo of a recent job]]</figcaption>
+        </figure>
+        <figure class="ph">
+          <div class="ph-box" aria-hidden="true"></div>
+          <figcaption>[[NEEDS INFO: photo of a repair in progress]]</figcaption>
+        </figure>
+        <figure class="ph">
+          <div class="ph-box" aria-hidden="true"></div>
+          <figcaption>[[NEEDS INFO: photo of a finished installation]]</figcaption>
+        </figure>
+        <figure class="ph">
+          <div class="ph-box" aria-hidden="true"></div>
+          <figcaption>[[NEEDS INFO: photo of the work van]]</figcaption>
+        </figure>
+        <figure class="ph">
+          <div class="ph-box" aria-hidden="true"></div>
+          <figcaption>[[NEEDS INFO: photo of the team at work]]</figcaption>
+        </figure>
+        <figure class="ph">
+          <div class="ph-box" aria-hidden="true"></div>
+          <figcaption>[[NEEDS INFO: photo of the workshop]]</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <div class="wrap">
+      <h2>About us</h2>
+      <p>Welcome to {{SITE_NAME}}. We're a friendly local team who take pride in doing a proper job — turning up when we say we will, treating your home with respect and keeping things simple from the first call to the finished work.</p>
+      <ul class="about-list">
+        <li>[[NEEDS INFO: the services you specialise in]]</li>
+        <li>[[NEEDS INFO: the areas you cover]]</li>
+        <li>[[NEEDS INFO: what customers can expect when they book]]</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="visit" class="section section-tint">
+    <div class="wrap">
+      <h2>Visit us</h2>
+      <p class="address">[[NEEDS INFO: address]]</p>
+      <p><a class="directions" href="#">Get directions</a></p>
+      <table class="table hours-table">
+        <caption class="visually-hidden">Opening hours</caption>
+        <thead>
+          <tr><th scope="col">Day</th><th scope="col">Opening hours</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Monday</td><td>[[NEEDS INFO: Monday opening hours]]</td></tr>
+          <tr><td>Tuesday</td><td>[[NEEDS INFO: Tuesday opening hours]]</td></tr>
+          <tr><td>Wednesday</td><td>[[NEEDS INFO: Wednesday opening hours]]</td></tr>
+          <tr><td>Thursday</td><td>[[NEEDS INFO: Thursday opening hours]]</td></tr>
+          <tr><td>Friday</td><td>[[NEEDS INFO: Friday opening hours]]</td></tr>
+          <tr><td>Saturday</td><td>[[NEEDS INFO: Saturday opening hours]]</td></tr>
+          <tr><td>Sunday</td><td>[[NEEDS INFO: Sunday opening hours]]</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="wrap">
+      <h2>Contact us</h2>
+      <p>The quickest way to reach us is by phone. You're welcome to email or message us on WhatsApp too — whichever suits you best.</p>
+      <p class="contact-call"><a class="btn btn-call" href="tel:[[NEEDS INFO: phone]]">Call us: [[NEEDS INFO: phone]]</a></p>
+      <p class="contact-line">Email: <a href="mailto:[[NEEDS INFO: email]]">[[NEEDS INFO: email]]</a></p>
+      <p class="contact-line">WhatsApp: <a href="https://wa.me/">[[NEEDS INFO: WhatsApp number]]</a></p>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-label="Ready to book">
+    <div class="wrap">
+      <h2>Ready to get the job sorted?</h2>
+      <p>Give us a ring and we'll talk through what you need — no obligation.</p>
+      <a class="btn btn-cta" href="tel:[[NEEDS INFO: phone]]">Call us today</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>&copy; {{SITE_NAME}}. All rights reserved.</p>
+    <p>Website by <a href="https://pykk.uk">PYKK</a></p>
+  </div>
+</footer>
+
+<script src="https://{{PUBLIC_APP_HOST}}/pv.js" data-site="{{SITE_SLUG}}" defer></script>
+</body>
+</html>
