@@ -20,14 +20,21 @@
       "static/chunks/4bd1b696-c023c6e3521b1417.js",
       "static/chunks/255-2dbbf79f36f0dfa2.js",
       "static/chunks/main-app-ddc50f308de6c4ca.js",
-      "static/chunks/app/healthz/route-b467296fe75ff63c.js"
+      "static/chunks/app/healthz/route-10acc6d459f41d8c.js"
+    ],
+    "/pv.js/route": [
+      "static/chunks/webpack-4e6bf084ac60582b.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-2dbbf79f36f0dfa2.js",
+      "static/chunks/main-app-ddc50f308de6c4ca.js",
+      "static/chunks/app/pv.js/route-10acc6d459f41d8c.js"
     ],
     "/page": [
       "static/chunks/webpack-4e6bf084ac60582b.js",
       "static/chunks/4bd1b696-c023c6e3521b1417.js",
       "static/chunks/255-2dbbf79f36f0dfa2.js",
       "static/chunks/main-app-ddc50f308de6c4ca.js",
-      "static/chunks/app/page-b467296fe75ff63c.js"
+      "static/chunks/app/page-10acc6d459f41d8c.js"
     ]
   }
 }

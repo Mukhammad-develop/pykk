@@ -37,6 +37,12 @@
       "regex": "^/healthz(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/healthz(?:/)?$"
+    },
+    {
+      "page": "/pv.js",
+      "regex": "^/pv\\.js(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pv\\.js(?:/)?$"
     }
   ],
   "dataRoutes": [],
