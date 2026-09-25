@@ -55,6 +55,9 @@ jobs:
       - name: Build (standalone)
         run: pnpm build
 
+      - name: Bundle server scripts (migrate + create-admin)
+        run: pnpm bundle:server
+
       - name: Assemble the release folder
         run: |
           cd "$GITHUB_WORKSPACE"

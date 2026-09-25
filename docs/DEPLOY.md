@@ -132,8 +132,11 @@ bash ~/pykk/scripts/update.sh
 You should see coloured steps ending with a health check that prints a line of JSON like
 `{"ok":true,"service":"pykk","version":"abc1234",...}`.
 
-> The command `node ~/pykk-web/create-admin.mjs` (creating your admin login) arrives with
-> the admin panel phase — skip it for now.
+> **Create your admin login** (once the admin panel phase is deployed): still in cPanel
+> Terminal, run
+> `source ~/nodevenv/pykk-web/*/bin/activate && cd ~/pykk-web && node create-admin.mjs`
+> and answer the prompts (your email, then a password of at least 12 characters — input
+> is hidden). Running it again with the same email updates the password.
 
 ### 8. Get the padlock (SSL)
 

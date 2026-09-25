@@ -1,0 +1,29 @@
+# Local development database for the PYKK admin panel (Mac only).
+# The server uses the cPanel MySQL/MariaDB — this is just a local twin.
+#
+#   docker compose up -d     → start
+#   docker compose down      → stop (data is kept in the volume)
+#
+# Dev DATABASE_URL (goes in web/.env.local):
+#   mysql://pykk:pykk-local-dev-password@localhost:3307/pykk
+#
+# The password below is a throwaway for the local-only database on your Mac.
+# It is NOT a real secret and never leaves your machine.
+
+services:
+  db:
+    image: mariadb:10.11
+    container_name: pykk-dev-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: pykk-local-root-password
+      MYSQL_DATABASE: pykk
+      MYSQL_USER: pykk
+      MYSQL_PASSWORD: pykk-local-dev-password
+    ports:
+      - "3307:3306"   # 3307 on the Mac so it can't clash with anything else
+    volumes:
+      - pykk-dev-db:/var/lib/mysql
+
+volumes:
+  pykk-dev-db:

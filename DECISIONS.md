@@ -2,6 +2,29 @@
 
 Short reasons for technical choices, newest first.
 
+- **DB-backed 30-day sessions.** The cookie holds a random 32-byte token; the table
+  holds only its SHA-256 hash — a leaked database doesn't leak usable sessions, and
+  sessions are revocable per device ("log out all devices" comes with Settings).
+- **argon2id (19 MiB / 2 / 1) for passwords** — the OWASP profile, gentle on shared
+  hosting. `pnpm.onlyBuiltDependencies` lets its prebuilt binary install under pnpm 10.
+- **MariaDB 10.11 for local dev** (`docker compose`): cPanel hosts usually ship MariaDB;
+  the schema is simple and works identically on MySQL 8, and Drizzle/mysql2 drive both.
+- **`serverExternalPackages` + `outputFileTracingIncludes` for the release.** Next.js
+  inlines dependencies into its server chunks, so `mysql2`/`drizzle-orm`/`zod` were
+  missing from the standalone `node_modules` — and the whole `drizzle-orm` package is
+  included because `migrate.mjs` needs the `mysql2/migrator` subpath the app never imports.
+- **Bundled server scripts with `--packages=external`.** `migrate.mjs` and
+  `create-admin.mjs` are esbuild bundles that resolve packages from the release's
+  `node_modules` — one code path locally (`tsx`) and on the server.
+- **Host routing as pure functions** (`web/src/lib/host.ts`, unit-tested) consumed by
+  the middleware: admin paths only on the admin host; `/pay/*`, `/api/pv`, `/pv.js` on
+  the app host and — because this server can't attach a second domain — also on the
+  admin host (the fallback); `/healthz` on every known host; unknown hosts get 404;
+  `ADMIN_IP_ALLOWLIST` never blocks public paths. CSP nonce only in production (dev
+  needs `eval`).
+- **Rate limiting in the database** (`login_attempts` table), not in memory — correct
+  across Passenger restarts, and lockouts land in the activity log.
+- **Tailwind CSS v4** for the admin panel (the brief's stack; CSS-first config).
 - **Mac-side tooling lives in a root `package.json`** (html-validate, Playwright, axe,
   sharp, node-html-parser). It's dev-only and never deployed — the server only receives
   `sites/` files and the built app. Playwright browsers install via
