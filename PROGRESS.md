@@ -7,12 +7,18 @@
   `scripts/`, `.github/workflows/`). `.gitignore`, `PROGRESS.md` and `DECISIONS.md`
   in place. `index.html` untouched.
 
+- **P1 — Prove the hosting works (code done, server part remains):** minimal Next.js
+  app in `web/` with a "PYKK is running" page and `/healthz`; GitHub Action that builds
+  and publishes the `deploy` branch; `start.js` and `scripts/update.sh`;
+  `web/.env.example`; `docs/DEPLOY.md`. Verified locally: lint, typecheck, tests and a
+  full standalone build all pass.
+
 ## Next
 
-- **P1 — Prove the hosting works:** minimal Next.js app in `web/` with a
-  "PYKK is running" page and `/healthz`; GitHub Action that builds and publishes
-  the `deploy` branch; `start.js` and `scripts/update.sh`; `docs/DEPLOY.md`;
-  first-time cPanel setup until `https://admin.pykk.uk/healthz` answers with a padlock.
+- **Finish P1 on the server:** follow `docs/DEPLOY.md` (Part 1) until
+  `https://admin.pykk.uk/healthz` answers with a padlock. Do not start P2 before that.
+- **P2 — Client site workflow:** 4 templates, `new-site.mjs`, `check-site.mjs`,
+  subdomain creation in `update.sh`, `NEW_CLIENT.md`, demo site live.
 
 ## Waiting on the founder
 

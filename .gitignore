@@ -2,6 +2,8 @@
 node_modules/
 .next/
 release/
+next-env.d.ts
+*.tsbuildinfo
 
 # Secrets — never commit these
 .env

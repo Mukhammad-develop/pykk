@@ -1,0 +1,97 @@
+name: Deploy
+
+# Builds the Next.js app on every push to main that changes web/**,
+# and publishes a ready-to-run release to the "deploy" branch.
+# The server only pulls that branch — it never builds anything.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Override with a repo variable named NODE_VERSION (Settings → Secrets and variables → Actions → Variables)
+          node-version: ${{ vars.NODE_VERSION || '22' }}
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build (standalone)
+        run: pnpm build
+
+      - name: Assemble the release folder
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          rm -rf release
+          mkdir release
+
+          # The standalone server (server.js + its minimal node_modules)
+          if [ -f web/.next/standalone/server.js ]; then
+            cp -R web/.next/standalone/. release/
+          else
+            # Nested layout (happens in some monorepo setups)
+            cp -R web/.next/standalone/web/. release/
+            cp -R web/.next/standalone/node_modules release/node_modules 2>/dev/null || true
+          fi
+
+          # Static assets and public files the standalone build leaves out
+          mkdir -p release/.next
+          cp -R web/.next/static release/.next/static
+          if [ -d web/public ]; then cp -R web/public release/public; fi
+
+          # Launcher, plus optional server tools (added in later phases — copied when present)
+          cp web/deploy/start.js release/start.js
+          if [ -f web/deploy/migrate.mjs ]; then cp web/deploy/migrate.mjs release/migrate.mjs; fi
+          if [ -d web/drizzle ]; then cp -R web/drizzle release/drizzle; fi
+          if [ -f web/deploy/create-admin.mjs ]; then cp web/deploy/create-admin.mjs release/create-admin.mjs; fi
+
+          # Keeps the server's own .env and tmp/ out of git's way on the deploy branch
+          printf '.env\ntmp/\n' > release/.gitignore
+
+          # Version stamp: commit hash on line 1, build time on line 2
+          git rev-parse --short HEAD > release/VERSION.txt
+          date -u +%Y-%m-%dT%H:%M:%SZ >> release/VERSION.txt
+
+          ls -la release
+
+      - name: Publish the release to the deploy branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./release
+          publish_branch: deploy
+          commit_message: 'Deploy ${{ github.sha }}'
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'

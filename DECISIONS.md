@@ -2,6 +2,18 @@
 
 Short reasons for technical choices, newest first.
 
+- **The `deploy` branch keeps its history** (one commit per deploy, published with
+  peaceiris/actions-gh-pages) instead of being wiped each time — so the server can roll
+  back with `git reset --hard <previous hash>` as described in DEPLOY.md.
+- **`start.js` uses Node's built-in `.env` parser** (`process.loadEnvFile`, Node 22)
+  instead of bundling dotenv — one less dependency in the minimal standalone release.
+- **The app version comes from `VERSION.txt` at boot.** `start.js` reads it into
+  `APP_VERSION`; `/healthz` and the home page report it. No build-time code generation.
+- **Vitest for tests, ESLint flat config for linting, `next typegen` before `tsc`** —
+  so lint/typecheck/test run fast in CI without needing a full build first.
+- **Next.js (App Router, TypeScript) with `output: 'standalone'`** — the build produces
+  a self-contained `server.js` + minimal `node_modules`, which is what the memory-limited
+  cPanel server can run without building anything.
 - **`pykk` is its own git repo.** It previously sat inside a git repo covering the
   whole home folder (leftover from other projects). `git init` inside `pykk/` gives
   it an independent history; the outer repo was not touched. Nothing inside `pykk`
