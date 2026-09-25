@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - 'web/**'
+      - '.github/workflows/deploy.yml'   # so fixes to this file re-run it too
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,9 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
+        with:
+          # Reads the pnpm version from the packageManager field in this file
+          package_json_file: web/package.json
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
