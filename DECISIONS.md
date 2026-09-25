@@ -2,6 +2,10 @@
 
 Short reasons for technical choices, newest first.
 
+- **`PUBLIC_APP_HOST=admin.pykk.uk` (the single-host fallback) on this server.** The
+  host's "Setup Node.js App" allows only one URL per app, so `app.pykk.uk` can't be
+  attached. Per the brief's planned fallback, the pay pages, beacon and public API will
+  be served on the admin host, and `ADMIN_IP_ALLOWLIST` must never block them.
 - **The repo's `index.html` is the source of truth for the live homepage.** The founder
   asked for the homepage to deploy from the repo like everything else. `update.sh` copies
   it to `~/pykk.uk` on each run, saving the previous live file as `index.html.bak` first.

@@ -26,7 +26,8 @@
 ## Waiting on the founder
 
 - `docs/ADMIN_BRIEF.md` (the admin panel spec) — needed before phase P3.
-- To confirm with the hosting company: which Node.js versions are offered,
-  MySQL or MariaDB, whether one Node app can serve two domains
-  (`admin.pykk.uk` + `app.pykk.uk`), and whether the `uapi` command works in
-  cPanel Terminal.
+- Answered by the host so far: **Node 22 is available** (used for the app); **one Node
+  app cannot serve two domains**, so the fallback is active — `PUBLIC_APP_HOST=admin.pykk.uk`,
+  and `/pay/*`, `/api/pv`, `/healthz` will live on the admin host.
+- Still to confirm: MySQL or MariaDB, and whether the `uapi` command works in cPanel
+  Terminal (needed for automatic client subdomains in P2).
