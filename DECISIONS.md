@@ -2,6 +2,11 @@
 
 Short reasons for technical choices, newest first.
 
+- **`node-linker=hoisted` in `web/.npmrc` (flat node_modules).** pnpm's default
+  symlinked layout broke inside the standalone release on its way through git to the
+  server — Next.js then failed to boot with `Cannot find module 'styled-jsx/package.json'`
+  (HTTP 500 via Passenger). Reproduced locally, fixed by shipping a flat, npm-style
+  node_modules with real folders only; verified with a local dress rehearsal.
 - **`PUBLIC_APP_HOST=admin.pykk.uk` (the single-host fallback) on this server.** The
   host's "Setup Node.js App" allows only one URL per app, so `app.pykk.uk` can't be
   attached. Per the brief's planned fallback, the pay pages, beacon and public API will
