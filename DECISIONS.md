@@ -2,6 +2,13 @@
 
 Short reasons for technical choices, newest first.
 
+- **JSON route handlers for all mutations; no server actions.** Deep in the P3.1
+  deploy we found Next.js server-action POSTs (multipart bodies with `$ACTION_`
+  fields) dying with "Failed to find Server Action" 404s on this server's Node
+  (22.23.2) — reproduced in clean Docker runs on Node 22 AND Node 24, while the
+  same build works on Node 25. cPanel only offers Node 22, so all mutations are
+  plain `fetch()` POSTs with JSON bodies to route handlers. CSRF protection comes
+  from an origin check + `SameSite=Strict` cookie + JSON content-type.
 - **DB-backed 30-day sessions.** The cookie holds a random 32-byte token; the table
   holds only its SHA-256 hash — a leaked database doesn't leak usable sessions, and
   sessions are revocable per device ("log out all devices" comes with Settings).

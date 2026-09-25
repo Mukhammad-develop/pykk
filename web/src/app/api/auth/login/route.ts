@@ -1,7 +1,5 @@
-'use server'
-
+import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
 import { getDb } from '@/db'
 import { adminUsers } from '@/db/schema'
@@ -9,35 +7,39 @@ import { verifyPassword } from '@/lib/auth/password'
 import { createSession } from '@/lib/auth/session'
 import { checkLocked, clearAttempts, registerFailure } from '@/lib/auth/login-attempts'
 import { logActivity } from '@/lib/auth/activity'
-import { clientIp } from '@/lib/ip'
+import { clientIpFromHeaders, originAllowed } from '@/lib/request'
+
+export const dynamic = 'force-dynamic'
 
 const GENERIC_ERROR = 'Invalid email or password.'
 
-const credentialsSchema = z.object({
+const bodySchema = z.object({
   email: z.string().trim().toLowerCase().email(),
   password: z.string().min(1),
 })
 
-export interface LoginFormState {
-  error: string | null
-}
+export async function POST(request: Request) {
+  if (!originAllowed(request)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
 
-export async function login(
-  _prevState: LoginFormState,
-  formData: FormData,
-): Promise<LoginFormState> {
-  const parsed = credentialsSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-  })
-  if (!parsed.success) return { error: GENERIC_ERROR }
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: GENERIC_ERROR }, { status: 400 })
+  }
+  const parsed = bodySchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: GENERIC_ERROR }, { status: 401 })
+  }
 
   const { email, password } = parsed.data
-  const ip = await clientIp()
+  const ip = clientIpFromHeaders(request.headers)
 
   // Rate limit: 5 failures per 15 minutes, per IP and per email.
   if ((await checkLocked('ip', ip ?? 'unknown')) || (await checkLocked('email', email))) {
-    return { error: GENERIC_ERROR }
+    return NextResponse.json({ error: GENERIC_ERROR }, { status: 401 })
   }
 
   const db = getDb()
@@ -51,22 +53,11 @@ export async function login(
     if (emailResult.justLocked || ipResult.justLocked) {
       await logActivity({ actor: 'system', action: 'auth.lockout', entity: 'admin_user', entityId: email, ip })
     }
-    return { error: GENERIC_ERROR }
+    return NextResponse.json({ error: GENERIC_ERROR }, { status: 401 })
   }
 
   await clearAttempts(email, ip)
   await createSession(user.id, ip, null)
   await logActivity({ actor: email, action: 'auth.login', entity: 'admin_user', entityId: email, ip })
-  redirect('/')
-}
-
-export async function logout(): Promise<void> {
-  const { destroySession } = await import('@/lib/auth/session')
-  const { getSession } = await import('@/lib/auth/session')
-  const session = await getSession()
-  await destroySession()
-  if (session) {
-    await logActivity({ actor: session.email, action: 'auth.logout', entity: 'admin_user', entityId: session.email })
-  }
-  redirect('/login')
+  return NextResponse.json({ ok: true })
 }

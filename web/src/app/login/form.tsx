@@ -1,32 +1,41 @@
 'use client'
 
-import { useActionState } from 'react'
-import { useFormStatus } from 'react-dom'
-import { login, type LoginFormState } from './actions'
-
-const initialState: LoginFormState = { error: null }
-
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="mt-2 w-full rounded-lg bg-emerald-500 px-4 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:opacity-60"
-    >
-      {pending ? 'Signing in…' : 'Sign in'}
-    </button>
-  )
-}
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export function LoginForm() {
-  const [state, formAction] = useActionState(login, initialState)
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  const [pending, setPending] = useState(false)
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setPending(true)
+    setError(null)
+    const form = new FormData(event.currentTarget)
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email: form.get('email'),
+        password: form.get('password'),
+      }),
+    })
+    setPending(false)
+    if (response.ok) {
+      router.push('/')
+      router.refresh()
+      return
+    }
+    const data = await response.json().catch(() => null)
+    setError(data?.error ?? 'Something went wrong — please try again.')
+  }
 
   return (
-    <form action={formAction} className="mt-6 flex flex-col gap-4">
-      {state.error && (
+    <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4">
+      {error && (
         <p role="alert" className="rounded-lg border border-red-900 bg-red-950 px-3 py-2 text-sm text-red-300">
-          {state.error}
+          {error}
         </p>
       )}
       <label className="flex flex-col gap-1 text-sm text-slate-300">
@@ -49,7 +58,13 @@ export function LoginForm() {
           className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 text-base text-slate-100 outline-none focus:border-emerald-500"
         />
       </label>
-      <SubmitButton />
+      <button
+        type="submit"
+        disabled={pending}
+        className="mt-2 w-full rounded-lg bg-emerald-500 px-4 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:opacity-60"
+      >
+        {pending ? 'Signing in…' : 'Sign in'}
+      </button>
     </form>
   )
 }

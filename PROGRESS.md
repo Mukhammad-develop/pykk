@@ -38,7 +38,10 @@
   with 5-per-15-min rate limiting (per IP and per email, lockouts logged);
   DB-backed 30-day revocable sessions (hashed tokens); `create-admin.mjs` ships in
   the release; Tailwind v4 for the panel. 28 unit tests pass; full release rehearsal
-  verified locally (migrations, admin creation, argon2, host routing).
+  verified locally (migrations, admin creation, argon2, host routing). Post-deploy
+  hunt: Next.js server-action POSTs 404 on this server's Node 22 (and on 24 — works
+  on 25), so all mutations were rebuilt as JSON route handlers; the full login flow
+  is proven on Node 22 in Docker with a real browser.
 
 ## Next
 

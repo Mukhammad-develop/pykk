@@ -33,6 +33,9 @@ client pay pages, API — built in phases). Hosting is cPanel shared hosting.
 5. **Never build on the server** and never push to the `deploy` branch by hand —
    GitHub Actions builds it. Don't run git mutations (commit/push/reset) without
    telling the founder what you're committing first.
+6. **No Next.js server actions.** Mutations are `fetch()` POSTs with JSON bodies to
+   route handlers — server-action posts 404 on this server's Node 22 (proven;
+   see `DECISIONS.md`). Route handlers must check the origin (`lib/request.ts`).
 6. **Keep `PROGRESS.md` and `DECISIONS.md` current** when you change something
    meaningful.
 

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth/session'
-import { logout } from './login/actions'
+import { LogoutButton } from './logout-button'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,14 +16,7 @@ export default async function AdminHome() {
         <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">
           PYKK Admin
         </p>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 hover:border-slate-500"
-          >
-            Log out
-          </button>
-        </form>
+        <LogoutButton />
       </header>
 
       <section className="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-6">
