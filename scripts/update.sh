@@ -60,8 +60,12 @@ if [ -z "$NODEVENV" ]; then
   NODEVENV="$(ls "$HOME"/nodevenv/pykk-web/*/bin/activate 2>/dev/null | head -n 1 || true)"
 fi
 if [ -n "$NODEVENV" ] && [ -f "$NODEVENV" ]; then
+  # cPanel's activate script references variables it never sets, so relax
+  # the "unbound variable" check just while sourcing it.
+  set +u
   # shellcheck disable=SC1090
   . "$NODEVENV"
+  set -u
   ok "Using $(node --version)"
 else
   warn "Node virtualenv not found — using the system node ($(node --version 2>/dev/null || echo 'not found'))"
