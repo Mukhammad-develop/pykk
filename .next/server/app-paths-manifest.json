@@ -1,9 +1,13 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/api/auth/logout/route": "app/api/auth/logout/route.js",
-  "/healthz/route": "app/healthz/route.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/logout/route": "app/api/auth/logout/route.js",
+  "/api/internal/run-daily-job/route": "app/api/internal/run-daily-job/route.js",
+  "/healthz/route": "app/healthz/route.js",
+  "/internal/cron/daily/route": "app/internal/cron/daily/route.js",
+  "/api/businesses/route": "app/api/businesses/route.js",
   "/pv.js/route": "app/pv.js/route.js",
+  "/businesses/new/page": "app/businesses/new/page.js",
   "/login/page": "app/login/page.js",
   "/page": "app/page.js"
 }

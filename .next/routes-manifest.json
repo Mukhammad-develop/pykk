@@ -33,10 +33,22 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/businesses/new",
+      "regex": "^/businesses/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/businesses/new(?:/)?$"
+    },
+    {
       "page": "/healthz",
       "regex": "^/healthz(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/healthz(?:/)?$"
+    },
+    {
+      "page": "/internal/cron/daily",
+      "regex": "^/internal/cron/daily(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/internal/cron/daily(?:/)?$"
     },
     {
       "page": "/login",

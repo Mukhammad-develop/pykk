@@ -31,4 +31,28 @@ if (!process.env.PORT) {
   process.env.PORT = '3000'
 }
 
+// Bind to all interfaces: the standalone server otherwise binds to the machine
+// hostname only (HOSTNAME is always set by Docker/Passenger), which would make
+// the startup safety-net call to 127.0.0.1 fail.
+process.env.HOSTNAME = '0.0.0.0'
+
 require('./server.js')
+
+// Safety net: run the daily billing job shortly after boot. The cPanel Cron
+// Job also calls /internal/cron/daily every morning, but if that ever fails,
+// bills are still created after every deploy or restart.
+if (process.env.DATABASE_URL && process.env.CRON_SECRET) {
+  const port = process.env.PORT
+  const secret = process.env.CRON_SECRET
+  setTimeout(() => {
+    fetch(`http://127.0.0.1:${port}/internal/cron/daily`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${secret}` },
+    })
+      .then(async (res) => {
+        const text = await res.text()
+        console.log('[pykk] startup daily job:', res.status, text.slice(0, 200))
+      })
+      .catch((err) => console.error('[pykk] startup daily job failed:', err.message))
+  }, 5000)
+}
