@@ -2,6 +2,11 @@
 
 Short reasons for technical choices, newest first.
 
+- **The repo's `index.html` is the source of truth for the live homepage.** The founder
+  asked for the homepage to deploy from the repo like everything else. `update.sh` copies
+  it to `~/pykk.uk` on each run, saving the previous live file as `index.html.bak` first.
+  The "never modify `index.html`" rule still stands for the *content* — changes are made
+  deliberately in the repo, never by editing the live file on the server.
 - **The `deploy` branch keeps its history** (one commit per deploy, published with
   peaceiris/actions-gh-pages) instead of being wiped each time — so the server can roll
   back with `git reset --hard <previous hash>` as described in DEPLOY.md.

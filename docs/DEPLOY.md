@@ -10,6 +10,10 @@ How it all fits together:
 - On the server there are two folders:
   - `~/pykk` — a clone of **main** (client sites + scripts)
   - `~/pykk-web` — a clone of **deploy** (the running app; cPanel's "Node.js App" points here)
+- `~/pykk.uk` is your live homepage's document root. The repo's `index.html` is its
+  source of truth: every run of `update.sh` copies the repo version there (keeping the
+  previous live file as `index.html.bak`). Never edit the live file by hand — edit it in
+  the repo on your Mac and push.
 - The server **never builds anything** — it only pulls finished files. Secrets live only in
   `~/pykk-web/.env` on the server (never in git).
 
@@ -177,6 +181,8 @@ curl -fsS -H "Authorization: Bearer PASTE_YOUR_CRON_SECRET" https://admin.pykk.u
 2. **Wait for the GitHub Action to go green:** open the repo → **Actions**. A push that
    changes `web/` builds and publishes the new release (about 2–4 minutes).
 3. **In cPanel Terminal:** `bash ~/pykk/scripts/update.sh`
+   — this also syncs the live homepage from the repo's `index.html` if it changed
+   (the old live file is kept as `~/pykk.uk/index.html.bak`).
 4. **Check:** https://admin.pykk.uk/healthz shows the new version (the first 7 characters
    of the commit hash).
 

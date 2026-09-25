@@ -15,6 +15,7 @@ NODEVENV=""
 SITES_REPO="$HOME/pykk"   # clone of the main branch (client sites + scripts)
 APP_DIR="$HOME/pykk-web"  # clone of the deploy branch (the running app)
 APP_URL="https://admin.pykk.uk"
+HOMEPAGE_DIR="$HOME/pykk.uk"  # document root of the live homepage
 # ---------------------------------------------------------------------------
 
 if [ -t 1 ]; then
@@ -30,6 +31,23 @@ step "Updating the sites repo ($SITES_REPO)"
 cd "$SITES_REPO"
 git pull --ff-only
 ok "Sites repo up to date"
+
+step "Updating the homepage (pykk.uk)"
+# The repo's index.html is the source of truth for the live homepage.
+# If the live file differs, the old one is kept as index.html.bak first.
+if [ -d "$HOMEPAGE_DIR" ]; then
+  if ! cmp -s "$SITES_REPO/index.html" "$HOMEPAGE_DIR/index.html" 2>/dev/null; then
+    if [ -f "$HOMEPAGE_DIR/index.html" ]; then
+      cp "$HOMEPAGE_DIR/index.html" "$HOMEPAGE_DIR/index.html.bak"
+    fi
+    cp "$SITES_REPO/index.html" "$HOMEPAGE_DIR/index.html"
+    ok "Homepage updated (previous live copy saved as index.html.bak)"
+  else
+    ok "Homepage already up to date"
+  fi
+else
+  warn "$HOMEPAGE_DIR not found — homepage not updated"
+fi
 
 step "Updating the app ($APP_DIR)"
 cd "$APP_DIR"

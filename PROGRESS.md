@@ -12,6 +12,9 @@
   and publishes the `deploy` branch; `start.js` and `scripts/update.sh`;
   `web/.env.example`; `docs/DEPLOY.md`. Verified locally: lint, typecheck, tests and a
   full standalone build all pass.
+- **Homepage auto-deploy** (founder request during P1): the repo's `index.html` is the
+  source of truth for the live homepage. `update.sh` copies it to `~/pykk.uk` on every
+  run, saving the previous live file as `index.html.bak` first.
 
 ## Next
 
