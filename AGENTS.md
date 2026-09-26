@@ -3,8 +3,9 @@
 Read this file first, whatever the task is. It tells you what PYKK is, the rules you
 must never break, and how the pieces fit together.
 
-- **Making a website for a client?** Follow `docs/NEW_CLIENT.md` (the step-by-step
-  checklist). The short version is below.
+- **Making a website for a client?** Follow `docs/CLIENT_SITE_GUIDE.md` (the
+  definitive playbook: vocabulary, design rules, required sections, workflow) and
+  `docs/NEW_CLIENT.md` (the founder's checklist). The short version is below.
 - **Current state of the project:** `PROGRESS.md` (what's done, what's next).
 - **Why things are the way they are:** `DECISIONS.md`.
 - **The original master brief:** `docs/KIMI_START.md` (wins if documents disagree).
@@ -36,8 +37,11 @@ client pay pages, API — built in phases). Hosting is cPanel shared hosting.
 6. **No Next.js server actions.** Mutations are `fetch()` POSTs with JSON bodies to
    route handlers — server-action posts 404 on this server's Node 22 (proven;
    see `DECISIONS.md`). Route handlers must check the origin (`lib/request.ts`).
-6. **Keep `PROGRESS.md` and `DECISIONS.md` current** when you change something
+7. **Keep `PROGRESS.md` and `DECISIONS.md` current** when you change something
    meaningful.
+8. **The word is "bond", never "subscription".** The client's monthly payment
+   relationship with PYKK is a bond — in client sites, admin UI copy, client
+   messages and docs. See `docs/CLIENT_SITE_GUIDE.md` section 1.
 
 ## How the pieces fit
 

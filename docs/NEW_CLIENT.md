@@ -5,11 +5,19 @@ used everywhere: the folder `sites/{slug}`, the address `https://{slug}.pykk.uk`
 and the entry in the admin panel. Slug rules: 3–40 characters, lowercase `a–z`,
 `0–9` and hyphens.
 
-## 1. Admin panel — later phase
+**Vocabulary:** the client's monthly payment relationship with PYKK is a **bond** —
+never write "subscription". Every AI chat building or customising the site must
+follow `docs/CLIENT_SITE_GUIDE.md`.
 
-Once the admin panel is live (phase P3+): add the business at
-https://admin.pykk.uk with the **same slug**, the monthly price, and the first
-payment date (marked paid). Until then, keep a note of the client and the date.
+## 1. Admin panel — add the business
+
+At https://admin.pykk.uk: **+ Add business** — name, slug (same as the site folder
+you'll create), type, owner contact, monthly price, and the billing anchor date
+(default: today). This instantly creates the client's **first bond bill**, due on
+the anchor date, with its `#` reference. (From Phase 3: paste the pay link you
+create in Stripe into that bill, tap **Copy message for client**, and send it by
+WhatsApp. The client pays — the bond has started. They have the grace period
+— default 7 days — to pay before the site is temporarily turned off.)
 
 ## 2. Create the site (on your Mac)
 
@@ -22,12 +30,13 @@ The site starts in **preview mode** (hidden from Google via `noindex`).
 
 ## 3. Customise it (on your Mac)
 
-Ask Kimi to fill in the site from your notes (real prices, hours, address, phone,
-WhatsApp, about text). Put the client's photos in `sites/SLUG/images/` — Kimi will
-wire them into the page. Anything unknown stays as a visible `[[NEEDS INFO: …]]`
-placeholder; never invent facts.
+Open a chat in the `pykk` folder and say:
+> New client: read AGENTS.md, docs/CLIENT_SITE_GUIDE.md and docs/NEW_CLIENT.md.
+> Client: …(name, type, prices, hours, address, phone/WhatsApp, special requests)…
+> Photos are in sites/SLUG/images/.
 
-Preview locally: `npx serve sites/SLUG`
+Put the client's photos in `sites/SLUG/images/` first. The chat fills in the real
+facts, builds the bond page, checks the site, and pushes.
 
 ## 4. Check it (on your Mac)
 
@@ -60,7 +69,9 @@ Open `https://SLUG.pykk.uk`. The padlock can take a few minutes to appear while
 AutoSSL runs. The site is still in preview mode — hidden from Google but viewable
 by anyone with the link, so send it to the client for approval.
 
-## 8. When the client has paid
+## 8. When the client pays their first bond bill
+
+Mark the bill paid in the admin panel (Phase 3), then:
 
 ```
 node scripts/new-site.mjs --slug SLUG --publish
@@ -69,6 +80,13 @@ bash ~/pykk/scripts/update.sh   (in cPanel Terminal)
 ```
 
 This removes the `noindex` tag so Google can find the site.
+
+## 9. Every month after
+
+The daily job creates the next bill 7 days before it's due. You paste the pay
+link, copy the message, and the client pays. Bills have a grace period (default
+7 days, no extra charge); if a bill stays unpaid past grace, the website shows a
+"temporarily turned off" page and returns the moment they pay.
 
 ---
 
