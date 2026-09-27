@@ -127,8 +127,11 @@ describe.skipIf(!hasDb)('daily job (database)', () => {
 
   it('auto-suspends a business whose unpaid bill is past grace — but not before', async () => {
     const fs = await import('node:fs')
+    const os = await import('node:os')
     const path = await import('node:path')
-    const dir = process.env.SITES_DIR!
+    // self-sufficient sites sandbox (CI has no SITES_DIR in the environment)
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pykk-grace-test-'))
+    process.env.SITES_DIR = dir
     const business = await addBusiness({ graceDays: 7 })
     fs.mkdirSync(path.join(dir, business.slug), { recursive: true })
     fs.writeFileSync(path.join(dir, business.slug, 'index.html'), '<html>real</html>')
