@@ -114,6 +114,14 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/businesses/(?<nxtPid>[^/]+?)/website(?:/)?$"
+    },
+    {
+      "page": "/pay/[reference]",
+      "regex": "^/pay/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPreference": "nxtPreference"
+      },
+      "namedRegex": "^/pay/(?<nxtPreference>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
