@@ -21,8 +21,8 @@ export default async function NewBusinessPage() {
         <Link href="/" className="text-sm text-slate-400 hover:text-slate-200">← Back</Link>
         <h1 className="mt-2 text-2xl font-bold text-slate-100">Add business</h1>
         <p className="mt-1 text-sm text-slate-400">
-          Adds the client, records their first month as paid, and anchors their
-          future bills to that date.
+          Adds the client and creates their first bond bill — due on the anchor
+          date, payable via a pay link you paste in afterwards.
         </p>
       </header>
       <NewBusinessForm defaultPricePence={defaultPrice} />

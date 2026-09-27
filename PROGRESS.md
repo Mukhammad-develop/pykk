@@ -56,14 +56,29 @@
   service. 56 tests pass; full flow rehearsed on Node 22 (login → add business →
   job creates the bill → visible in the list).
 
+- **P3 Phase 3 — Today page and the grace engine** (27 Sep 2026): the Today page
+  (4 cards: links to create, waiting, overdue, collected this month; "bond bills
+  needing a link" with paste-link + Stripe reference append; waiting list with
+  Mark paid / Waive / Void; overdue in red; "Marked paid recently" with 10-minute
+  Undo). Add business now creates the **first bond bill** (due on the anchor date —
+  no in-person payment). Grace engine: daily job auto-suspends a business whose
+  unpaid bill passes `due + grace_days` and swaps its site to a "temporarily
+  turned off" page (backup kept, self-healing); marking paid or waiving restores
+  site and business. Link validation is just https + length (no domain whitelist,
+  founder decision). Panel layout with mobile bottom tabs; businesses list +
+  detail (status actions, price & notes, payment history). 72 tests pass; full
+  grace cycle rehearsed end-to-end on Node 22 (suspend → file swap → pay →
+  restore).
+
 ## Next
 
-- **Finish P3 Phase 2 on the server:** push → Action green → `update.sh` (applies
-  the new tables) → on the iPhone: add a business → "Run daily job now" → see the
-  scheduled bill appear. Also add the 06:00 cPanel Cron Job (DEPLOY.md step 9).
-- **P3 Phase 3 — The Today page:** summary cards, the "links to create" table with
-  paste-link validation, Mark paid / Waive / Void / Undo, Copy message for client,
-  mobile layout.
+- **Finish P3 Phase 3 on the server:** push → Action green → `update.sh` → iPhone:
+  Today page, add a business, paste a link, copy message, mark paid (+undo), and
+  watch the grace engine turn a test site off and back on.
+- **P4 — the site factory:** per-category intake form in the panel, photo upload,
+  AI drafting via OpenRouter with the guaranteed template fallback, server-side
+  validation, git commit from the server (PAT), automatic subdomains via uapi.
+- **P5 — the client pay page** (`/pay/{reference}?t={token}`) with an end-to-end test.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
   new could follow them.
 

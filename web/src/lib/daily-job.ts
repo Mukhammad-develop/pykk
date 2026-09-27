@@ -2,14 +2,16 @@ import { randomBytes } from 'node:crypto'
 import { and, eq, inArray, lt } from 'drizzle-orm'
 import { getDb } from '@/db'
 import { businesses, payments } from '@/db/schema'
-import { addDays, dueDatesBetween, nextDueAfter, todayLondon, type ISODate } from './billing'
+import { addDays, dueDatesBetween, nextDueAfter, pastGrace, todayLondon, type ISODate } from './billing'
 import { uniqueReference } from './reference'
 import { getSettingNumber } from './settings'
 import { logActivity } from './auth/activity'
+import { suspendSite } from './site-control'
 
 export interface DailyJobResult {
   created: number
   overdue: number
+  suspended: number
   today: ISODate
 }
 
@@ -76,11 +78,35 @@ export async function runDailyJob(opts: { today?: ISODate } = {}): Promise<Daily
     .where(and(lt(payments.dueDate, today), inArray(payments.status, ['scheduled', 'link_ready'])))
   const overdue = Number((overdueResult as unknown as [{ affectedRows?: number }])[0]?.affectedRows ?? 0)
 
+  // Auto-suspend: an unpaid bill past its grace period turns the site off.
+  const graceDefault = await getSettingNumber('grace_days', 7)
+  const candidates = await db
+    .select({ payment: payments, business: businesses })
+    .from(payments)
+    .innerJoin(businesses, eq(businesses.id, payments.businessId))
+    .where(and(eq(payments.status, 'overdue'), eq(businesses.status, 'active')))
+
+  let suspended = 0
+  for (const { payment, business } of candidates) {
+    const grace = business.graceDays ?? graceDefault
+    if (!pastGrace(today, payment.dueDate, grace)) continue
+    await db.update(businesses).set({ status: 'suspended' }).where(eq(businesses.id, business.id))
+    const siteResult = suspendSite(business.slug)
+    await logActivity({
+      actor: 'system',
+      action: 'business.auto_suspended',
+      entity: 'business',
+      entityId: business.id,
+      after: { reference: payment.reference, dueDate: payment.dueDate, grace, siteResult },
+    })
+    suspended++
+  }
+
   await logActivity({
     actor: 'system',
     action: 'cron.daily',
-    after: { created, overdue, today },
+    after: { created, overdue, suspended, today },
   })
 
-  return { created, overdue, today }
+  return { created, overdue, suspended, today }
 }

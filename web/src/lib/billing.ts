@@ -42,6 +42,12 @@ export function todayLondon(now: Date = new Date()): ISODate {
   }).format(now)
 }
 
+// A bill is past its grace period when more than `graceDays` days have passed
+// since its due date. No extra charge during grace — the site just turns off after.
+export function pastGrace(today: ISODate, dueDate: ISODate, graceDays: number): boolean {
+  return diffDays(dueDate, today) > graceDays
+}
+
 // The due date in a given month for a given anchor day: the anchor day clamped
 // to the month's last day. Anchor 31 Jan → 28/29 Feb → 31 Mar.
 export function dueDateInMonth(anchorDay: number, year: number, month: number): ISODate {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BUSINESS_TYPES, PAID_METHODS } from '@/db/schema'
+import { BUSINESS_TYPES } from '@/db/schema'
 import { todayLondon } from '@/lib/billing'
 
 const inputClass =
@@ -18,14 +18,6 @@ const TYPE_LABELS: Record<string, string> = {
   laundry: 'Laundry',
   retail: 'Retail',
   local_services: 'Local services',
-  other: 'Other',
-}
-
-const METHOD_LABELS: Record<string, string> = {
-  cash: 'Cash',
-  card_in_person: 'Card in person',
-  bank_transfer: 'Bank transfer',
-  link: 'Payment link',
   other: 'Other',
 }
 
@@ -51,14 +43,14 @@ export function NewBusinessForm({ defaultPricePence }: { defaultPricePence: numb
         ownerEmail: form.get('ownerEmail'),
         ownerPhone: form.get('ownerPhone'),
         pricePence: Number.isFinite(pricePounds) ? Math.round(pricePounds * 100) : undefined,
-        firstPaymentDate: form.get('firstPaymentDate'),
-        firstPaymentMethod: form.get('firstPaymentMethod'),
+        anchorDate: form.get('anchorDate'),
+        graceDays: Number(form.get('graceDays')),
         notes: form.get('notes'),
       }),
     })
     setPending(false)
     if (response.ok) {
-      router.push('/')
+      router.push('/businesses')
       router.refresh()
       return
     }
@@ -120,16 +112,12 @@ export function NewBusinessForm({ defaultPricePence }: { defaultPricePence: numb
         />
       </label>
       <label className={labelClass}>
-        First payment date * <span className="text-xs text-slate-500">the day they paid their first month — future bills anchor to it</span>
-        <input name="firstPaymentDate" type="date" required className={inputClass} defaultValue={todayLondon()} />
+        Billing anchor date * <span className="text-xs text-slate-500">the first bond bill is due this day; future bills follow monthly</span>
+        <input name="anchorDate" type="date" required className={inputClass} defaultValue={todayLondon()} />
       </label>
       <label className={labelClass}>
-        First payment method *
-        <select name="firstPaymentMethod" required className={inputClass} defaultValue="card_in_person">
-          {PAID_METHODS.map((method) => (
-            <option key={method} value={method}>{METHOD_LABELS[method]}</option>
-          ))}
-        </select>
+        Grace period (days) <span className="text-xs text-slate-500">late-payment leeway before the site turns itself off — default 7</span>
+        <input name="graceDays" type="number" min="0" max="60" className={inputClass} defaultValue={7} />
       </label>
       <label className={labelClass}>
         Notes

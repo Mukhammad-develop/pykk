@@ -124,4 +124,62 @@ describe.skipIf(!hasDb)('daily job (database)', () => {
       .where(and(eq(payments.businessId, business.id), eq(payments.status, 'overdue')))
     expect(overdueRows).toHaveLength(2)
   })
+
+  it('auto-suspends a business whose unpaid bill is past grace — but not before', async () => {
+    const fs = await import('node:fs')
+    const path = await import('node:path')
+    const dir = process.env.SITES_DIR!
+    const business = await addBusiness({ graceDays: 7 })
+    fs.mkdirSync(path.join(dir, business.slug), { recursive: true })
+    fs.writeFileSync(path.join(dir, business.slug, 'index.html'), '<html>real</html>')
+
+    const db = getDb()
+    const mkPayment = (reference: string, dueDate: string) => ({
+      businessId: business.id,
+      reference,
+      periodStart: addDays(dueDate, -30),
+      periodEnd: dueDate,
+      dueDate,
+      amountPence: 499,
+      status: 'scheduled' as const,
+      clientToken: 'tok-' + Math.random().toString(36).slice(2, 44),
+    })
+    // one bill overdue but inside grace, one past grace
+    await db.insert(payments).values([
+      mkPayment('INGRAC', addDays(today, -3)),
+      mkPayment('PASTGR', addDays(today, -10)),
+    ])
+
+    const first = await runDailyJob({ today })
+    expect(first.overdue).toBe(2)
+    expect(first.suspended).toBe(1) // only because of the past-grace bill
+
+    const after = await db.select().from(businesses).where(eq(businesses.id, business.id))
+    expect(after[0].status).toBe('suspended')
+    expect(fs.readFileSync(path.join(dir, business.slug, 'index.html'), 'utf8')).toContain('pykk:paused')
+
+    // idempotent: further runs don't suspend again
+    const second = await runDailyJob({ today })
+    expect(second.suspended).toBe(0)
+  })
+
+  it('leaves an overdue-but-in-grace business alone', async () => {
+    const business = await addBusiness({ graceDays: 7 })
+    const db = getDb()
+    const dueDate = addDays(today, -3)
+    await db.insert(payments).values({
+      businessId: business.id,
+      reference: 'INGRCE',
+      periodStart: addDays(dueDate, -30),
+      periodEnd: dueDate,
+      dueDate,
+      amountPence: 499,
+      status: 'scheduled',
+      clientToken: 'tok-' + Math.random().toString(36).slice(2, 44),
+    })
+    const result = await runDailyJob({ today })
+    expect(result.suspended).toBe(0)
+    const after = await db.select().from(businesses).where(eq(businesses.id, business.id))
+    expect(after[0].status).toBe('active')
+  })
 })

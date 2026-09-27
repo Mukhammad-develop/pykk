@@ -120,6 +120,9 @@ export const businesses = mysqlTable(
     town: varchar('town', { length: 120 }),
     status: varchar('status', { length: 20 }).notNull().default('lead'),
     pricePence: int('price_pence').notNull(),
+    // Days of grace after a bill's due date before the site turns itself off.
+    // NULL means "use the grace_days setting".
+    graceDays: int('grace_days'),
     billingAnchorDate: date('billing_anchor_date', { mode: 'string' }),
     startedAt: date('started_at', { mode: 'string' }),
     cancelledAt: date('cancelled_at', { mode: 'string' }),
@@ -163,6 +166,8 @@ export const payments = mysqlTable(
     paidAt: date('paid_at', { mode: 'string' }),
     paidMethod: varchar('paid_method', { length: 20 }),
     paidNote: varchar('paid_note', { length: 500 }),
+    // When the founder clicked "Mark paid" — the 10-minute undo window runs on this.
+    paidRecordedAt: timestamp('paid_recorded_at'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().onUpdateNow().notNull(),
   },

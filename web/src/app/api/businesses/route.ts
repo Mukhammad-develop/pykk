@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { eq } from 'drizzle-orm'
 import { getDb } from '@/db'
-import { businesses, payments, BUSINESS_TYPES, PAID_METHODS } from '@/db/schema'
+import { businesses, payments, BUSINESS_TYPES } from '@/db/schema'
 import { apiSession } from '@/lib/auth/guard'
 import { logActivity } from '@/lib/auth/activity'
 import { originAllowed, clientIpFromHeaders } from '@/lib/request'
@@ -22,8 +22,8 @@ const bodySchema = z.object({
   ownerEmail: z.string().trim().toLowerCase().email().optional().or(z.literal('')),
   ownerPhone: z.string().trim().max(40).optional().or(z.literal('')),
   pricePence: z.number().int().min(0).max(1000000).optional(),
-  firstPaymentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  firstPaymentMethod: z.enum(PAID_METHODS),
+  anchorDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  graceDays: z.number().int().min(0).max(60).optional(),
   notes: z.string().trim().max(5000).optional().or(z.literal('')),
 })
 
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
   }
 
   const pricePence = input.pricePence ?? (await getSettingNumber('default_price_pence', 499))
-  const anchor = input.firstPaymentDate
+  const anchor = input.anchorDate
 
   await db.insert(businesses).values({
     name: input.name,
@@ -77,6 +77,7 @@ export async function POST(request: Request) {
     ownerPhone: input.ownerPhone || null,
     status: 'active',
     pricePence,
+    graceDays: input.graceDays ?? null,
     billingAnchorDate: anchor,
     startedAt: anchor,
     notes: input.notes || null,
@@ -88,7 +89,7 @@ export async function POST(request: Request) {
     .limit(1)
   const business = created[0]
 
-  // The first month is paid in person at signup; it anchors all future bills.
+  // The first bond bill: due on the anchor date, payable via a pay link.
   const reference = await uniqueReference(async (ref) => {
     const rows = await db
       .select({ id: payments.id })
@@ -104,9 +105,7 @@ export async function POST(request: Request) {
     periodEnd: nextDueAfter(anchor, anchor),
     dueDate: anchor,
     amountPence: pricePence,
-    status: 'paid',
-    paidAt: anchor,
-    paidMethod: input.firstPaymentMethod,
+    status: 'scheduled',
     clientToken: randomBytes(32).toString('base64url'),
   })
 
@@ -115,9 +114,9 @@ export async function POST(request: Request) {
     action: 'business.created',
     entity: 'business',
     entityId: business.id,
-    after: { name: business.name, slug: business.slug, pricePence, anchor },
+    after: { name: business.name, slug: business.slug, pricePence, anchor, firstBillReference: reference },
     ip: clientIpFromHeaders(request.headers),
   })
 
-  return NextResponse.json({ ok: true, id: business.id, slug: business.slug })
+  return NextResponse.json({ ok: true, id: business.id, slug: business.slug, reference })
 }

@@ -2,6 +2,18 @@
 
 Short reasons for technical choices, newest first.
 
+- **The "turned off" mechanism is a file swap in `SITES_DIR`** (`lib/site-control.ts`):
+  the real `index.html` is backed up as `index.html.pykk-paused` and a paused page
+  (with a `pykk:paused` marker) takes its place. Idempotent and self-healing after
+  git pulls; restored on mark-paid, waive or reactivate. Auto-suspend runs in the
+  daily job when `today > dueDate + graceDays` (per-business grace, setting default 7).
+- **The first bond bill is created with the business** (founder's model change: no
+  in-person first payment). Due on the anchor date, payable via a pasted pay link;
+  clients get the grace period from day one.
+- **Undo-paid is server-driven** via a "Marked paid recently" Today section: after
+  marking paid the row leaves the waiting list, so the 10-minute undo window
+  (`paid_recorded_at` + 10 min) is computed per row on the server — component
+  state alone would lose it.
 - **The site factory (P4) is server-side, but git stays the source of truth.** The
   app generates client sites from panel intake + photos, validates the output,
   then commits and pushes from the server with a fine-grained GitHub PAT scoped
