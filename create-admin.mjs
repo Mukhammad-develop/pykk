@@ -142,6 +142,12 @@ var init_schema = __esm({
         startedAt: date("started_at", { mode: "string" }),
         cancelledAt: date("cancelled_at", { mode: "string" }),
         notes: text("notes"),
+        // Site factory: the structured website intake (contact, hours, prices,
+        // extras per type, additional info, photo filenames) and build state.
+        intakeJson: json("intake_json"),
+        websiteStatus: varchar("website_status", { length: 20 }).notNull().default("none"),
+        websiteBuiltAt: timestamp("website_built_at"),
+        websiteNote: varchar("website_note", { length: 255 }),
         createdAt: timestamp("created_at").defaultNow().notNull(),
         updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull()
       },

@@ -28,6 +28,30 @@
       "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/businesses/[id]/build-website",
+      "regex": "^/api/businesses/([^/]+?)/build\\-website(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)/build\\-website(?:/)?$"
+    },
+    {
+      "page": "/api/businesses/[id]/intake",
+      "regex": "^/api/businesses/([^/]+?)/intake(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)/intake(?:/)?$"
+    },
+    {
+      "page": "/api/businesses/[id]/photos",
+      "regex": "^/api/businesses/([^/]+?)/photos(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)/photos(?:/)?$"
+    },
+    {
       "page": "/api/businesses/[id]/status",
       "regex": "^/api/businesses/([^/]+?)/status(?:/)?$",
       "routeKeys": {
@@ -82,6 +106,14 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/businesses/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/businesses/[id]/website",
+      "regex": "^/businesses/([^/]+?)/website(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/businesses/(?<nxtPid>[^/]+?)/website(?:/)?$"
     }
   ],
   "staticRoutes": [
