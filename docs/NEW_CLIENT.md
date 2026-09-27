@@ -19,16 +19,23 @@ create in Stripe into that bill, tap **Copy message for client**, and send it by
 WhatsApp. The client pays — the bond has started. They have the grace period
 — default 7 days — to pay before the site is temporarily turned off.)
 
-## 2. Create the site (on your Mac)
+## 2. Create the site — two ways
 
+**A) The website factory in the panel (standard sites):** open the business →
+**Website factory** → fill the intake (contact, hours, prices, photos) → **Save
+intake** → **Build the website**. In about a minute the site is AI-drafted,
+validated, committed to git, and live at `SLUG.pykk.uk` with SSL — no Mac, no
+Terminal. (Needs `OPENROUTER_API_KEY` and `SITE_BUILD_GITHUB_TOKEN` in the
+server's `.env` — one-time setup in `docs/DEPLOY.md`.)
+
+**B) On your Mac (bespoke sites):**
 ```
 node scripts/new-site.mjs --slug SLUG --name "BUSINESS NAME" --type TYPE
 ```
-
 `TYPE` is one of: **barber**, **beauty**, **cafe**, **services**.
 The site starts in **preview mode** (hidden from Google via `noindex`).
 
-## 3. Customise it (on your Mac)
+## 3. Customise it (on your Mac, for bespoke sites)
 
 Open a chat in the `pykk` folder and say:
 > New client: read AGENTS.md, docs/CLIENT_SITE_GUIDE.md and docs/NEW_CLIENT.md.

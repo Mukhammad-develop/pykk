@@ -18,7 +18,7 @@
   },
   "packageManager": "pnpm@10.26.1",
   "pnpm": {
-    "onlyBuiltDependencies": ["argon2", "esbuild"]
+    "onlyBuiltDependencies": ["argon2", "esbuild", "sharp"]
   },
   "dependencies": {
     "argon2": "^0.44.0",
@@ -27,6 +27,7 @@
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "sharp": "^0.33.5",
     "zod": "^3.25.0"
   },
   "devDependencies": {

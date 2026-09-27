@@ -54,6 +54,12 @@ client pay pages, API — built in phases). Hosting is cPanel shared hosting.
 - **`sites/_templates/`** — 4 starter templates: `barber`, `beauty`, `cafe`,
   `services`. **`sites/{slug}/`** — one folder per client site (static), served at
   `{slug}.pykk.uk` (cPanel subdomain, document root `pykk/sites/{slug}`).
+- **The site factory** (in the panel, `/businesses/[id]/website`) builds sites
+  server-side: intake form → AI draft via OpenRouter (validated, one retry) →
+  deterministic fallback template → files into `sites/{slug}/` → git commit+push
+  from the server (`SITE_BUILD_GITHUB_TOKEN`) → subdomain + AutoSSL via `uapi`.
+  The Mac flow (`new-site.mjs` + AI chats per `docs/CLIENT_SITE_GUIDE.md`) is for
+  bespoke sites.
 - **Templates use tokens** `{{SITE_NAME}}`, `{{SITE_SLUG}}`, `{{PUBLIC_APP_HOST}}`,
   filled by `new-site.mjs`. Every template already includes the page-view beacon
   (`/pv.js` on the app host) and a "Website by PYKK" footer link — keep both.

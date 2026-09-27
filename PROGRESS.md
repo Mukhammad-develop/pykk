@@ -70,15 +70,28 @@
   grace cycle rehearsed end-to-end on Node 22 (suspend → file swap → pay →
   restore).
 
+- **P4 — The site factory** (27 Sep 2026): the panel builds client websites
+  itself. `/businesses/[id]/website`: per-category intake form (contact, location,
+  7-day hours, services & prices with presets, extras per type, additional info),
+  photo upload (JPG/PNG → WebP ≤1600px into `sites/{slug}/images/`). The pipeline:
+  AI draft via OpenRouter (`kimi-k2` by default, configurable) against the
+  `CLIENT_SITE_GUIDE` rules → server-side validator (beacon slug, noindex, footer
+  link, one h1, no tokens, never "subscription", bond section) → one retry →
+  guaranteed deterministic fallback template. Then: files written, git
+  commit+push from the server (fine-grained PAT), subdomain + AutoSSL via uapi —
+  all reported in `websiteNote`. Builds run in the background with DB status
+  polling. **Rehearsed live on Node 22: real OpenRouter generation passed
+  validation first try; fallback ships a full site with no key.** 88 tests pass.
+
 ## Next
 
-- **Finish P3 Phase 3 on the server:** push → Action green → `update.sh` → iPhone:
-  Today page, add a business, paste a link, copy message, mark paid (+undo), and
-  watch the grace engine turn a test site off and back on.
-- **P4 — the site factory:** per-category intake form in the panel, photo upload,
-  AI drafting via OpenRouter with the guaranteed template fallback, server-side
-  validation, git commit from the server (PAT), automatic subdomains via uapi.
+- **Finish P4 on the server:** founder creates the fine-grained GitHub PAT
+  (Site-builder token, pykk repo only, Contents: write) and adds it +
+  `OPENROUTER_API_KEY` to `~/pykk-web/.env`; then `update.sh`; then build a first
+  real site from the panel (Businesses → a business → Website factory).
 - **P5 — the client pay page** (`/pay/{reference}?t={token}`) with an end-to-end test.
+- **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
+  new could follow them.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
   new could follow them.
 

@@ -2,6 +2,19 @@
 
 Short reasons for technical choices, newest first.
 
+- **Site builds run fire-and-forget with DB-backed status.** The build-website
+  route kicks off `buildSite()` without awaiting it; `websiteStatus` on the
+  business row is the progress channel, and the page polls it. No queue infra
+  needed on shared hosting; Passenger keeps the process alive between requests.
+- **The AI output contract is `=== index.html ===` / `=== styles.css ===`** blocks,
+  validated server-side (beacon slug, noindex, footer link, one h1, no tokens,
+  never "subscription", bond section, CSS size). One retry with the failures fed
+  back, then the deterministic **baseline renderer** as the guaranteed floor —
+  proven live: kimi-k2 passed validation first try, and the fallback path ships a
+  complete site with no API key.
+- **Photos are converted to WebP at upload** (sharp, ≤1600px, quality 82) into
+  `sites/{slug}/images/`, numbered from the count on disk so multi-request uploads
+  can't overwrite each other. Filenames are fed to the AI for the gallery.
 - **The "turned off" mechanism is a file swap in `SITES_DIR`** (`lib/site-control.ts`):
   the real `index.html` is backed up as `index.html.pykk-paused` and a paused page
   (with a `pykk:paused` marker) takes its place. Idempotent and self-healing after
