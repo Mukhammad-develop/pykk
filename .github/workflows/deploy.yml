@@ -90,6 +90,8 @@ jobs:
           ADMIN_EMAIL: e2e@pykk.uk
           ADMIN_PASSWORD: e2e-password-123
           CRON_SECRET: e2e-cron-secret
+          # same single-host fallback as production, or /pay/* 404s in middleware
+          PUBLIC_APP_HOST: admin.pykk.uk
         run: |
           rm -rf /tmp/e2e-app && mkdir /tmp/e2e-app
           cp -r .next/standalone/. /tmp/e2e-app/
