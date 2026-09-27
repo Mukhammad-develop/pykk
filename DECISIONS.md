@@ -2,6 +2,10 @@
 
 Short reasons for technical choices, newest first.
 
+- **The e2e test runs against the built standalone in CI**, not the dev server:
+  the workflow assembles the release, migrates the MariaDB service database,
+  creates an admin, boots `start.js`, and drives the full billing circle with
+  Playwright. Vitest excludes `e2e/` (it runs via `pnpm e2e` in its own step).
 - **Site builds run fire-and-forget with DB-backed status.** The build-website
   route kicks off `buildSite()` without awaiting it; `websiteStatus` on the
   business row is the progress channel, and the page polls it. No queue infra

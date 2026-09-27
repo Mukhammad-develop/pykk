@@ -83,15 +83,25 @@
   polling. **Rehearsed live on Node 22: real OpenRouter generation passed
   validation first try; fallback ships a full site with no key.** 88 tests pass.
 
+- **P5 — The client pay page** (27 Sep 2026): `/pay/{reference}?t={token}` — no
+  login, constant-time token check (wrong token → plain 404), branded page with
+  business name, reference, period, due date, amount and a big **Pay now** button
+  opening the pasted link; states for "link coming soon", overdue, paid and waived;
+  `noindex`, nothing else about the business shown. End-to-end test
+  (`web/e2e/pay-page.test.mjs`) drives the whole circle — create business → daily
+  job creates the bill → paste link → Pay now → mark paid → Paid — and now runs in
+  CI against the built standalone with the MariaDB service (11/11 checks pass).
+
 ## Next
 
-- **Finish P4 on the server:** founder creates the fine-grained GitHub PAT
-  (Site-builder token, pykk repo only, Contents: write) and adds it +
-  `OPENROUTER_API_KEY` to `~/pykk-web/.env`; then `update.sh`; then build a first
-  real site from the panel (Businesses → a business → Website factory).
-- **P5 — the client pay page** (`/pay/{reference}?t={token}`) with an end-to-end test.
-- **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
-  new could follow them.
+- **Finish P5 on the server:** push → Action green (now includes the e2e run) →
+  `update.sh` → iPhone: copy a client message and open the pay link — it should
+  show the branded pay page with **Pay now**.
+- **P6 — the "real site" upgrade:** bond section off public sites (moves to the
+  future client area); design moods (structure variety, not just palettes);
+  personality intake (story, real client-supplied reviews, socials, hero photo).
+- **P7 — the client area** ("their admin panel"): personal link access (no
+  passwords), bond + bills + pay, page-view stats, bond explanation.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
   new could follow them.
 

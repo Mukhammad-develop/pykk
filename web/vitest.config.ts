@@ -18,4 +18,7 @@ export default defineConfig({
       '@': resolve(here, 'src'),
     },
   },
+  test: {
+    exclude: ['node_modules/**', 'e2e/**'],
+  },
 })

@@ -81,6 +81,31 @@ jobs:
       - name: Bundle server scripts (migrate + create-admin)
         run: pnpm bundle:server
 
+      - name: Install the e2e browser
+        run: npx playwright install chromium
+
+      - name: End-to-end test (pay page)
+        env:
+          BASE_URL: http://localhost:4577
+          ADMIN_EMAIL: e2e@pykk.uk
+          ADMIN_PASSWORD: e2e-password-123
+          CRON_SECRET: e2e-cron-secret
+        run: |
+          rm -rf /tmp/e2e-app && mkdir /tmp/e2e-app
+          cp -r .next/standalone/. /tmp/e2e-app/
+          mkdir -p /tmp/e2e-app/.next
+          cp -r .next/static /tmp/e2e-app/.next/static
+          cp deploy/start.js deploy/migrate.mjs deploy/create-admin.mjs /tmp/e2e-app/
+          cp -r drizzle /tmp/e2e-app/drizzle
+          echo "e2e" > /tmp/e2e-app/VERSION.txt
+          cd /tmp/e2e-app
+          node migrate.mjs
+          printf 'e2e-password-123\ne2e-password-123\n' | node create-admin.mjs --email "$ADMIN_EMAIL"
+          PORT=4577 node start.js &
+          sleep 6
+          cd "$GITHUB_WORKSPACE/web"
+          node e2e/pay-page.test.mjs
+
       - name: Assemble the release folder
         run: |
           cd "$GITHUB_WORKSPACE"
