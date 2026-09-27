@@ -18,7 +18,72 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/api/businesses/[id]",
+      "regex": "^/api/businesses/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/businesses/[id]/status",
+      "regex": "^/api/businesses/([^/]+?)/status(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)/status(?:/)?$"
+    },
+    {
+      "page": "/api/payments/[id]/link",
+      "regex": "^/api/payments/([^/]+?)/link(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/payments/(?<nxtPid>[^/]+?)/link(?:/)?$"
+    },
+    {
+      "page": "/api/payments/[id]/mark-paid",
+      "regex": "^/api/payments/([^/]+?)/mark\\-paid(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/payments/(?<nxtPid>[^/]+?)/mark\\-paid(?:/)?$"
+    },
+    {
+      "page": "/api/payments/[id]/undo-paid",
+      "regex": "^/api/payments/([^/]+?)/undo\\-paid(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/payments/(?<nxtPid>[^/]+?)/undo\\-paid(?:/)?$"
+    },
+    {
+      "page": "/api/payments/[id]/void",
+      "regex": "^/api/payments/([^/]+?)/void(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/payments/(?<nxtPid>[^/]+?)/void(?:/)?$"
+    },
+    {
+      "page": "/api/payments/[id]/waive",
+      "regex": "^/api/payments/([^/]+?)/waive(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/payments/(?<nxtPid>[^/]+?)/waive(?:/)?$"
+    },
+    {
+      "page": "/businesses/[id]",
+      "regex": "^/businesses/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/businesses/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",
@@ -31,6 +96,12 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/businesses",
+      "regex": "^/businesses(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/businesses(?:/)?$"
     },
     {
       "page": "/businesses/new",
