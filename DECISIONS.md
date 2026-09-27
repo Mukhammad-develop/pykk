@@ -2,6 +2,22 @@
 
 Short reasons for technical choices, newest first.
 
+- **The site factory (P4) is server-side, but git stays the source of truth.** The
+  app generates client sites from panel intake + photos, validates the output,
+  then commits and pushes from the server with a fine-grained GitHub PAT scoped
+  to the pykk repo only (Contents: write) — stored in the server `.env` like every
+  other secret. Founder approved the token's blast radius (write to a public repo).
+- **AI drafting via OpenRouter (`OPENROUTER_API_KEY` / `OPENROUTER_MODEL`) with a
+  guaranteed floor.** The model drafts the site against a strict spec; a validator
+  checks it (beacon slug, noindex, footer link, no leftover tokens/placeholders,
+  never "subscription", valid HTML); one retry with the error fed back; if it still
+  fails, the app falls back to rendering the proven template with the intake data —
+  every save ships a working site.
+- **Subdomains are created by the app via `uapi`** (founder decision: full
+  zero-touch). Called without a shell, slug strictly validated; failures fall back
+  to the manual cPanel steps. `update.sh` keeps its own uapi step for git-made sites.
+- **No allowed-domain list for payment links** (founder decision: single admin,
+  not a fraud vector). Link validation is just `https://` + max 500 chars.
 - **Billing dates are ISO strings, never instants.** All due-date logic works on
   'YYYY-MM-DD' strings on the Europe/London calendar; "today" comes from `Intl`
   with the London timezone. UK clock changes can't shift a due date (unit-tested
