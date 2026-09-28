@@ -29,6 +29,13 @@
       "when": 1790534079498,
       "tag": "0003_giant_mikhail_rasputin",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1790559069946,
+      "tag": "0004_outstanding_multiple_man",
+      "breakpoints": true
     }
   ]
 }

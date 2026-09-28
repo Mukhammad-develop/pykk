@@ -20,6 +20,8 @@ __export(schema_exports, {
   adminUsers: () => adminUsers,
   bookings: () => bookings,
   businesses: () => businesses,
+  clientSessions: () => clientSessions,
+  clientUsers: () => clientUsers,
   costs: () => costs,
   enquiries: () => enquiries,
   loginAttempts: () => loginAttempts,
@@ -40,7 +42,7 @@ import {
   text,
   date
 } from "drizzle-orm/mysql-core";
-var adminUsers, adminSessions, loginAttempts, activityLog, BUSINESS_TYPES, BUSINESS_STATUSES, businesses, PAYMENT_STATUSES, PAID_METHODS, payments, costs, settings, bookings, smsMessages, enquiries, pageViewsDaily;
+var adminUsers, adminSessions, loginAttempts, activityLog, BUSINESS_TYPES, BUSINESS_STATUSES, businesses, PAYMENT_STATUSES, PAID_METHODS, payments, costs, settings, bookings, smsMessages, enquiries, pageViewsDaily, clientUsers, clientSessions;
 var init_schema = __esm({
   "src/db/schema.ts"() {
     "use strict";
@@ -258,6 +260,39 @@ var init_schema = __esm({
         uniqueVisitors: int("unique_visitors").notNull().default(0)
       },
       (t) => [uniqueIndex("page_views_business_day_unique").on(t.businessId, t.day)]
+    );
+    clientUsers = mysqlTable(
+      "client_users",
+      {
+        id: int("id").autoincrement().primaryKey(),
+        businessId: int("business_id").notNull(),
+        email: varchar("email", { length: 320 }).notNull(),
+        passwordHash: text("password_hash").notNull(),
+        active: int("active").notNull().default(1),
+        // 1 = can log in, 0 = disabled
+        createdAt: timestamp("created_at").defaultNow().notNull()
+      },
+      (t) => [
+        uniqueIndex("client_users_email_unique").on(t.email),
+        index("client_users_business_idx").on(t.businessId)
+      ]
+    );
+    clientSessions = mysqlTable(
+      "client_sessions",
+      {
+        id: int("id").autoincrement().primaryKey(),
+        tokenHash: char("token_hash", { length: 64 }).notNull(),
+        clientUserId: int("client_user_id").notNull(),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+        expiresAt: timestamp("expires_at").notNull(),
+        revokedAt: timestamp("revoked_at"),
+        ip: varchar("ip", { length: 45 }),
+        userAgent: varchar("user_agent", { length: 255 })
+      },
+      (t) => [
+        uniqueIndex("client_sessions_token_unique").on(t.tokenHash),
+        index("client_sessions_user_idx").on(t.clientUserId)
+      ]
     );
   }
 });
