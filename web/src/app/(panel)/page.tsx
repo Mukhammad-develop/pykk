@@ -205,10 +205,10 @@ export default async function TodayPage() {
 
       <section className="mt-8">
         <h2 className="text-lg font-bold text-slate-100">Today&apos;s activity</h2>
-        <p className="mt-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-500">
-          Bookings, texts and enquiries: <span className="text-slate-400">not connected yet</span> —
-          those modules arrive in later phases.
-        </p>
+        <div className="mt-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-400">
+          <p>Bookings today (all clients): <span className="font-semibold text-slate-100">{data.bookingsToday}</span></p>
+          <p className="mt-1 text-slate-500">Texts and enquiries: not connected yet.</p>
+        </div>
       </section>
     </div>
   )

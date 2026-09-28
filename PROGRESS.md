@@ -119,13 +119,25 @@
   — issue login → client logs in → sees bond → edits hours → site rebuilds itself
   with the new times. 95 tests pass.
 
+- **P8 — Bookings end-to-end** (28 Sep 2026): client websites take real
+  appointments. Intake gets "Takes bookings on the website"; the generated site
+  then includes a booking form (service, date, time on the hour/half-hour, name,
+  phone, note) driven by app-served `booking.js` — one update point for every
+  site. `POST /api/booking` is public but CORS-locked to `*.pykk.uk`, rate-limited
+  (10/IP/hour), and validates for real: the business's opening hours (Europe/London
+  wall clock, BST-aware), no past slots, no double-booking, services must match
+  the intake. Bookings land in the client's **Bookings tab** with Confirm / Done /
+  No-show / Cancel actions, and the founder's Today page counts today's bookings
+  across all clients. Availability logic is unit-tested (closed days, past,
+  collisions, clock change); full flow rehearsed on Node 22 — 106 tests pass.
+
 ## Next
 
-- **Finish P6 on the server:** push → Action green → `update.sh` → founder
-  rebuilds existing factory sites (`uramazinghair`) with a mood + personality —
-  the bond section disappears from the public page.
-- **P7 — the client area** ("their admin panel"): personal link access (no
-  passwords), bond + bills + pay, page-view stats, bond explanation.
+- **Finish P8 on the server:** push → Action green → `update.sh` → enable bookings
+  on a test business (intake → Details → "Takes bookings") → rebuild → book a slot
+  on the public site → see it in the client's Bookings tab.
+- **P9 — the "awesome" pass:** site quality overhaul (richer mood design systems,
+  agency-grade generation brief, map embed, gallery niceties).
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
   new could follow them.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone

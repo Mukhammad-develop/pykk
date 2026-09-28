@@ -35,6 +35,7 @@ const intakeSchema = z.object({
     cafeService: z.enum(['eat-in', 'takeaway', 'both']).optional(),
     areasCovered: z.string().trim().max(255).optional(),
     callOut: z.string().trim().max(255).optional(),
+    enableBooking: z.boolean().optional(),
   }).default({}),
   photos: z.array(z.string().trim().max(120)).max(20).default([]),
 })

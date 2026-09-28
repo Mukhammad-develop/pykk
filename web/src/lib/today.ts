@@ -1,7 +1,8 @@
 import { and, asc, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
 import { getDb } from '@/db'
-import { businesses, payments } from '@/db/schema'
-import { diffDays, todayLondon } from './billing'
+import { bookings, businesses, payments } from '@/db/schema'
+import { diffDays, addDays, todayLondon } from './billing'
+import { slotToUtcIso } from './booking'
 
 export interface TodayCard {
   count: number
@@ -15,6 +16,7 @@ export interface TodayData {
   overdue: TodayCard
   collectedThisMonthPence: number
   collectedLastMonthPence: number
+  bookingsToday: number
   toCreate: PaymentRow[]
   waitingList: PaymentRow[]
   overdueList: PaymentRow[]
@@ -133,12 +135,22 @@ export async function getTodayData(): Promise<TodayData> {
         : null,
   }))
 
+  // Bookings happening today (London date), across all clients.
+  const dayStart = new Date(slotToUtcIso(today, '00:00'))
+  const dayEnd = new Date(slotToUtcIso(addDays(today, 1), '00:00'))
+  const bookingsTodayRows = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(bookings)
+    .where(and(gte(bookings.startsAt, dayStart), lt(bookings.startsAt, dayEnd)))
+  const bookingsToday = Number(bookingsTodayRows[0].count)
+
   return {
     linksToCreate,
     waiting: { count: Number(waitingRows[0].count), totalPence: Number(waitingRows[0].total) },
     overdue: { count: overdueRows.length, totalPence: overdueTotal, oldestDays },
     collectedThisMonthPence: collectedThisMonth.totalPence,
     collectedLastMonthPence: Number(collectedLastMonthRows[0].total),
+    bookingsToday,
     toCreate,
     waitingList,
     overdueList: overdueRows,

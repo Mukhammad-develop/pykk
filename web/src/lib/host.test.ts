@@ -40,6 +40,7 @@ describe('isPublicPath', () => {
     expect(isPublicPath('/pay/JK891P')).toBe(true)
     expect(isPublicPath('/pay/JK891P/anything')).toBe(true)
     expect(isPublicPath('/api/pv')).toBe(true)
+    expect(isPublicPath('/api/booking')).toBe(true)
     expect(isPublicPath('/pv.js')).toBe(true)
   })
 

@@ -2,6 +2,15 @@
 
 Short reasons for technical choices, newest first.
 
+- **Booking behavior is one app-served script (`/booking.js`), not per-site JS.**
+  The generated form carries data attributes (slug, api host); the shared script
+  posts to `/api/booking`. One update point, like the client panel.
+- **Availability is computed on the Europe/London wall clock** (`lib/booking.ts`,
+  BST-aware `slotToUtcIso`): opening hours per weekday, hour/half-hour starts, no
+  past slots, no double-booking. The storage column is a real UTC timestamp.
+- **`/api/booking` is public but fenced**: CORS-locked to `*.pykk.uk`, rate-limited
+  by IP (10/hour, stored on the booking row for abuse review), service names must
+  match the business's intake, and `enableBooking` must be on for that business.
 - **The client area is a static shell per site + one app-served panel app.**
   `{slug}.pykk.uk/admin` is a tiny static page (in git with the site) that loads
   `client-panel.js` from the app host — cPanel/Apache keeps serving client sites

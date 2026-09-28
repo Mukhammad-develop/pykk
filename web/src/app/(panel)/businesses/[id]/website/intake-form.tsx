@@ -314,6 +314,17 @@ export function IntakeForm({
               </label>
             </>
           )}
+          {['barber_hair', 'beauty_spa', 'cleaning', 'laundry', 'local_services', 'other'].includes(businessType) && (
+            <label className="flex items-center gap-2 text-sm text-slate-300">
+              <input
+                type="checkbox"
+                checked={intake.extras.enableBooking ?? false}
+                onChange={(e) => set('extras', { ...intake.extras, enableBooking: e.target.checked })}
+                className="accent-emerald-500"
+              />
+              Takes bookings on the website (adds an appointment form + a Bookings tab in the client area)
+            </label>
+          )}
           <label className={label}>Your story / about
             <textarea
               className={input}

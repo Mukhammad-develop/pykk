@@ -88,6 +88,7 @@ export interface SiteIntake {
     cafeService?: 'eat-in' | 'takeaway' | 'both'
     areasCovered?: string // services
     callOut?: string // services
+    enableBooking?: boolean // customers can book on the website
   }
   photos: string[] // filenames in sites/{slug}/images/
 }

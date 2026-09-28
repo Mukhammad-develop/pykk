@@ -207,17 +207,27 @@ export const settings = mysqlTable('settings', {
 })
 
 // Stub tables the statistics phase will read — created now per the brief.
+// P8: bookings are real — customers book on the client site (online), and the
+// client manages them in their admin panel.
+export const BOOKING_STATUSES = ['pending', 'confirmed', 'cancelled', 'completed', 'no_show'] as const
+export type BookingStatus = (typeof BOOKING_STATUSES)[number]
+
 export const bookings = mysqlTable(
   'bookings',
   {
     id: int('id').autoincrement().primaryKey(),
     businessId: int('business_id').notNull(),
     startsAt: timestamp('starts_at').notNull(),
-    status: varchar('status', { length: 20 }).notNull(),
+    status: varchar('status', { length: 20 }).notNull().default('pending'),
     source: varchar('source', { length: 20 }).notNull(), // online, phone, walk_in
+    customerName: varchar('customer_name', { length: 160 }),
+    customerPhone: varchar('customer_phone', { length: 40 }),
+    service: varchar('service', { length: 120 }),
+    note: varchar('note', { length: 500 }),
+    ip: varchar('ip', { length: 45 }), // for rate limiting and abuse review
     createdAt: timestamp('created_at').defaultNow().notNull(),
   },
-  (t) => [index('bookings_business_idx').on(t.businessId)],
+  (t) => [index('bookings_business_idx').on(t.businessId), index('bookings_starts_idx').on(t.startsAt)],
 )
 
 export const smsMessages = mysqlTable(

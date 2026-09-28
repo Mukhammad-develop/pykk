@@ -1,5 +1,6 @@
 import type { businesses } from '@/db/schema'
 import { DAY_ORDER, moodById, type MoodId, type SiteIntake } from './intake'
+import { renderBookingForm, BOOKING_CSS } from './booking-form'
 
 // The guaranteed floor of the site factory: a complete, correct, honest site
 // rendered deterministically from the intake, in the client's chosen mood.
@@ -162,7 +163,7 @@ ${intake.reviews
   <p class="brand">${name}</p>
   <nav aria-label="Main">
     <a href="#services">Services</a>
-    <a href="#gallery">Gallery</a>
+    <a href="#gallery">Gallery</a>${intake.extras.enableBooking ? '\n    <a href="#book">Book</a>' : ''}
     <a href="#visit">Visit</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -190,7 +191,7 @@ ${reviewBlocks}
     <h2 id="about-heading">About</h2>
     <p>${aboutText}</p>
   </section>
-  <section id="visit" aria-labelledby="visit-heading">
+${intake.extras.enableBooking ? renderBookingForm({ slug, publicAppHost, services: intake.services }) + '\n' : ''}  <section id="visit" aria-labelledby="visit-heading">
     <h2 id="visit-heading">Opening hours &amp; location</h2>
     <table class="hours">
 ${hourRows}
@@ -276,6 +277,7 @@ h2 { font-size: 1.35rem; margin-bottom: 1rem; border-bottom: 2px solid var(--lin
 footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 2rem 1rem; border-top: 1px solid var(--line); }
 footer a { color: var(--accent); }
 @media (min-width: 40rem) { .contact-actions { flex-direction: row; flex-wrap: wrap; } }
+${intake.extras.enableBooking ? BOOKING_CSS : ''}
 `
 
   return { html, css }

@@ -9,7 +9,7 @@
 
 export type HostKind = 'admin' | 'app' | 'unknown'
 
-export const PUBLIC_PATH_PREFIXES = ['/pay/', '/api/pv']
+export const PUBLIC_PATH_PREFIXES = ['/pay/', '/api/pv', '/api/booking']
 export const PUBLIC_EXACT_PATHS = ['/pv.js']
 export const HEALTH_PATH = '/healthz'
 
