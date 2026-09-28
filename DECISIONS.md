@@ -6,7 +6,8 @@ Short reasons for technical choices, newest first.
   model designs for *this* business), then the full build, then a
   critique-and-rewrite pass — founder approved the token/time cost (~3 min,
   ~4× tokens). The deterministic baseline remains the floor; the validator is
-  unchanged.
+  unchanged. Default model: `~anthropic/claude-fable-latest` (Claude Fable 5.1,
+  chosen by the founder after A/B comparing; configurable via `OPENROUTER_MODEL`).
 - **Site quality is owned by the generation brief, not the model.** The craft bar
   (hero anatomy, section rhythm, depth per mood, map embed, sticky call, gallery
   hover, footers, transitions) lives in the system prompt; moods are full design
