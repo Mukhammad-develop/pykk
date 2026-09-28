@@ -5,10 +5,10 @@ import { usePathname } from 'next/navigation'
 
 const tabs = [
   { href: '/', label: 'Today', enabled: true },
+  { href: '/payments', label: 'Payments', enabled: true },
   { href: '/businesses', label: 'Businesses', enabled: true },
-  { href: '#', label: 'Payments', enabled: false },
-  { href: '#', label: 'Stats', enabled: false },
-  { href: '#', label: 'More', enabled: false },
+  { href: '/stats', label: 'Stats', enabled: true },
+  { href: '/more', label: 'More', enabled: true },
 ]
 
 // Bottom tab bar on phones (where the founder lives), top row on bigger screens.

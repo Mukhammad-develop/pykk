@@ -1,6 +1,7 @@
 import type { businesses } from '@/db/schema'
 import { renderBaselineSite } from './baseline'
 import { buildPrompt, extractFiles } from './prompt'
+import { buildConceptPrompt, buildCritiquePrompt } from './concept'
 import { callOpenRouter } from './openrouter'
 import { validateScript, validateSite } from './validate'
 import type { SiteIntake } from './intake'
@@ -16,9 +17,11 @@ export interface GenerateResult {
   failures: string[]
 }
 
-// Drafts a site with the AI, validates it, retries once with the errors fed
-// back, and falls back to the deterministic baseline renderer — so every call
-// returns a complete, shippable site.
+const SYSTEM_RULES_DIGEST = `static HTML+CSS only (no frameworks/CDNs/webfonts); one h1; semantic landmarks; mobile-first; AA contrast; noindex meta; lang="en-GB"; UK English; no invented facts/reviews/stats; never the word "subscription"; no PYKK-internal/bond content; footer "Website by PYKK" linking https://pykk.uk; beacon <script src="https://HOST/pv.js" data-site="SLUG" defer>; photos only from the provided filenames; booking form only if enabled (with the exact booking.js contract); craft bar: eyebrow labels, section rhythm, depth per mood, map embed when address, sticky mobile call button when phone, hover transitions, two-column footer.`
+
+// The multi-step pipeline (founder-approved: tokens and build time are cheap):
+// art direction → full build → critique-and-rewrite → validate → one retry →
+// deterministic baseline as the guaranteed floor.
 export async function generateSite(business: Business, intake: SiteIntake): Promise<GenerateResult> {
   const host = (process.env.PUBLIC_APP_HOST || 'admin.pykk.uk').replace(/\/$/, '')
   const ctx = { slug: business.slug, publicAppHost: host }
@@ -27,16 +30,31 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
   if (process.env.OPENROUTER_API_KEY) {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        const answer = await callOpenRouter(buildPrompt(business, intake, host, failures.length > 0 ? failures : undefined))
+        // 1. Art direction for THIS business
+        const concept = await callOpenRouter(buildConceptPrompt(business, intake), { maxTokens: 1500 })
+
+        // 2. Full build against the concept
+        const answer = await callOpenRouter(
+          buildPrompt(business, intake, host, failures.length > 0 ? failures : undefined, concept),
+          { maxTokens: 10000 },
+        )
         const files = extractFiles(answer)
         if (!files) {
           failures.push(`attempt ${attempt}: could not find the two files in the model's answer`)
           continue
         }
-        const problems = validateSite(files.html, files.css, ctx)
+
+        // 3. Critique-and-rewrite
+        const critiquedAnswer = await callOpenRouter(
+          buildCritiquePrompt(files.html, files.css, concept, SYSTEM_RULES_DIGEST.replace('HOST', host).replace('SLUG', business.slug), failures),
+          { maxTokens: 10000 },
+        )
+        const finalFiles = extractFiles(critiquedAnswer) ?? files
+
+        // 4. Validate
+        const problems = validateSite(finalFiles.html, finalFiles.css, ctx)
         if (problems.length === 0) {
-          // script.js is optional and only accepted if it stays tiny and local
-          let js = files.js
+          let js = finalFiles.js
           if (js) {
             const jsProblems = validateScript(js, host)
             if (jsProblems.length > 0) {
@@ -44,7 +62,7 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
               js = undefined
             }
           }
-          return { ...files, js, usedFallback: false, attempts: attempt, failures }
+          return { ...finalFiles, js, usedFallback: false, attempts: attempt, failures }
         }
         failures.push(...problems.map((p) => `attempt ${attempt}: ${p}`))
       } catch (error) {

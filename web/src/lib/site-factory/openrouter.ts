@@ -5,13 +5,16 @@ export interface ChatMessage {
   content: string
 }
 
-export async function callOpenRouter(messages: ChatMessage[]): Promise<string> {
+export async function callOpenRouter(
+  messages: ChatMessage[],
+  opts: { maxTokens?: number } = {},
+): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw new Error('OPENROUTER_API_KEY is not set')
   const model = process.env.OPENROUTER_MODEL || 'moonshotai/kimi-k2'
 
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), 110_000)
+  const timer = setTimeout(() => controller.abort(), 240_000) // big builds are fine (founder-approved)
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -25,7 +28,7 @@ export async function callOpenRouter(messages: ChatMessage[]): Promise<string> {
         model,
         messages,
         temperature: 0.4,
-        max_tokens: 8000,
+        max_tokens: opts.maxTokens ?? 8000,
       }),
       signal: controller.signal,
     })

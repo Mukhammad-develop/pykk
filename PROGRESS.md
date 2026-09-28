@@ -141,6 +141,18 @@
   embed, sticky call, hover zoom). Live AI rehearsal: every craft check passed,
   hero looks like an agency hero (backdrop, overlay, kicker, tagline, CTA).
 
+- **P10 — Astonishing generation + full panel pages** (28 Sep 2026): generation is
+  now **multi-step** (founder-approved: tokens/time are cheap) — art direction for
+  the specific business → full build against that concept → critique-and-rewrite
+  pass → validation → retry → baseline floor. Builds take ~3 minutes and produce
+  visibly stronger pages. The founder's panel is complete and tabbed:
+  **Payments** (filters by status/business/month, reference search, CSV export),
+  **Stats** (MRR, ARR, collected, outstanding, overdue, expected 30d, lifetime,
+  avg, **profit vs costs** with a monthly costs editor; clients by status; honest
+  "not connected yet" for the rest), **More/Settings** (lead/grace days, default
+  price, message template with live preview, activity log with filter, account +
+  log out all devices). All five mobile tabs live. Full rehearsal passes.
+
 ## Next
 
 - **Finish P9 on the server:** push → Action green → `update.sh` → rebuild a site

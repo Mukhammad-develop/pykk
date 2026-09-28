@@ -38,6 +38,7 @@ export function buildPrompt(
   intake: SiteIntake,
   publicAppHost: string,
   previousFailures?: string[],
+  concept?: string,
 ): ChatMessage[] {
   const mood = moodById(intake.mood, business.type)
   const hours = DAY_ORDER.map(([key, label]) => `${label}: ${intake.hours[key] || 'not provided'}`).join('\n')
@@ -59,6 +60,11 @@ Design mood "${mood.label}": ${mood.direction}
 Public app host for the beacon: ${publicAppHost}
 Hero photo: ${intake.heroPhoto && intake.photos.length > 0 ? `use images/${intake.photos[0]} as the hero backdrop` : 'no hero backdrop'}
 Booking section: ${intake.extras.enableBooking ? 'ENABLED — include it per rule 10' : 'disabled — do NOT include any booking form'}
+${
+  concept
+    ? `\nTHE APPROVED ART DIRECTION — follow it faithfully (it satisfies the craft bar):\n${concept}\n`
+    : ''
+}
 
 CONTACT
 Owner: ${intake.ownerName || 'not provided'}
