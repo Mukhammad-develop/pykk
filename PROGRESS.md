@@ -92,16 +92,27 @@
   job creates the bill → paste link → Pay now → mark paid → Paid — and now runs in
   CI against the built standalone with the MariaDB service (11/11 checks pass).
 
+- **P6 — The "real site" upgrade** (28 Sep 2026): the bond pitch is OFF public
+  client sites (PYKK-internal content moves to the future client area; the
+  validator now *rejects* bond content). Sites get **design moods** — Dark & bold,
+  Light & elegant, Warm & rustic, Bright & practical — real structure variety
+  chosen at intake, so two clients of the same type no longer look alike.
+  Personality intake: the owner's story, real client-supplied reviews (used
+  verbatim, never invented — a "What customers say" section appears only when
+  provided), Instagram/Facebook links, and a hero-photo backdrop option. The
+  baseline renderer now renders in the chosen mood too (CSS-variable palettes).
+  `CLIENT_SITE_GUIDE.md` updated to match. 94 tests pass; rehearsed live on
+  Node 22: AI generation with mood + reviews + story + socials passed every check.
+
 ## Next
 
-- **Finish P5 on the server:** push → Action green (now includes the e2e run) →
-  `update.sh` → iPhone: copy a client message and open the pay link — it should
-  show the branded pay page with **Pay now**.
-- **P6 — the "real site" upgrade:** bond section off public sites (moves to the
-  future client area); design moods (structure variety, not just palettes);
-  personality intake (story, real client-supplied reviews, socials, hero photo).
+- **Finish P6 on the server:** push → Action green → `update.sh` → founder
+  rebuilds existing factory sites (`uramazinghair`) with a mood + personality —
+  the bond section disappears from the public page.
 - **P7 — the client area** ("their admin panel"): personal link access (no
   passwords), bond + bills + pay, page-view stats, bond explanation.
+- **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
+  new could follow them.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
   new could follow them.
 

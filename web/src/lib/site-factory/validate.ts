@@ -18,7 +18,11 @@ export function validateSite(html: string, css: string, ctx: SiteCheckContext): 
   if (!html.includes('href="https://pykk.uk"')) failures.push('missing the "Website by PYKK" footer link to https://pykk.uk')
   if (html.includes('{{')) failures.push('contains unfilled {{TOKEN}} placeholders')
   if (lower.includes('subscription')) failures.push('contains the forbidden word "subscription" — use "bond"')
-  if (!/your bond/i.test(html)) failures.push('missing the "Your bond" section (see CLIENT_SITE_GUIDE §5)')
+  // The bond pitch is PYKK-internal: it belongs in the client area, never on
+  // the public site (founder decision — a public page sells the business only).
+  if (/your bond|monthly bond|bond payment|bond with pykk/i.test(html)) {
+    failures.push('contains PYKK-internal bond content — the public site must sell the business only')
+  }
   if (!css || css.length < 200) failures.push('styles.css is missing or too small')
   if (html.includes('lorem ipsum') || lower.includes('lorem ipsum')) failures.push('contains lorem ipsum')
   if (!html.includes('lang="en-GB"')) failures.push('missing lang="en-GB"')

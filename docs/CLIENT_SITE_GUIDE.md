@@ -65,17 +65,14 @@ Ask for anything that's missing — do not guess:
 4. **About** — short, warm, factual.
 5. **Opening hours & location** — full week, address, directions link.
 6. **Contact** — click-to-call, email, WhatsApp.
-7. **A bond page or clearly-linked bond section** titled **"Your bond"** (or
-   "Your bond with PYKK"). In plain English it explains:
-   - what the bond costs per month and what it includes (their website, hosting,
-     updates, support from PYKK)
-   - that each month PYKK sends them a **secure pay link** by message, and paying
-     it keeps their website online
-   - that there's a grace period after the due date, and that if a bill stays
-     unpaid past it the website is **temporarily turned off** until it's paid
-   - how to contact PYKK to change anything or end the bond
-   It must NOT contain any hard-coded payment link (links change monthly), and
-   must NOT use the word "subscription".
+7. **No PYKK-internal content.** The public site sells the BUSINESS only. The
+   client's bond with PYKK is explained in their private client area — never on
+   the public page. (The only PYKK presence: the "Website by PYKK" footer link
+   and the beacon.) Reviews appear ONLY if the client supplied them verbatim —
+   never invented. Socials (Instagram/Facebook) are linked when provided.
+8. **Design follows the chosen mood** (Dark & bold, Light & elegant,
+   Warm & rustic, Bright & practical) — real structure variety, so two clients
+   of the same type never look alike.
 
 ## 6. Design rules
 

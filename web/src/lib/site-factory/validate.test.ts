@@ -15,7 +15,7 @@ const goodHtml = `<!DOCTYPE html>
 </head>
 <body>
 <main><h1>Fade &amp; Co.</h1>
-<section id="bond"><h2>Your bond with PYKK</h2><p>bond text</p></section>
+<section id="about"><h2>About</h2><p>honest text</p></section>
 </main>
 <footer>© Fade &amp; Co. · Website by <a href="https://pykk.uk">PYKK</a></footer>
 <script src="https://admin.pykk.uk/pv.js" data-site="fadeandco" defer></script>
@@ -32,13 +32,18 @@ describe('validateSite', () => {
     expect(validateSite(html, goodCss, ctx).join(' ')).toContain('data-site="fadeandco"')
   })
   it('rejects the forbidden word "subscription"', () => {
-    const html = goodHtml.replace('bond text', 'subscription text')
+    const html = goodHtml.replace('honest text', 'subscription text')
     expect(validateSite(html, goodCss, ctx).join(' ')).toContain('subscription')
   })
-  it('rejects missing noindex, footer link, bond section and tokens', () => {
+  it('rejects PYKK-internal bond content on the public site', () => {
+    const withBond = goodHtml.replace('</main>', '<section id="bond"><h2>Your bond with PYKK</h2><p>monthly bond stuff</p></section></main>')
+    const failures = validateSite(withBond, goodCss, ctx).join(' ')
+    expect(failures).toContain('bond')
+    expect(failures).toContain('PYKK-internal')
+  })
+  it('rejects missing noindex, footer link and tokens', () => {
     expect(validateSite(goodHtml.replace('<meta name="robots" content="noindex">', ''), goodCss, ctx).join(' ')).toContain('noindex')
     expect(validateSite(goodHtml.replace('href="https://pykk.uk"', 'href="https://example.com"'), goodCss, ctx).join(' ')).toContain('PYKK')
-    expect(validateSite(goodHtml.replace('Your bond with PYKK', 'About us'), goodCss, ctx).join(' ')).toContain('bond')
     expect(validateSite(goodHtml + '{{SITE_NAME}}', goodCss, ctx).join(' ')).toContain('{{TOKEN}}')
   })
   it('rejects missing h1, multiple h1s, and thin css', () => {

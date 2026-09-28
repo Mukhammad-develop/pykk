@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { DAY_ORDER, TYPE_PRESETS, type SiteIntake, type IntakeService } from '@/lib/site-factory/intake'
+import { DAY_ORDER, MOODS, TYPE_PRESETS, type SiteIntake, type IntakeService } from '@/lib/site-factory/intake'
 
 const input =
   'rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-500 w-full'
@@ -90,6 +90,12 @@ export function IntakeForm({
           <label className={label}>Email
             <input className={input} type="email" value={intake.email} onChange={(e) => set('email', e.target.value)} />
           </label>
+          <label className={label}>Instagram link
+            <input className={input} value={intake.socials.instagram} onChange={(e) => set('socials', { ...intake.socials, instagram: e.target.value })} placeholder="https://instagram.com/…" />
+          </label>
+          <label className={label}>Facebook link
+            <input className={input} value={intake.socials.facebook} onChange={(e) => set('socials', { ...intake.socials, facebook: e.target.value })} placeholder="https://facebook.com/…" />
+          </label>
         </div>
       </section>
 
@@ -102,6 +108,33 @@ export function IntakeForm({
           <label className={label}>Landmark / town
             <input className={input} value={intake.landmark} onChange={(e) => set('landmark', e.target.value)} placeholder="near the station" />
           </label>
+        </div>
+      </section>
+
+      <section className={section}>
+        <h2 className="text-sm font-semibold text-slate-200">Look &amp; feel — pick a mood</h2>
+        <p className="mt-1 text-xs text-slate-500">The design structure the factory builds from. Show the client and pick together.</p>
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {MOODS.map((mood) => (
+            <label
+              key={mood.id}
+              className={`cursor-pointer rounded-xl border p-3 transition ${
+                intake.mood === mood.id
+                  ? 'border-emerald-500 bg-emerald-950/40'
+                  : 'border-slate-700 bg-slate-950 hover:border-slate-500'
+              }`}
+            >
+              <input
+                type="radio"
+                name="mood"
+                className="hidden"
+                checked={intake.mood === mood.id}
+                onChange={() => set('mood', mood.id)}
+              />
+              <p className="text-sm font-semibold text-slate-100">{mood.label}</p>
+              <p className="mt-0.5 text-xs text-slate-400">{mood.hint}</p>
+            </label>
+          ))}
         </div>
       </section>
 
@@ -173,6 +206,53 @@ export function IntakeForm({
       </section>
 
       <section className={section}>
+        <h2 className="text-sm font-semibold text-slate-200">Real reviews (optional)</h2>
+        <p className="mt-1 text-xs text-slate-500">Only words the client actually gave you — up to 3. Never made up.</p>
+        <div className="mt-3 grid gap-2">
+          {intake.reviews.map((review, index) => (
+            <div key={index} className="flex flex-col gap-1 rounded-xl border border-slate-800 bg-slate-950 p-2">
+              <div className="flex items-center gap-2">
+                <input
+                  className={input}
+                  value={review.author}
+                  onChange={(e) =>
+                    set('reviews', intake.reviews.map((r, i) => (i === index ? { ...r, author: e.target.value } : r)))
+                  }
+                  placeholder="Name (e.g. Sam, Watford)"
+                />
+                <button
+                  type="button"
+                  onClick={() => set('reviews', intake.reviews.filter((_, i) => i !== index))}
+                  className="shrink-0 rounded-lg border border-slate-700 px-2 py-2 text-xs text-slate-400 hover:border-red-700 hover:text-red-300"
+                  aria-label="Remove review"
+                >
+                  ✕
+                </button>
+              </div>
+              <textarea
+                className={input}
+                rows={2}
+                value={review.text}
+                onChange={(e) =>
+                  set('reviews', intake.reviews.map((r, i) => (i === index ? { ...r, text: e.target.value } : r)))
+                }
+                placeholder="“Best fade in town…”"
+              />
+            </div>
+          ))}
+        </div>
+        {intake.reviews.length < 3 && (
+          <button
+            type="button"
+            onClick={() => set('reviews', [...intake.reviews, { author: '', text: '' }])}
+            className="mt-3 rounded-lg border border-slate-700 px-3 py-2 text-xs text-slate-300 hover:border-slate-500"
+          >
+            + Add review
+          </button>
+        )}
+      </section>
+
+      <section className={section}>
         <h2 className="text-sm font-semibold text-slate-200">Details</h2>
         <div className="mt-3 grid gap-3">
           {businessType === 'barber_hair' && (
@@ -234,13 +314,13 @@ export function IntakeForm({
               </label>
             </>
           )}
-          <label className={label}>Additional info
+          <label className={label}>Your story / about
             <textarea
               className={input}
               rows={4}
               value={intake.additionalInfo}
               onChange={(e) => set('additionalInfo', e.target.value)}
-              placeholder="Anything else the website should say — parking, languages spoken, what makes you different…"
+              placeholder="The owner's story in their words — how they started, what they care about, what makes the place different…"
             />
           </label>
         </div>
@@ -254,11 +334,22 @@ export function IntakeForm({
           <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden" onChange={onUpload} disabled={uploading} />
         </label>
         {intake.photos.length > 0 && (
-          <ul className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-400">
-            {intake.photos.map((p) => (
-              <li key={p} className="rounded-lg border border-slate-800 bg-slate-950 px-2 py-1.5">📷 {p}</li>
-            ))}
-          </ul>
+          <>
+            <ul className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-400">
+              {intake.photos.map((p) => (
+                <li key={p} className="rounded-lg border border-slate-800 bg-slate-950 px-2 py-1.5">📷 {p}</li>
+              ))}
+            </ul>
+            <label className="mt-3 flex items-center gap-2 text-sm text-slate-300">
+              <input
+                type="checkbox"
+                checked={intake.heroPhoto}
+                onChange={(e) => set('heroPhoto', e.target.checked)}
+                className="accent-emerald-500"
+              />
+              Use the first photo as a big hero backdrop at the top
+            </label>
+          </>
         )}
       </section>
 

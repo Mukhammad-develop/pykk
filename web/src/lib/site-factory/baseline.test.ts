@@ -25,6 +25,10 @@ const intake = {
     { name: 'Skin fade', price: '15.00' },
     { name: 'Beard trim', price: '8.00' },
   ],
+  mood: 'dark-bold' as const,
+  reviews: [{ author: 'Sam, Watford', text: 'Best fade in town, every time.' }],
+  socials: { instagram: 'https://instagram.com/fadeandco', facebook: '' },
+  heroPhoto: true,
   extras: { barberMode: 'walk-ins' as const },
   additionalInfo: '',
   photos: ['img-01.webp', 'img-02.webp'],
@@ -50,14 +54,32 @@ describe('renderBaselineSite', () => {
     expect(html).toContain('images/img-01.webp')
     expect(html).toContain('Walk-ins welcome.')
   })
-  it('has the beacon, noindex, bond section and footer link', () => {
+  it('uses the chosen mood palette', () => {
+    expect(css).toContain('#14110d') // dark-bold
+    expect(css).toContain('#d9a441')
+  })
+  it('renders real reviews verbatim and socials', () => {
+    expect(html).toContain('What customers say')
+    expect(html).toContain('Best fade in town, every time.')
+    expect(html).toContain('Sam, Watford')
+    expect(html).toContain('https://instagram.com/fadeandco')
+  })
+  it('uses the first photo as hero backdrop when enabled', () => {
+    expect(html).toContain('hero--photo')
+    expect(html).toContain("url('images/img-01.webp')")
+  })
+  it('has the beacon, noindex and footer link — and NO bond content', () => {
     expect(html).toContain('src="https://admin.pykk.uk/pv.js" data-site="fadeandco"')
     expect(html).toContain('<meta name="robots" content="noindex">')
-    expect(html).toContain('Your bond with PYKK')
     expect(html).toContain('href="https://pykk.uk"')
+    expect(html.toLowerCase()).not.toContain('bond')
   })
   it('never says "subscription"', () => {
     expect(html.toLowerCase()).not.toContain('subscription')
+  })
+  it('skips the reviews section when there are no reviews', () => {
+    const { html: noReviews } = renderBaselineSite(business, { ...intake, reviews: [] }, 'admin.pykk.uk')
+    expect(noReviews).not.toContain('What customers say')
   })
 })
 

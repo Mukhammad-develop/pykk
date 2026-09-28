@@ -19,6 +19,16 @@ const intakeSchema = z.object({
   hours: z.record(z.string(), z.string().trim().max(40)).default({}),
   services: z.array(z.object({ name: z.string().trim().min(1).max(120), price: z.string().trim().max(20) })).max(30).default([]),
   additionalInfo: z.string().trim().max(3000).default(''),
+  mood: z.enum(['dark-bold', 'light-elegant', 'warm-rustic', 'bright-practical']).or(z.literal('')).default(''),
+  reviews: z.array(z.object({
+    author: z.string().trim().min(1).max(80),
+    text: z.string().trim().min(1).max(300),
+  })).max(3).default([]),
+  socials: z.object({
+    instagram: z.string().trim().max(200).default(''),
+    facebook: z.string().trim().max(200).default(''),
+  }).default({ instagram: '', facebook: '' }),
+  heroPhoto: z.boolean().default(false),
   extras: z.object({
     barberMode: z.enum(['walk-ins', 'appointments', 'both']).optional(),
     appointmentOnly: z.boolean().optional(),
