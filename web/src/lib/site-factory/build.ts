@@ -8,6 +8,7 @@ import { logActivity } from '@/lib/auth/activity'
 import { generateSite } from './generate'
 import { commitAndPushSite } from './git'
 import { ensureSubdomain } from './subdomain'
+import { renderAdminShell } from './admin-shell'
 import { EMPTY_INTAKE, type SiteIntake } from './intake'
 
 // The full site-factory pipeline for one business. Runs in the background
@@ -32,11 +33,16 @@ export async function buildSite(businessId: number): Promise<void> {
     // 1. Generate (AI + validator + retry, guaranteed fallback)
     const site = await generateSite(business, intake)
 
-    // 2. Write the files
+    // 2. Write the files (site + the client-area shell at /admin)
+    const host = (process.env.PUBLIC_APP_HOST || 'admin.pykk.uk').replace(/\/$/, '')
     const sitePath = path.join(sitesDir(), business.slug)
-    fs.mkdirSync(sitePath, { recursive: true })
+    fs.mkdirSync(path.join(sitePath, 'admin'), { recursive: true })
     fs.writeFileSync(path.join(sitePath, 'index.html'), site.html)
     fs.writeFileSync(path.join(sitePath, 'styles.css'), site.css)
+    fs.writeFileSync(
+      path.join(sitePath, 'admin', 'index.html'),
+      renderAdminShell({ slug: business.slug, publicAppHost: host }),
+    )
 
     // 3. Commit + push from the server (reports back if no token)
     const git = await commitAndPushSite(business.slug, `Add site: ${business.name} (site factory)`)

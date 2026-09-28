@@ -104,6 +104,21 @@
   `CLIENT_SITE_GUIDE.md` updated to match. 94 tests pass; rehearsed live on
   Node 22: AI generation with mood + reviews + story + socials passed every check.
 
+- **P7 — The client area** (28 Sep 2026): every client gets their own admin panel
+  at **`{slug}.pykk.uk/admin`** — a static shell (in git with the site) that loads
+  the panel app (`client-panel.js`) from the app host, so panel updates deploy
+  once for everyone. Login is founder-issued email+password (no signup; "Client
+  access" card on the business page creates/resets it and copies a ready message).
+  Bearer-token sessions (no cookies — works cross-subdomain on iPhone Safari);
+  every client API is CORS-locked to `*.pykk.uk` origins. Inside: **Bond** (price,
+  next due, bills with Pay buttons, the bond explanation), **Website info** (edit
+  hours, services & prices, real reviews, story → Save → the same factory pipeline
+  regenerates the site automatically), **Bookings** (list; actions arrive with the
+  booking form phase). `/admin` deliberately stays reachable while a site is
+  suspended, so the client can pay to come back. Rehearsed on Node 22: full loop
+  — issue login → client logs in → sees bond → edits hours → site rebuilds itself
+  with the new times. 95 tests pass.
+
 ## Next
 
 - **Finish P6 on the server:** push → Action green → `update.sh` → founder

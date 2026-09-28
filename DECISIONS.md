@@ -2,6 +2,22 @@
 
 Short reasons for technical choices, newest first.
 
+- **The client area is a static shell per site + one app-served panel app.**
+  `{slug}.pykk.uk/admin` is a tiny static page (in git with the site) that loads
+  `client-panel.js` from the app host — cPanel/Apache keeps serving client sites
+  as pure static files, and panel updates deploy once for every client.
+- **Client auth is bearer tokens, not cookies.** iPhone Safari blocks
+  cross-subdomain cookies (ITP), so login returns a 30-day token the shell keeps
+  in localStorage; every `/api/client/*` call carries it and it unlocks exactly
+  one business (`business_id` scoping everywhere). Founder-issued credentials —
+  no signup. Client login is rate-limited through the same `login_attempts`
+  machinery as the admin login.
+- **Client APIs are CORS-locked to `*.pykk.uk` origins** (regex-echoed allow
+  header, preflight handler), and `/api/client/` is exempt from the admin IP
+  allowlist — clients log in from their own subdomains.
+- **Content edits regenerate through the same factory pipeline** (PUT
+  `/api/client/website` → `buildSite`), so there is exactly one way a site gets
+  made, whether the founder, an AI chat, or the client drives it.
 - **The e2e test runs against the built standalone in CI**, not the dev server:
   the workflow assembles the release, migrates the MariaDB service database,
   creates an admin, boots `start.js`, and drives the full billing circle with

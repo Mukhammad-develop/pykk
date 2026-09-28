@@ -10,6 +10,7 @@ import { isSiteSuspended, sitesDir } from '@/lib/site-control'
 import fs from 'node:fs'
 import { StatusActions } from './status-actions'
 import { PriceNotesForm } from './price-notes-form'
+import { ClientAccessCard } from './client-access-card'
 
 export const dynamic = 'force-dynamic'
 
@@ -122,6 +123,8 @@ export default async function BusinessDetailPage({ params }: { params: Promise<{
         <h2 className="mb-3 text-sm font-semibold text-slate-200">Price & notes</h2>
         <PriceNotesForm businessId={business.id} pricePence={business.pricePence} notes={business.notes} />
       </section>
+
+      <ClientAccessCard businessId={business.id} slug={business.slug} />
 
       <section className="mt-4">
         <h2 className="text-sm font-semibold text-slate-200">Payment history</h2>

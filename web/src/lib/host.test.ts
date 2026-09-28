@@ -101,6 +101,10 @@ describe('allowlistAppliesTo', () => {
   it('never applies to the secret-protected cron endpoint', () => {
     expect(allowlistAppliesTo('/internal/cron/daily')).toBe(false)
   })
+  it('never applies to the client-area API', () => {
+    expect(allowlistAppliesTo('/api/client/login')).toBe(false)
+    expect(allowlistAppliesTo('/api/client/bond')).toBe(false)
+  })
   it('applies to admin paths', () => {
     expect(allowlistAppliesTo('/')).toBe(true)
     expect(allowlistAppliesTo('/settings')).toBe(true)
