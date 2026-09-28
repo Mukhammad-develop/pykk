@@ -15,6 +15,8 @@ export interface GenerateResult {
   usedFallback: boolean
   attempts: number
   failures: string[]
+  // how long each pipeline step took, for the activity log
+  steps: Record<string, number>
 }
 
 const SYSTEM_RULES_DIGEST = `static HTML+CSS only (no frameworks/CDNs/webfonts); one h1; semantic landmarks; mobile-first; AA contrast; noindex meta; lang="en-GB"; UK English; no invented facts/reviews/stats; never the word "subscription"; no PYKK-internal/bond content; footer "Website by PYKK" linking https://pykk.uk; beacon <script src="https://HOST/pv.js" data-site="SLUG" defer>; photos only from the provided filenames; booking form only if enabled (with the exact booking.js contract); craft bar: eyebrow labels, section rhythm, depth per mood, map embed when address, sticky mobile call button when phone, hover transitions, two-column footer.`
@@ -29,15 +31,20 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
 
   if (process.env.OPENROUTER_API_KEY) {
     for (let attempt = 1; attempt <= 2; attempt++) {
+      const steps: Record<string, number> = {}
       try {
         // 1. Art direction for THIS business
+        let t0 = Date.now()
         const concept = await callOpenRouter(buildConceptPrompt(business, intake), { maxTokens: 1500 })
+        steps[`attempt${attempt}.conceptMs`] = Date.now() - t0
 
         // 2. Full build against the concept
+        t0 = Date.now()
         const answer = await callOpenRouter(
           buildPrompt(business, intake, host, failures.length > 0 ? failures : undefined, concept),
           { maxTokens: 10000 },
         )
+        steps[`attempt${attempt}.buildMs`] = Date.now() - t0
         const files = extractFiles(answer)
         if (!files) {
           failures.push(`attempt ${attempt}: could not find the two files in the model's answer`)
@@ -45,10 +52,12 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
         }
 
         // 3. Critique-and-rewrite
+        t0 = Date.now()
         const critiquedAnswer = await callOpenRouter(
           buildCritiquePrompt(files.html, files.css, concept, SYSTEM_RULES_DIGEST.replace('HOST', host).replace('SLUG', business.slug), failures),
           { maxTokens: 10000 },
         )
+        steps[`attempt${attempt}.critiqueMs`] = Date.now() - t0
         const finalFiles = extractFiles(critiquedAnswer) ?? files
 
         // 4. Validate
@@ -62,7 +71,7 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
               js = undefined
             }
           }
-          return { ...finalFiles, js, usedFallback: false, attempts: attempt, failures }
+          return { ...finalFiles, js, usedFallback: false, attempts: attempt, failures, steps }
         }
         failures.push(...problems.map((p) => `attempt ${attempt}: ${p}`))
       } catch (error) {
@@ -74,5 +83,5 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
   }
 
   const baseline = renderBaselineSite(business, intake, host)
-  return { ...baseline, usedFallback: true, attempts: 0, failures }
+  return { ...baseline, usedFallback: true, attempts: 0, failures, steps: {} }
 }

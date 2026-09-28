@@ -8,6 +8,14 @@ import { buildSite } from '@/lib/site-factory/build'
 
 export const dynamic = 'force-dynamic'
 
+// A build whose status has been "building" for this long is orphaned — the app
+// process that was running it has died (shared-host restarts/squeezes).
+const STALE_BUILD_MS = 15 * 60 * 1000
+
+function isStale(business: { websiteStatus: string; updatedAt: Date }): boolean {
+  return business.websiteStatus === 'building' && business.updatedAt.getTime() < Date.now() - STALE_BUILD_MS
+}
+
 // Kick off a website build in the background. The business page polls
 // GET /api/businesses/[id] for the result.
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -27,7 +35,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (!business) {
     return NextResponse.json({ error: 'Business not found' }, { status: 404 })
   }
-  if (business.websiteStatus === 'building') {
+  if (business.websiteStatus === 'building' && !isStale(business)) {
     return NextResponse.json({ error: 'A build is already running.' }, { status: 409 })
   }
 
@@ -39,7 +47,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   return NextResponse.json({ ok: true, status: 'building' })
 }
 
-// The business page polls this for build progress.
+// The business page polls this for build progress. Also the watchdog: a
+// "building" status older than 15 minutes is marked failed automatically.
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await apiSession()
   if (!session) {
@@ -52,6 +61,16 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   if (!business) {
     return NextResponse.json({ error: 'Business not found' }, { status: 404 })
   }
+
+  if (isStale(business)) {
+    const note = 'Build interrupted — the app process restarted. Press Rebuild.'
+    await db
+      .update(businesses)
+      .set({ websiteStatus: 'failed', websiteNote: note })
+      .where(eq(businesses.id, business.id))
+    return NextResponse.json({ websiteStatus: 'failed', websiteBuiltAt: business.websiteBuiltAt, websiteNote: note })
+  }
+
   return NextResponse.json({
     websiteStatus: business.websiteStatus,
     websiteBuiltAt: business.websiteBuiltAt,
