@@ -184,10 +184,28 @@
       "namedRegex": "^/login(?:/)?$"
     },
     {
+      "page": "/more",
+      "regex": "^/more(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/more(?:/)?$"
+    },
+    {
+      "page": "/payments",
+      "regex": "^/payments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/payments(?:/)?$"
+    },
+    {
       "page": "/pv.js",
       "regex": "^/pv\\.js(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/pv\\.js(?:/)?$"
+    },
+    {
+      "page": "/stats",
+      "regex": "^/stats(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/stats(?:/)?$"
     }
   ],
   "dataRoutes": [],
