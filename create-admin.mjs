@@ -11,6 +11,7 @@ var __export = (target, all) => {
 // src/db/schema.ts
 var schema_exports = {};
 __export(schema_exports, {
+  BOOKING_STATUSES: () => BOOKING_STATUSES,
   BUSINESS_STATUSES: () => BUSINESS_STATUSES,
   BUSINESS_TYPES: () => BUSINESS_TYPES,
   PAID_METHODS: () => PAID_METHODS,
@@ -42,7 +43,7 @@ import {
   text,
   date
 } from "drizzle-orm/mysql-core";
-var adminUsers, adminSessions, loginAttempts, activityLog, BUSINESS_TYPES, BUSINESS_STATUSES, businesses, PAYMENT_STATUSES, PAID_METHODS, payments, costs, settings, bookings, smsMessages, enquiries, pageViewsDaily, clientUsers, clientSessions;
+var adminUsers, adminSessions, loginAttempts, activityLog, BUSINESS_TYPES, BUSINESS_STATUSES, businesses, PAYMENT_STATUSES, PAID_METHODS, payments, costs, settings, BOOKING_STATUSES, bookings, smsMessages, enquiries, pageViewsDaily, clientUsers, clientSessions;
 var init_schema = __esm({
   "src/db/schema.ts"() {
     "use strict";
@@ -215,18 +216,25 @@ var init_schema = __esm({
       key: varchar("key", { length: 60 }).primaryKey(),
       value: text("value").notNull()
     });
+    BOOKING_STATUSES = ["pending", "confirmed", "cancelled", "completed", "no_show"];
     bookings = mysqlTable(
       "bookings",
       {
         id: int("id").autoincrement().primaryKey(),
         businessId: int("business_id").notNull(),
         startsAt: timestamp("starts_at").notNull(),
-        status: varchar("status", { length: 20 }).notNull(),
+        status: varchar("status", { length: 20 }).notNull().default("pending"),
         source: varchar("source", { length: 20 }).notNull(),
         // online, phone, walk_in
+        customerName: varchar("customer_name", { length: 160 }),
+        customerPhone: varchar("customer_phone", { length: 40 }),
+        service: varchar("service", { length: 120 }),
+        note: varchar("note", { length: 500 }),
+        ip: varchar("ip", { length: 45 }),
+        // for rate limiting and abuse review
         createdAt: timestamp("created_at").defaultNow().notNull()
       },
-      (t) => [index("bookings_business_idx").on(t.businessId)]
+      (t) => [index("bookings_business_idx").on(t.businessId), index("bookings_starts_idx").on(t.startsAt)]
     );
     smsMessages = mysqlTable(
       "sms_messages",

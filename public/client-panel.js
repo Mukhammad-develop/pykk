@@ -352,12 +352,46 @@
       if (!d.bookings || d.bookings.length === 0) {
         section.appendChild(el('p', 'muted', 'No bookings yet. When customers book through your website, they appear here.'))
       } else {
+        var now = Date.now()
         d.bookings.forEach(function (b) {
           var row = el('div', 'bill')
+          var left = el('div')
           var when = b.startsAt ? new Date(b.startsAt) : null
-          row.appendChild(el('p', null, when ? when.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '—'))
-          row.appendChild(el('span', 'badge sky', b.status))
+          left.appendChild(el('p', null, when ? when.toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' }) : '—'))
+          var who = (b.customerName || 'Customer') + (b.service ? ' · ' + b.service : '')
+          left.appendChild(el('p', 'muted small', who))
+          if (b.customerPhone) left.appendChild(el('p', 'muted small', b.customerPhone))
+          row.appendChild(left)
+          var right = el('div', null)
+          right.style.textAlign = 'right'
+          var badgeColor = b.status === 'confirmed' ? 'green' : b.status === 'cancelled' ? 'red' : b.status === 'completed' ? 'sky' : b.status === 'no_show' ? 'red' : 'amber'
+          right.appendChild(el('span', 'badge ' + badgeColor, b.status.replace('_', ' ')))
+          row.appendChild(right)
           section.appendChild(row)
+
+          if ((b.status === 'pending' || b.status === 'confirmed') && when && when.getTime() > now - 86400000) {
+            var actions = el('div', 'row')
+            actions.style.marginTop = '-.35rem'
+            ;[
+              ['confirmed', 'Confirm'],
+              ['completed', 'Done'],
+              ['no_show', 'No-show'],
+              ['cancelled', 'Cancel'],
+            ].forEach(function (pair) {
+              if (pair[0] === b.status) return
+              var btn = el('button', 'ghost small', pair[1])
+              btn.style.fontSize = '.75rem'
+              btn.addEventListener('click', function () {
+                btn.disabled = true
+                api('/api/client/bookings/' + b.id + '/status', {
+                  method: 'POST',
+                  body: JSON.stringify({ action: pair[0] }),
+                }).then(function () { renderBookings(content) })
+              })
+              actions.appendChild(btn)
+            })
+            if (actions.children.length) section.appendChild(actions)
+          }
         })
       }
       content.appendChild(section)
