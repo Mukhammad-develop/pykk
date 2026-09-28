@@ -39,6 +39,11 @@ export async function buildSite(businessId: number): Promise<void> {
     fs.mkdirSync(path.join(sitePath, 'admin'), { recursive: true })
     fs.writeFileSync(path.join(sitePath, 'index.html'), site.html)
     fs.writeFileSync(path.join(sitePath, 'styles.css'), site.css)
+    if (site.js) {
+      fs.writeFileSync(path.join(sitePath, 'script.js'), site.js)
+    } else if (fs.existsSync(path.join(sitePath, 'script.js'))) {
+      fs.rmSync(path.join(sitePath, 'script.js')) // no stale script from an older build
+    }
     fs.writeFileSync(
       path.join(sitePath, 'admin', 'index.html'),
       renderAdminShell({ slug: business.slug, publicAppHost: host }),

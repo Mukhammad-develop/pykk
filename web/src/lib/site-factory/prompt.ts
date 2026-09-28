@@ -21,7 +21,17 @@ ABSOLUTE RULES (a validator checks every one — failing any means rejection):
 7. Footer: "© {business name} · Website by <a href="https://pykk.uk">PYKK</a>".
 8. Immediately before </body>: <script src="https://PUBLIC_APP_HOST/pv.js" data-site="SLUG" defer></script>
 9. Gallery images: use EXACTLY the photo filenames given. Do not invent other image files.
-10. When booking is enabled, the #book section must contain a form with id="booking-form" and data attributes data-slug="SLUG" and data-api="https://PUBLIC_APP_HOST", with fields named exactly: service (a <select> of the intake services), date (type="date"), time (a <select> with half-hour options 09:00–19:30), name, phone, note — followed by <p id="booking-error" hidden></p>, <p id="booking-success" hidden>Booked! We’ll confirm shortly — see you soon.</p>, a submit button with class "booking-submit", and the script tag <script src="https://PUBLIC_APP_HOST/booking.js" defer></script>. Never handle the booking yourself — that script does everything.`
+10. When booking is enabled, the #book section must contain a form with id="booking-form" and data attributes data-slug="SLUG" and data-api="https://PUBLIC_APP_HOST", with fields named exactly: service (a <select> of the intake services), date (type="date"), time (a <select> with half-hour options 09:00–19:30), name, phone, note — followed by <p id="booking-error" hidden></p>, <p id="booking-success" hidden>Booked! We’ll confirm shortly — see you soon.</p>, a submit button with class "booking-submit", and the script tag <script src="https://PUBLIC_APP_HOST/booking.js" defer></script>. Never handle the booking yourself — that script does everything.
+11. CRAFT BAR — this is what separates an agency site from a template. Every one of these is expected:
+    a. The hero is NOT just a title: an eyebrow/kicker line (small-caps label, e.g. the town or business type), a strong headline, one supporting sentence, and a primary CTA. A provided hero photo fills the hero with a readable dark overlay.
+    b. Section rhythm: alternate section backgrounds (page bg vs a subtly different surface), generous vertical padding, a centered max-width container, and each section header has a small eyebrow label above the h2 (e.g. "PRICES", "GALLERY", "VISIT US").
+    c. Real depth per the mood: shadows/borders/radius exactly as the mood specifies — never flat default boxes.
+    d. Gallery: a proper grid (2–3 columns on desktop), images with object-fit: cover and a subtle hover zoom transition.
+    e. #visit embeds Google Maps when an address is provided: <iframe src="https://www.google.com/maps?q=URL_ENCODED_ADDRESS&output=embed" loading="lazy" title="Map" style="border:0"> — full width, ~300px tall, rounded per the mood — in ADDITION to the directions link.
+    f. When a phone number is provided, add a sticky mobile call button: <a class="sticky-call" href="tel:…">Call {business name}</a>, position: fixed at the bottom, visible ONLY on screens under 640px, high z-index, the accent colour.
+    g. The footer has two columns on desktop (left: business name + the PYKK credit; right: quick contact links) and stacks on mobile.
+    h. Hover/focus transitions of 150–250ms ease on interactive elements.
+12. OPTIONAL third block === script.js === (vanilla, max 60 lines, no libraries, no external URLs): only if it clearly improves the page — e.g. a mobile nav toggle or a simple gallery lightbox. Omit it otherwise.`
 
 export function buildPrompt(
   business: Business,
@@ -94,13 +104,16 @@ Now produce the two files.`
   ]
 }
 
-// Pulls the two files out of the model's answer.
-export function extractFiles(answer: string): { html: string; css: string } | null {
+// Pulls the files out of the model's answer (script.js is optional).
+export function extractFiles(answer: string): { html: string; css: string; js?: string } | null {
   const htmlMatch = answer.match(/===\s*index\.html\s*===\s*([\s\S]*?)(?====\s*styles\.css\s*===|$)/i)
-  const cssMatch = answer.match(/===\s*styles\.css\s*===\s*([\s\S]*?)$/i)
+  const cssMatch = answer.match(/===\s*styles\.css\s*===\s*([\s\S]*?)(?====\s*script\.js\s*===|$)/i)
   if (!htmlMatch || !cssMatch) return null
   const html = htmlMatch[1].trim().replace(/^```\w*\n?/, '').replace(/```$/, '').trim()
   const css = cssMatch[1].trim().replace(/^```\w*\n?/, '').replace(/```$/, '').trim()
   if (!html || !css) return null
-  return { html, css }
+
+  const jsMatch = answer.match(/===\s*script\.js\s*===\s*([\s\S]*?)$/i)
+  const js = jsMatch ? jsMatch[1].trim().replace(/^```\w*\n?/, '').replace(/```$/, '').trim() : undefined
+  return { html, css, js: js || undefined }
 }

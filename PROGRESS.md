@@ -131,13 +131,26 @@
   across all clients. Availability logic is unit-tested (closed days, past,
   collisions, clock change); full flow rehearsed on Node 22 — 106 tests pass.
 
+- **P9 — The "awesome" pass** (28 Sep 2026): the generation brief now carries a
+  craft bar, not just rules — eyebrow/kicker lines, hero variants per mood,
+  alternating section rhythm, real depth per mood, hover gallery grids, Google
+  Maps embed in #visit, a sticky mobile call button, two-column footers and
+  150–250ms transitions. Mood directions are full design languages now. The model
+  may add a tiny vanilla `script.js` (≤4 KB, local only — validated, dropped if
+  it misbehaves). The baseline fallback got the same niceties (eyebrow, map
+  embed, sticky call, hover zoom). Live AI rehearsal: every craft check passed,
+  hero looks like an agency hero (backdrop, overlay, kicker, tagline, CTA).
+
 ## Next
 
-- **Finish P8 on the server:** push → Action green → `update.sh` → enable bookings
-  on a test business (intake → Details → "Takes bookings") → rebuild → book a slot
-  on the public site → see it in the client's Bookings tab.
-- **P9 — the "awesome" pass:** site quality overhaul (richer mood design systems,
-  agency-grade generation brief, map embed, gallery niceties).
+- **Finish P9 on the server:** push → Action green → `update.sh` → rebuild a site
+  and compare the result to the old one (eyebrow, map embed, sticky call button,
+  agency-grade hero).
+- **Then — selling:** the product is now: factory-built websites with booking,
+  the client area (`{slug}.pykk.uk/admin`) for bond + content + bookings, and
+  your billing loop. Real clients can come aboard.
+- **Later phases (per brief):** Stripe webhook, statistics & costs pages,
+  settings/2FA/daily summary/CSV export.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone
   new could follow them.
 - **Last:** a final review of `DEPLOY.md`, `NEW_CLIENT.md` and `PROGRESS.md` so someone

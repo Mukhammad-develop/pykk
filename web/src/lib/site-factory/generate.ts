@@ -2,7 +2,7 @@ import type { businesses } from '@/db/schema'
 import { renderBaselineSite } from './baseline'
 import { buildPrompt, extractFiles } from './prompt'
 import { callOpenRouter } from './openrouter'
-import { validateSite } from './validate'
+import { validateScript, validateSite } from './validate'
 import type { SiteIntake } from './intake'
 
 type Business = typeof businesses.$inferSelect
@@ -10,6 +10,7 @@ type Business = typeof businesses.$inferSelect
 export interface GenerateResult {
   html: string
   css: string
+  js?: string
   usedFallback: boolean
   attempts: number
   failures: string[]
@@ -34,7 +35,16 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
         }
         const problems = validateSite(files.html, files.css, ctx)
         if (problems.length === 0) {
-          return { ...files, usedFallback: false, attempts: attempt, failures }
+          // script.js is optional and only accepted if it stays tiny and local
+          let js = files.js
+          if (js) {
+            const jsProblems = validateScript(js, host)
+            if (jsProblems.length > 0) {
+              failures.push(`script.js dropped: ${jsProblems.join(', ')}`)
+              js = undefined
+            }
+          }
+          return { ...files, js, usedFallback: false, attempts: attempt, failures }
         }
         failures.push(...problems.map((p) => `attempt ${attempt}: ${p}`))
       } catch (error) {

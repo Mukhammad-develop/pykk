@@ -29,3 +29,17 @@ export function validateSite(html: string, css: string, ctx: SiteCheckContext): 
 
   return failures
 }
+
+// The optional script.js must stay tiny, library-free and local.
+export function validateScript(js: string, publicAppHost: string): string[] {
+  const failures: string[] = []
+  if (js.length > 4000) failures.push('script.js is too large (must stay tiny)')
+  if (js.includes('eval(')) failures.push('script.js uses eval()')
+  const urls = js.match(/https?:\/\/[^\s'"`)]+/g) ?? []
+  for (const url of urls) {
+    if (!url.includes(publicAppHost) && !url.includes('pykk.uk')) {
+      failures.push(`script.js references an external URL: ${url.slice(0, 60)}`)
+    }
+  }
+  return failures
+}

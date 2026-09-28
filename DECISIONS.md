@@ -2,6 +2,14 @@
 
 Short reasons for technical choices, newest first.
 
+- **Site quality is owned by the generation brief, not the model.** The craft bar
+  (hero anatomy, section rhythm, depth per mood, map embed, sticky call, gallery
+  hover, footers, transitions) lives in the system prompt; moods are full design
+  languages. The model stays configurable (`OPENROUTER_MODEL`) and the validator
+  + baseline floor are unchanged — better brief, same safety rails.
+- **Optional `script.js` is validated, not trusted.** Tiny (≤4 KB), no eval, no
+  external URLs beyond our hosts — anything else is dropped silently and the site
+  still ships. Stale scripts from older builds are removed on rebuild.
 - **Booking behavior is one app-served script (`/booking.js`), not per-site JS.**
   The generated form carries data attributes (slug, api host); the shared script
   posts to `/api/booking`. One update point, like the client panel.

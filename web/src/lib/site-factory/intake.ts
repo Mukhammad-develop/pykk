@@ -23,28 +23,28 @@ export const MOODS = [
     label: 'Dark & bold',
     hint: 'dramatic, confident, night-time energy',
     direction:
-      'Dark, masculine, sharp: near-black background #14110d, warm off-white text #ede6da, amber accent #d9a441. Condensed uppercase headings with letter-spacing, sharp corners, ruled price table with dotted leaders, thin horizontal rules.',
+      'Dark, masculine, sharp: near-black background #14110d, warm off-white text #ede6da, amber accent #d9a441. Hero: amber small-caps eyebrow, huge condensed uppercase headline (Avenir Next Condensed / Arial Narrow, letter-spacing), thin amber rules above and below. Buttons: 2px solid amber borders, sharp corners, amber fill on the primary. Sections: separated by thin #3a3324 rules, sharp-cornered cards on #1c1913. Price list: ruled table with dotted amber leaders.',
   },
   {
     id: 'light-elegant',
     label: 'Light & elegant',
     hint: 'calm, airy, premium spa feel',
     direction:
-      'Light, calm, elegant: cream background #faf6f1, deep plum-grey text #43333a, dusty rose accent #a4576b, soft sage secondary #7d8b76. Georgia serif headings, generous whitespace, 18px-radius cards with soft shadows, pill buttons.',
+      'Light, calm, elegant: cream background #faf6f1, deep plum-grey text #43333a, dusty rose accent #a4576b, soft sage #7d8b76. Hero: rose small-caps eyebrow, large Georgia serif headline, generous whitespace. Buttons: pill-shaped, rose solid primary. Cards: white, 18px radius, soft single shadow. Sections separated by whitespace and hairline #e3d9d2 rules — an airy, premium feel.',
   },
   {
     id: 'warm-rustic',
     label: 'Warm & rustic',
     hint: 'cosy, welcoming, handcrafted',
     direction:
-      'Warm, rustic, appetising: paper background #f8f2e4, dark brown text #3b2a1e, forest green accent #33573c, terracotta secondary #b0502a. Georgia serif, dotted leaders in the menu/price list, dashed hand-drawn section rules, stamp-style bordered CTA.',
+      'Warm, rustic, appetising: paper background #f8f2e4, dark brown text #3b2a1e, forest green accent #33573c, terracotta secondary #b0502a. Hero: terracotta small-caps eyebrow, big Georgia serif headline. Sections separated by dashed hand-drawn-style rules. Menu/price list with dotted leaders. CTA: 3px double-bordered stamp-style button, uppercase letter-spacing. Cards on #fffaf0 with 1px #d9cbb4 borders.',
   },
   {
     id: 'bright-practical',
     label: 'Bright & practical',
     hint: 'clean, fresh, trustworthy',
     direction:
-      'Bright, practical, trustworthy: white background, navy text #12283f, strong blue accent #0b5cab (white text on it), warm yellow #f2b705 highlights on dark areas only. Helvetica/Arial, cards with a 4px left accent border, big tap targets.',
+      'Bright, practical, trustworthy: white background, navy text #12283f, strong blue accent #0b5cab, warm yellow #f2b705 highlights on dark areas only. Hero: blue small-caps eyebrow, bold Helvetica/Arial headline, solid blue CTA. Cards: #f5f8fc with a 4px left blue accent border, 8px radius. Clean grid, big tap targets, footer on navy #12283f with white text.',
   },
 ] as const
 

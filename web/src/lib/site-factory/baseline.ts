@@ -140,7 +140,8 @@ ${intake.reviews
 
   const addressBlock = intake.address
     ? `<p class="address">${e(intake.address)}</p>
-          <a class="directions" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(intake.address)}" target="_blank" rel="noreferrer">Get directions ↗</a>`
+          <a class="directions" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(intake.address)}" target="_blank" rel="noreferrer">Get directions ↗</a>
+          <iframe class="map" src="https://www.google.com/maps?q=${encodeURIComponent(intake.address)}&amp;output=embed" loading="lazy" title="Map" referrerpolicy="no-referrer-when-downgrade"></iframe>`
     : `<p class="address">[[NEEDS INFO: address]]${intake.landmark ? ` (${e(intake.landmark)})` : ''}</p>`
 
   const aboutText = intake.additionalInfo
@@ -169,6 +170,7 @@ ${intake.reviews
   </nav>
 </header>
 <section class="hero${heroPhoto ? ' hero--photo' : ''}" aria-label="Welcome"${heroPhoto ? ` style="background-image: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)), url('images/${e(heroPhoto)}')"` : ''}>
+  <p class="eyebrow">${e(business.type.replace(/_/g, ' '))}${intake.landmark ? ` · ${e(intake.landmark)}` : ''}</p>
   <h1>${name}</h1>
   <p class="tagline">${extraLines.length > 0 ? e(extraLines.join(' ')) : `A friendly local ${business.type.replace(/_/g, ' ')}.`}</p>
   <a class="btn btn--primary" href="#contact">Get in touch</a>
@@ -208,7 +210,7 @@ ${contactItems.join('\n')}
 <footer>
   <p>© ${name} · Website by <a href="https://pykk.uk">PYKK</a></p>
 </footer>
-<script src="https://${publicAppHost}/pv.js" data-site="${slug}" defer></script>
+${intake.phone ? `<a class="sticky-call" href="${telHref(intake.phone)}">Call ${name}</a>\n` : ''}<script src="https://${publicAppHost}/pv.js" data-site="${slug}" defer></script>
 </body>
 </html>
 `
@@ -244,6 +246,11 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 }
 .hero--photo .tagline { color: #f0f0f0; }
 .hero h1 { font-size: clamp(2rem, 7vw, 3.2rem); line-height: 1.1; }
+.eyebrow {
+  color: var(--accent); font-size: .78rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; margin-bottom: .6rem;
+}
+.hero--photo .eyebrow { color: #fff; opacity: .9; }
 .tagline { color: var(--muted); margin: .75rem auto 1.5rem; max-width: 34rem; }
 .btn {
   display: inline-block; padding: .8rem 1.4rem; border-radius: .5rem; font-weight: 700;
@@ -276,6 +283,22 @@ h2 { font-size: 1.35rem; margin-bottom: 1rem; border-bottom: 2px solid var(--lin
 .contact-actions .btn { text-align: center; padding: .9rem; }
 footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 2rem 1rem; border-top: 1px solid var(--line); }
 footer a { color: var(--accent); }
+.map {
+  display: block; width: 100%; height: 300px; border: 1px solid var(--line);
+  border-radius: .5rem; margin-top: 1rem;
+}
+.sticky-call {
+  display: none; position: fixed; left: 1rem; right: 1rem; bottom: .75rem; z-index: 20;
+  background: var(--accent); color: var(--accent-text); text-align: center; font-weight: 700;
+  padding: .9rem; border-radius: .6rem; text-decoration: none; box-shadow: 0 4px 18px rgba(0,0,0,.35);
+}
+@media (max-width: 640px) {
+  .sticky-call { display: block; }
+  body { padding-bottom: 3.5rem; }
+}
+.gallery-grid figure img { transition: transform .25s ease; }
+.gallery-grid figure:hover img { transform: scale(1.04); }
+.btn { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
 @media (min-width: 40rem) { .contact-actions { flex-direction: row; flex-wrap: wrap; } }
 ${intake.extras.enableBooking ? BOOKING_CSS : ''}
 `
