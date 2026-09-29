@@ -37,7 +37,13 @@ export async function buildSite(businessId: number): Promise<void> {
     const host = (process.env.PUBLIC_APP_HOST || 'admin.pykk.uk').replace(/\/$/, '')
     const sitePath = path.join(sitesDir(), business.slug)
     fs.mkdirSync(path.join(sitePath, 'admin'), { recursive: true })
-    fs.writeFileSync(path.join(sitePath, 'index.html'), site.html)
+    // The host's nginx caches static files — bust it per build so a rebuild is
+    // visible immediately everywhere.
+    const bust = `?v=${Date.now()}`
+    const htmlToWrite = site.html
+      .replace(/href="styles\.css(\?[^"]*)?"/g, `href="styles.css${bust}"`)
+      .replace(/src="script\.js(\?[^"]*)?"/g, `src="script.js${bust}"`)
+    fs.writeFileSync(path.join(sitePath, 'index.html'), htmlToWrite)
     fs.writeFileSync(path.join(sitePath, 'styles.css'), site.css)
     if (site.js) {
       fs.writeFileSync(path.join(sitePath, 'script.js'), site.js)
