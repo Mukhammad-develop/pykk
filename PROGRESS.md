@@ -131,6 +131,16 @@
   across all clients. Availability logic is unit-tested (closed days, past,
   collisions, clock change); full flow rehearsed on Node 22 — 106 tests pass.
 
+- **Reference-grade pass** (29 Sep 2026): sites now get inline **SVG icon feature
+  cards** ("Why choose us" with a 15-icon catalog, enforced by the validator), a
+  live **"Open now / Closed" badge** computed from the business's hours in the
+  page, and a **confident local voice** (never "Welcome to our website"). Photo
+  uploads fixed for the host (browser-side shrink before upload). Never ships
+  truncated output again (validator rejects unbalanced CSS/unfinished HTML);
+  token ceiling raised to 32k so the model finishes on its own terms; nginx
+  static cache busted per build (`?v=timestamp`). Default model:
+  `~anthropic/claude-fable-latest`. Fallback renderer carries the same features.
+
 - **P9 — The "awesome" pass** (28 Sep 2026): the generation brief now carries a
   craft bar, not just rules — eyebrow/kicker lines, hero variants per mood,
   alternating section rhythm, real depth per mood, hover gallery grids, Google
