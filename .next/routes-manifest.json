@@ -44,6 +44,14 @@
       "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)/client\\-access(?:/)?$"
     },
     {
+      "page": "/api/businesses/[id]/edit-website",
+      "regex": "^/api/businesses/([^/]+?)/edit\\-website(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/businesses/(?<nxtPid>[^/]+?)/edit\\-website(?:/)?$"
+    },
+    {
       "page": "/api/businesses/[id]/intake",
       "regex": "^/api/businesses/([^/]+?)/intake(?:/)?$",
       "routeKeys": {
