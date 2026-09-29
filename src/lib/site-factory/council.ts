@@ -67,7 +67,7 @@ ${current.html}
 ${current.css}`,
           },
         ],
-        { maxTokens: 32000 },
+        { maxTokens: 32000, timeoutMs: 600_000 }, // thinking models need room
       )
 
       const revised = extractFiles(answer)

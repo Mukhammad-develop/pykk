@@ -19,4 +19,4 @@ THE SITE:
 === index.html ===
 ${i.html}
 === styles.css ===
-${i.css}`}],{maxTokens:32e3}),k=(0,d.l)(c);if(!k){h.push({model:a,reason:"unreadable answer"});continue}let l=(0,f.Q)(k.html,k.css,{slug:b.slug,publicAppHost:b.host});if(l.length>0){h.push({model:a,reason:`produced invalid output: ${l[0]}`});continue}i={html:k.html,css:k.css,js:k.js??i.js},g.push(j(a))}catch(b){h.push({model:a,reason:b.message.slice(0,120)})}return{...i,applied:g,skipped:h}}}};
+${i.css}`}],{maxTokens:32e3,timeoutMs:6e5}),k=(0,d.l)(c);if(!k){h.push({model:a,reason:"unreadable answer"});continue}let l=(0,f.Q)(k.html,k.css,{slug:b.slug,publicAppHost:b.host});if(l.length>0){h.push({model:a,reason:`produced invalid output: ${l[0]}`});continue}i={html:k.html,css:k.css,js:k.js??i.js},g.push(j(a))}catch(b){h.push({model:a,reason:b.message.slice(0,120)})}return{...i,applied:g,skipped:h}}}};
