@@ -147,6 +147,9 @@
   ("barber hair" → "barbershop"). Booking form polished from the eyes' own
   critique. Rehearsal on Node 22: all stage checks pass; eyes returned a real
   senior-designer critique of the rendered page.
+- **The model council** (29 Sep 2026, founder's idea): after the critique pass,
+  every build is reviewed and surgically fixed by Opus, Kimi K3 and GPT-6 Astra
+  in turn (`COUNCIL_MODELS`, validated after each pass, graceful skips).
 
 - **Reference-grade pass** (29 Sep 2026): sites now get inline **SVG icon feature
   cards** ("Why choose us" with a 15-icon catalog, enforced by the validator), a

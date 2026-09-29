@@ -17,6 +17,7 @@ export interface GenerateResult {
   attempts: number
   failures: string[]
   archetype: Archetype
+  council: { applied: string[]; skipped: { model: string; reason: string }[] }
   // how long each pipeline step took, for the activity log
   steps: Record<string, number>
 }
@@ -66,6 +67,22 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
         // 4. Validate
         const problems = validateSite(finalFiles.html, finalFiles.css, ctx)
         if (problems.length === 0) {
+          // 4b. The model council: Opus, Kimi K3 and GPT-6 Astra each review
+          // and surgically fix the site in turn (skips gracefully on errors).
+          t0 = Date.now()
+          let councilInfo: { applied: string[]; skipped: { model: string; reason: string }[] } = { applied: [], skipped: [] }
+          try {
+            const { runCouncil } = await import('./council')
+            const council = await runCouncil(finalFiles, { business, intake, concept, host, slug: business.slug })
+            finalFiles.html = council.html
+            finalFiles.css = council.css
+            if (council.js) finalFiles.js = council.js
+            councilInfo = { applied: council.applied, skipped: council.skipped }
+          } catch (error) {
+            councilInfo.skipped.push({ model: 'council', reason: (error as Error).message.slice(0, 120) })
+          }
+          steps[`attempt${attempt}.councilMs`] = Date.now() - t0
+
           // 5. The eyes: render + taste-critique + one revision (best effort,
           // skipped silently when no browser/vision is available).
           t0 = Date.now()
@@ -103,7 +120,7 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
               js = undefined
             }
           }
-          return { ...finalFiles, js, usedFallback: false, attempts: attempt, failures, archetype, steps }
+          return { ...finalFiles, js, usedFallback: false, attempts: attempt, failures, archetype, council: councilInfo, steps }
         }
         failures.push(...problems.map((p) => `attempt ${attempt}: ${p}`))
       } catch (error) {
@@ -115,5 +132,5 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
   }
 
   const baseline = renderBaselineSite(business, intake, host)
-  return { ...baseline, usedFallback: true, attempts: 0, failures, archetype: archetypeById(undefined, business.type), steps: {} }
+  return { ...baseline, usedFallback: true, attempts: 0, failures, archetype: archetypeById(undefined, business.type), council: { applied: [], skipped: [] }, steps: {} }
 }

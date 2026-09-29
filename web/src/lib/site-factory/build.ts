@@ -82,9 +82,10 @@ export async function buildSite(businessId: number): Promise<void> {
 
     const note = [
       site.usedFallback ? 'fallback template used' : 'AI-drafted',
+      site.council.applied.length > 0 ? `council: ${site.council.applied.join(' → ')}` : null,
       git.message,
       sub.message,
-    ].join(' · ')
+    ].filter(Boolean).join(' · ')
 
     await db
       .update(businesses)
@@ -100,7 +101,15 @@ export async function buildSite(businessId: number): Promise<void> {
       action: 'website.built',
       entity: 'business',
       entityId: businessId,
-      after: { usedFallback: site.usedFallback, attempts: site.attempts, steps: site.steps, failures: site.failures.slice(0, 6), note },
+      after: {
+        usedFallback: site.usedFallback,
+        attempts: site.attempts,
+        archetype: site.archetype.id,
+        council: site.council,
+        steps: site.steps,
+        failures: site.failures.slice(0, 6),
+        note,
+      },
     })
   } catch (error) {
     await fail((error as Error).message)

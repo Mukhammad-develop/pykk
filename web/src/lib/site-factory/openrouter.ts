@@ -14,9 +14,17 @@ export async function callOpenRouter(
   messages: ChatMessage[],
   opts: { maxTokens?: number } = {},
 ): Promise<string> {
+  return callModel(process.env.OPENROUTER_MODEL || '~anthropic/claude-fable-latest', messages, opts)
+}
+
+// Explicit-model variant (the council calls different models in turn).
+export async function callModel(
+  model: string,
+  messages: ChatMessage[],
+  opts: { maxTokens?: number } = {},
+): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw new Error('OPENROUTER_API_KEY is not set')
-  const model = process.env.OPENROUTER_MODEL || '~anthropic/claude-fable-latest'
 
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), 240_000) // big builds are fine (founder-approved)

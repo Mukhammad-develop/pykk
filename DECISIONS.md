@@ -2,6 +2,12 @@
 
 Short reasons for technical choices, newest first.
 
+- **A model council reviews every build** (founder's idea): after the critique
+  pass, `~anthropic/claude-opus-latest`, `moonshotai/kimi-k3` and
+  `openai/gpt-6-astra` each review and surgically fix the site in turn. Every
+  pass is validated; a model that errors or breaks validation is skipped and
+  the last good version kept. Configurable via `COUNCIL_MODELS`. It is also the
+  facts backstop (invented years, wrong prices get removed by another brain).
 - **Mechanics live in code, taste lives in the prompt (Opus pass).** The model
   never sees beacon/noindex/footer/map/booking rules — `injectMechanics` adds
   them deterministically, and the model places `<!--BOOKING-->`/`<!--MAP-->`
