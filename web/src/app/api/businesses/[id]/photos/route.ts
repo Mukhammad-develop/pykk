@@ -51,12 +51,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const imagesDir = path.join(sitesDir(), business.slug, 'images')
   fs.mkdirSync(imagesDir, { recursive: true })
 
-  const sharp = (await import('sharp')).default
   const saved: string[] = []
   // Number after any photos already on disk (across requests).
   const existingCount = fs.readdirSync(imagesDir).filter((f) => /^img-\d+\.webp$/.test(f)).length
   let index = existingCount + 1
   try {
+    const sharp = (await import('sharp')).default
     for (const file of files) {
       if (!ALLOWED.has(file.type)) {
         return NextResponse.json({ error: `"${file.name}" is not a JPG, PNG or WebP image.` }, { status: 400 })

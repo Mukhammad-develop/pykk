@@ -15,8 +15,9 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['mysql2', 'drizzle-orm', 'zod'],
   // The app only imports drizzle-orm's main entry, but migrate.mjs also needs
   // drizzle-orm/mysql2/migrator — ship the whole package in the release.
+  // @img/* holds sharp's platform binaries (photo conversion in the factory).
   outputFileTracingIncludes: {
-    '/**': ['./node_modules/drizzle-orm/**'],
+    '/**': ['./node_modules/drizzle-orm/**', './node_modules/@img/**'],
   },
   poweredByHeader: false,
 }
