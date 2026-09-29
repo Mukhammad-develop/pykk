@@ -53,10 +53,21 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
   const saved: string[] = []
   // Number after any photos already on disk (across requests).
-  const existingCount = fs.readdirSync(imagesDir).filter((f) => /^img-\d+\.webp$/.test(f)).length
+  const existingCount = fs.readdirSync(imagesDir).filter((f) => /^img-\d+\.(webp|jpe?g)$/.test(f)).length
   let index = existingCount + 1
+
+  // sharp is preferred (WebP output) but can't run on every host (old glibc).
+  // Fallback: store the browser-shrunk JPEG as-is — always works.
+  let sharp: typeof import('sharp') | null = null
   try {
-    const sharp = (await import('sharp')).default
+    sharp = (await import('sharp')).default
+    await sharp(Buffer.alloc(1, 0))
+  } catch (error) {
+    console.error('[pykk] sharp unavailable, falling back to JPEG passthrough:', (error as Error).message)
+    sharp = null
+  }
+
+  try {
     for (const file of files) {
       if (!ALLOWED.has(file.type)) {
         return NextResponse.json({ error: `"${file.name}" is not a JPG, PNG or WebP image.` }, { status: 400 })
@@ -65,14 +76,19 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         return NextResponse.json({ error: `"${file.name}" is over 5 MB — shrink it first.` }, { status: 400 })
       }
       const buffer = Buffer.from(await file.arrayBuffer())
-      const name = `img-${String(index).padStart(2, '0')}.webp`
+      const name = `img-${String(index).padStart(2, '0')}`
       index++
-      await sharp(buffer)
-        .rotate() // respect EXIF orientation
-        .resize({ width: 1600, withoutEnlargement: true })
-        .webp({ quality: 82 })
-        .toFile(path.join(imagesDir, name))
-      saved.push(name)
+      if (sharp) {
+        await sharp(buffer)
+          .rotate() // respect EXIF orientation
+          .resize({ width: 1600, withoutEnlargement: true })
+          .webp({ quality: 82 })
+          .toFile(path.join(imagesDir, `${name}.webp`))
+        saved.push(`${name}.webp`)
+      } else {
+        fs.writeFileSync(path.join(imagesDir, `${name}.jpg`), buffer)
+        saved.push(`${name}.jpg`)
+      }
     }
   } catch (error) {
     console.error('[pykk] photo conversion failed:', error)
