@@ -2,6 +2,10 @@
 
 Short reasons for technical choices, newest first.
 
+- **The host's nginx caches static files, so every build cache-busts asset URLs**
+  (`styles.css?v=<build time>`). Learned the hard way: a good rebuild was
+  invisible for ~15 minutes because nginx kept serving the previous build to
+  browsers while curl slipped past the cache.
 - **Multi-step generation beats bigger single shots.** Art direction first (the
   model designs for *this* business), then the full build, then a
   critique-and-rewrite pass — founder approved the token/time cost (~3 min,
