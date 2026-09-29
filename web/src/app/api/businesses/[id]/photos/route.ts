@@ -56,22 +56,30 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   // Number after any photos already on disk (across requests).
   const existingCount = fs.readdirSync(imagesDir).filter((f) => /^img-\d+\.webp$/.test(f)).length
   let index = existingCount + 1
-  for (const file of files) {
-    if (!ALLOWED.has(file.type)) {
-      return NextResponse.json({ error: `"${file.name}" is not a JPG, PNG or WebP image.` }, { status: 400 })
+  try {
+    for (const file of files) {
+      if (!ALLOWED.has(file.type)) {
+        return NextResponse.json({ error: `"${file.name}" is not a JPG, PNG or WebP image.` }, { status: 400 })
+      }
+      if (file.size > MAX_BYTES) {
+        return NextResponse.json({ error: `"${file.name}" is over 5 MB — shrink it first.` }, { status: 400 })
+      }
+      const buffer = Buffer.from(await file.arrayBuffer())
+      const name = `img-${String(index).padStart(2, '0')}.webp`
+      index++
+      await sharp(buffer)
+        .rotate() // respect EXIF orientation
+        .resize({ width: 1600, withoutEnlargement: true })
+        .webp({ quality: 82 })
+        .toFile(path.join(imagesDir, name))
+      saved.push(name)
     }
-    if (file.size > MAX_BYTES) {
-      return NextResponse.json({ error: `"${file.name}" is over 5 MB — shrink it first.` }, { status: 400 })
-    }
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const name = `img-${String(index).padStart(2, '0')}.webp`
-    index++
-    await sharp(buffer)
-      .rotate() // respect EXIF orientation
-      .resize({ width: 1600, withoutEnlargement: true })
-      .webp({ quality: 82 })
-      .toFile(path.join(imagesDir, name))
-    saved.push(name)
+  } catch (error) {
+    console.error('[pykk] photo conversion failed:', error)
+    return NextResponse.json(
+      { error: `Photo conversion failed on the server: ${(error as Error).message.slice(0, 200)}` },
+      { status: 500 },
+    )
   }
 
   // Merge into the intake's photo list (keep existing, append new, dedupe).

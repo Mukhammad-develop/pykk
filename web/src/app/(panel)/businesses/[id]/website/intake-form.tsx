@@ -52,25 +52,55 @@ export function IntakeForm({
     }
   }
 
+  // Shrink a photo in the browser before upload: max 1600px, JPEG ~0.85.
+  // Phone photos go from 2–5 MB to a few hundred KB — uploads always pass
+  // the host's body-size limits and are much faster.
+  async function shrinkImage(file: File): Promise<Blob> {
+    const bitmap = await createImageBitmap(file)
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(bitmap.width * scale)
+    canvas.height = Math.round(bitmap.height * scale)
+    const ctx = canvas.getContext('2d')!
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error('Could not process the image'))),
+        'image/jpeg',
+        0.85,
+      )
+    })
+  }
+
   async function onUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files
     if (!files || files.length === 0) return
     setUploading(true)
     setError(null)
     setMessage(null)
-    const form = new FormData()
-    for (const file of Array.from(files)) form.append('photos', file)
-    const res = await fetch(`/api/businesses/${businessId}/photos`, { method: 'POST', body: form })
-    setUploading(false)
-    const data = await res.json().catch(() => null)
-    if (res.ok) {
-      set('photos', data.photos)
-      setMessage(`✓ ${data.saved.length} photo(s) uploaded and converted.`)
-      router.refresh()
-    } else {
-      setError(data?.error ?? 'Upload failed — try again.')
+    try {
+      const form = new FormData()
+      for (const file of Array.from(files)) {
+        if (file.size > 5 * 1024 * 1024) {
+          throw new Error(`"${file.name}" is over 5 MB — shrink it first.`)
+        }
+        form.append('photos', await shrinkImage(file), file.name.replace(/\.\w+$/, '.jpg'))
+      }
+      const res = await fetch(`/api/businesses/${businessId}/photos`, { method: 'POST', body: form })
+      const data = await res.json().catch(() => null)
+      if (res.ok) {
+        set('photos', data.photos)
+        setMessage(`✓ ${data.saved.length} photo(s) uploaded and converted.`)
+        router.refresh()
+      } else {
+        setError(data?.error ?? `Upload failed (server said ${res.status}) — try again.`)
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Upload failed — try again.')
+    } finally {
+      setUploading(false)
+      event.target.value = ''
     }
-    event.target.value = ''
   }
 
   return (
