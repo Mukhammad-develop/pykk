@@ -1,562 +1,432 @@
-/* Paper, ink, terracotta leaders and a green booking stamp. */
+/* ============================================================
+   FOUNDATION — Heritage Barber
+   ============================================================ */
 :root {
   --bg: #f8f2e4;
   --surface: #fffaf0;
   --text: #3b2a1e;
-  --muted: #7a6455;
+  --muted: #7a624f;
   --accent: #33573c;
-  --accent-ink: #f8f2e4;
-  --secondary: #b0502a;
-  --line: #d9cbb2;
-  --line-strong: #3b2a1e;
+  --line: #d3c4a6;
+  --stamp: #b0502a;
+  --stamp-soft: rgba(176, 80, 42, .12);
   --display: clamp(3.25rem, 11vw, 6rem);
   --step--1: clamp(.8rem, .77rem + .15vw, .9rem);
+  --step-0: 1.0625rem;
   --step-1: clamp(1.3rem, 1.1rem + 1vw, 1.9rem);
   --step-2: clamp(1.8rem, 1.4rem + 2vw, 2.9rem);
+  --ease: cubic-bezier(.2, .7, .2, 1);
   --serif: Georgia, "Times New Roman", serif;
-  --ease: cubic-bezier(.2,.7,.2,1);
-  --space: clamp(3rem, 8vw, 5.5rem);
+  /* Uneven dash lengths give the rules a hand-chalked edge. */
+  --chalk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='4' viewBox='0 0 120 4'%3E%3Cpath d='M0 2h14M20 2.4h9M34 1.7h18M57 2.2h7M69 1.8h15M89 2.3h11M105 2h13' stroke='%23b0502a' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
 }
 
-*, *::before, *::after { box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
-
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
 body {
   margin: 0;
-  font-family: var(--serif);
-  font-size: 1.0625rem;
-  line-height: 1.65;
-  letter-spacing: .5px;
-  background-color: var(--bg);
+  background: var(--bg);
   color: var(--text);
-  background-image: repeating-linear-gradient(
-    180deg, transparent 0 31px, rgba(59,42,30,.045) 31px 32px);
+  font-family: var(--serif);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
-
-.container {
-  width: min(1120px, 100% - 2.5rem);
-  margin-inline: auto;
-}
-
-section { padding-block: var(--space); }
-[id] { scroll-margin-top: 6rem; }
-
+img { max-width: 100%; height: auto; display: block; }
+.container { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+section { padding-block: clamp(3rem, 8vw, 5.5rem); }
 h1, h2, h3 {
-  margin: 0 0 .6em;
+  margin: 0;
   font-weight: 400;
   line-height: 1.05;
+  letter-spacing: -.01em;
   text-wrap: balance;
 }
-
-h2 {
-  font-size: var(--step-2);
-  font-style: italic;
-  letter-spacing: -.01em;
-}
-
-p { max-width: 62ch; margin: 0 0 1em; }
-ul, ol { margin: 0; padding: 0; list-style: none; }
-
+h2 { font-size: var(--step-2); }
+p { max-width: 62ch; margin: 0 0 1rem; }
 a {
   color: inherit;
-  transition: color .18s var(--ease), background-color .18s var(--ease),
-    transform .18s var(--ease), border-color .18s var(--ease);
+  text-decoration-color: var(--stamp);
+  text-decoration-thickness: 1px;
+  text-underline-offset: .2em;
+  transition: color .18s var(--ease), text-decoration-color .18s var(--ease);
 }
+a:hover { color: var(--stamp); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+main:focus { outline: none; }
 
-:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 5px;
-}
-
-.book :focus-visible { outline-color: var(--bg); }
-.book__form :focus-visible { outline-color: var(--accent); }
-
-.skip-link {
+/* Skip link */
+.skip {
   position: fixed;
-  top: .75rem;
   left: 1rem;
-  z-index: 30;
-  padding: .75rem 1rem;
-  background: var(--surface);
-  color: var(--text);
-  transform: translateY(-200%);
-}
-
-.skip-link:focus { transform: translateY(0); }
-
-/* Small-caps labels: 12px, spaced .2em. */
-.eyebrow {
-  color: var(--secondary);
-  font-size: .75rem;
-  letter-spacing: .2em;
-  text-transform: lowercase;
-  font-variant: small-caps;
-  font-weight: 700;
-  margin-bottom: 1.25rem;
-}
-
-/* ---------- Buttons & the signature stamp ---------- */
-.btn {
-  display: inline-block;
-  padding: .9em 1.6em;
-  border: 2px solid var(--text);
-  color: var(--text);
-  font-size: .8rem;
-  text-decoration: none;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-
-.btn:hover, .btn:focus-visible {
+  top: 1rem;
+  z-index: 40;
+  max-width: calc(100% - 2rem);
+  padding: .6em 1em;
   background: var(--text);
   color: var(--bg);
+  text-decoration: none;
+  transform: translateY(calc(-100% - 2rem));
 }
+.skip:focus { transform: none; }
+.skip:hover { color: var(--bg); }
 
-.btn--ghost { border-width: 1px; font-weight: 600; }
-
-.stamp {
-  --stamp: var(--accent);
-  position: relative;
-  display: inline-block;
-  padding: .4rem;
-  border: 3px solid var(--stamp);
+/* Small, wide-tracked terracotta labels */
+.eyebrow {
   color: var(--stamp);
-  text-decoration: none;
-  transform: rotate(-2deg);
-  transition: transform .2s var(--ease), background-color .2s var(--ease),
-    color .2s var(--ease);
-}
-
-.stamp span {
-  display: block;
-  padding: .55em 1.5em;
-  border: 1px solid var(--stamp);
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-a.stamp:hover, a.stamp:focus-visible {
-  transform: rotate(-2deg) scale(1.04);
-  background: var(--stamp);
-  color: var(--accent-ink);
-}
-
-a.stamp:hover span, a.stamp:focus-visible span {
-  border-color: var(--accent-ink);
-}
-
-.stamp--paper { --stamp: var(--bg); }
-
-/* ---------- Top bar ---------- */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: var(--bg);
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--line);
-}
-
-.topbar__inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: .25rem 1rem;
-  padding-block: .5rem;
-}
-
-.brand {
-  font-size: 1rem;
-  font-weight: 700;
-  text-decoration: none;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-}
-
-.topbar .brand, .topbar__nav a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-}
-
-.topbar__nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  font-size: .75rem;
   font-variant: small-caps;
   text-transform: lowercase;
-  letter-spacing: .2em;
+  letter-spacing: .22em;
+  font-size: var(--step--1);
+  margin: 0 0 1rem;
 }
 
-.topbar__nav a { text-decoration: none; }
-.topbar__nav a:hover { color: var(--secondary); }
-
-/* ---------- 1 · Hero ---------- */
-.hero {
-  padding-block: clamp(4rem, 14vw, 9rem) clamp(3rem, 8vw, 6rem);
-  text-align: center;
-}
-
-.hero__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hero__title {
-  font-size: var(--display);
-  font-style: italic;
-  line-height: .95;
-  letter-spacing: -.015em;
-  margin-bottom: .35em;
-}
-
-.hero__lede {
-  max-width: 38ch;
-  color: var(--muted);
-  margin-bottom: 2.25rem;
-  text-wrap: balance;
-}
-
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem 2rem;
-}
-
-.hero__pin {
-  width: 1px;
-  height: clamp(3rem, 8vw, 5rem);
-  margin: 3rem auto 0;
-  background: linear-gradient(var(--line-strong), transparent);
+/* ============================================================
+   SIGNATURE — dot leaders and hand-chalked rules
+   ============================================================ */
+.price-table {
   position: relative;
+  padding: 4px 0 0;
+  margin: 0;
 }
-
-.hero__pin::before {
+.price-table::before,
+.price-row::after {
   content: "";
   position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--secondary);
-  box-shadow: inset 0 -3px 0 rgba(0,0,0,.25);
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--chalk) repeat-x left center;
 }
-
-/* ---------- 2 · Price list ---------- */
-.prices { padding-top: 0; }
-
-.rule {
-  border: 0;
-  border-top: 1px solid var(--line);
-  margin-block: 2rem;
-}
-
-.rule--dashed {
-  border-top: 2px dashed var(--line-strong);
-  margin-block: 0 2.5rem;
-}
-
-.prices__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: .5rem 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.prices__head h2 { margin: 0; }
-
-.prices__note {
-  margin: 0;
-  font-style: italic;
-  color: var(--muted);
-  font-size: var(--step--1);
-}
-
-.price-table { border-top: 2px solid var(--line-strong); }
-
+.price-table::before { top: 0; }
 .price-row {
   display: flex;
   align-items: baseline;
   gap: .75rem;
-  min-width: 0;
-  padding: 1.05rem 0;
-  border-bottom: 1px dashed var(--line-strong);
+  position: relative;
+  padding: .95rem 0 1rem;
 }
-
+.price-row::before {
+  content: "";
+  order: 1;
+  flex: 1 0 1rem;
+  border-bottom: 3px dotted var(--stamp);
+  opacity: .85;
+  transform: translateY(-.25em);
+}
+.price-row::after { bottom: 0; }
+.price-row:nth-child(even)::after { background-position: 37px center; }
+.price-row:nth-child(3n)::after { background-position: 71px center; }
 .price-row .name {
   min-width: 0;
-  overflow-wrap: anywhere;
-  font-size: var(--step-1);
   font-weight: 400;
-  font-style: italic;
+  font-size: var(--step-1);
+  letter-spacing: .01em;
+  overflow-wrap: anywhere;
 }
-
-.price-row .leader {
-  flex: 1;
-  border-bottom: 2px dotted var(--secondary);
-  opacity: .75;
-  transform: translateY(-5px);
-}
-
 .price-row .price {
-  color: var(--text);
-  font-size: var(--step-1);
-  font-weight: 700;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-/* ---------- 3 · Three paper notes ---------- */
-.promises { padding-top: 0; }
-
-.promise-grid {
-  display: grid;
-  gap: 1rem;
-}
-
-.promise {
-  min-width: 0;
-  padding: 1.75rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-top: 2px solid var(--line-strong);
-}
-
-.promise__num {
-  display: block;
-  font-size: .75rem;
-  letter-spacing: .2em;
-  color: var(--secondary);
-  margin-bottom: .75rem;
-}
-
-.promise h2 {
-  font-size: var(--step-1);
-  font-style: italic;
-  letter-spacing: 0;
-  margin-bottom: .4em;
-}
-
-.promise p {
+  order: 2;
+  flex-shrink: 0;
   margin: 0;
-  color: var(--muted);
-  max-width: 30ch;
+  color: var(--accent);
+  font-weight: 400;
+  font-size: var(--step-1);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.price-row .price--closed {
+  color: var(--stamp);
+  font-variant: small-caps;
+  letter-spacing: .12em;
 }
 
-/* ---------- 4 · Story ---------- */
-.story {
-  border-top: 1px solid var(--line);
+/* Stamp links */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: .85em 1.5em;
+  border: 2px solid var(--stamp);
+  color: var(--stamp);
+  text-decoration: none;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: .2em;
+  font-size: var(--step-0);
+  line-height: 1.2;
+  transform: rotate(-1.5deg);
+  box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 4px var(--stamp);
+  transition: transform .2s var(--ease), background-color .2s var(--ease), color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.stamp:hover,
+.stamp:focus-visible {
+  background: var(--stamp);
+  color: var(--bg);
+  transform: rotate(0deg);
+  box-shadow: inset 0 0 0 3px var(--stamp), inset 0 0 0 4px var(--bg);
+}
+.stamp--small {
+  padding: .6em 1em;
+  font-size: var(--step--1);
+  transform: rotate(-1deg);
+}
+.rule { border: 0; margin-block: 2rem; }
+.rule--dashed {
+  height: 4px;
+  background: var(--chalk) repeat-x left center;
+  opacity: .8;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
-
-.story__inner {
-  display: grid;
-  gap: 2rem;
-  max-width: 54ch;
-}
-
-.story__quote {
-  margin: 0;
-  padding-left: 1.25rem;
-  border-left: 3px solid var(--secondary);
-}
-
-.story__quote p {
-  margin: 0;
-  font-size: var(--step-2);
-  font-style: italic;
-  line-height: 1.1;
-  color: var(--accent);
-}
-
-.story__body p { margin: 0; }
-
-/* ---------- Reviews ---------- */
-.reviews__title {
-  font-size: .75rem;
-  font-style: normal;
-  letter-spacing: .2em;
-  text-transform: lowercase;
-  font-variant: small-caps;
-  font-weight: 700;
-  color: var(--secondary);
-  margin-bottom: 2rem;
-}
-
-.review-list {
-  counter-reset: r;
-  border-top: 1px solid var(--line-strong);
-}
-
-.review {
-  counter-increment: r;
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  gap: .25rem 1rem;
-  padding: 1.5rem 0;
-  border-bottom: 1px dashed var(--line-strong);
-}
-
-.review::before {
-  content: counter(r, decimal-leading-zero);
-  font-size: .75rem;
-  letter-spacing: .2em;
-  color: var(--secondary);
-  padding-top: .5em;
-  grid-row: span 2;
-}
-
-.review__text {
-  margin: 0;
-  font-size: var(--step-1);
-  font-style: italic;
-  line-height: 1.25;
-  max-width: 30ch;
-}
-
-.review__text::before { content: "“"; color: var(--secondary); }
-.review__text::after { content: "”"; color: var(--secondary); }
-
-.review__by {
-  margin: 0;
-  font-size: .75rem;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* ---------- 5 · Booking band ---------- */
-.book {
-  background: var(--accent);
-  color: var(--bg);
-  background-image: repeating-linear-gradient(
-    180deg, transparent 0 31px, rgba(248,242,228,.06) 31px 32px);
-}
-
-.book h2 { color: var(--bg); }
-.book__inner { display: grid; gap: 2.5rem; }
-.book__hours, .book__form { min-width: 0; }
-
-.hours {
-  border-collapse: collapse;
-  width: 100%;
-  max-width: 26rem;
-  margin: 1.5rem 0 2rem;
-}
-
-.hours caption {
-  text-align: left;
-  font-size: .75rem;
-  font-variant: small-caps;
-  text-transform: lowercase;
-  letter-spacing: .2em;
-  padding-bottom: .75rem;
-}
-
-.hours th, .hours td {
-  padding: .5rem 0;
-  border-bottom: 1px dashed rgba(248,242,228,.35);
-  text-align: left;
-  font-weight: 400;
-}
-
-.hours th { padding-right: 1rem; }
-
-.hours td {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.book__stamp { margin: 0; pointer-events: none; }
-
-.book__form {
-  background: var(--surface);
-  color: var(--text);
-  padding: 1.5rem;
-  border: 1px solid var(--line-strong);
-  box-shadow: 6px 6px 0 rgba(20,17,13,.25);
-}
-
-.book__fallback { margin: 0; }
-
-/* Keep the fallback only while the booking slot is empty. */
-.book__widget:empty { display: none; }
-.book__widget:not(:empty) + .book__fallback { display: none; }
-.book__widget iframe { display: block; width: 100%; max-width: 100%; border: 0; }
-
-/* ---------- Footer ---------- */
-.foot {
-  border-top: 2px dashed var(--line-strong);
-  padding-block: var(--space);
-}
-
-.foot__inner {
+.top__inner {
   display: flex;
   flex-wrap: wrap;
-  gap: 2.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem 1.5rem;
+  padding-block: .9rem;
+}
+.brand {
+  text-decoration: none;
+  font-size: var(--step-0);
+  letter-spacing: .02em;
+}
+a.brand { display: inline-flex; align-items: center; min-height: 44px; }
+.top__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem 1.25rem;
+  font-size: var(--step--1);
+  letter-spacing: .06em;
+}
+.top__nav > a:not(.stamp) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+.top__nav a:not(.stamp):hover { text-decoration: underline; }
+
+@media (max-width: 767px) {
+  html { scroll-padding-top: 1rem; }
+  .top { position: static; }
 }
 
-.foot__col { flex: 1 1 18rem; min-width: 0; }
-.foot .brand { display: block; margin-bottom: 1.25rem; }
-.foot__note { margin: 0; font-style: italic; color: var(--muted); }
-
-.foot__map {
-  min-height: 16rem;
-  border: 1px solid var(--line-strong);
+/* ============================================================
+   1. HERO — prices directly beneath the board sign
+   ============================================================ */
+.hero {
+  position: relative;
+  padding-block: clamp(3.5rem, 10vw, 7.5rem) clamp(3rem, 8vw, 6rem);
+}
+.hero__kicker { margin-bottom: 1.5rem; }
+.hero__title {
+  font-size: var(--display);
+  line-height: .92;
+  letter-spacing: -.025em;
+  max-width: 12ch;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+.hero__menu {
+  max-width: 34rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 1.75rem;
 }
 
-.foot__map:empty { display: none; }
-.foot__map iframe { display: block; width: 100%; max-width: 100%; border: 0; }
-
-/* ---------- Larger widths ---------- */
-@media (min-width: 640px) {
-  .promise-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .promise { padding: 1.75rem 1.25rem; }
-  .review { grid-template-columns: 3rem minmax(0, 1fr) auto; }
-  .review::before { grid-row: auto; }
-  .review__by { align-self: center; }
+/* ============================================================
+   2. PHOTO STRIP — full bleed, uneven widths
+   ============================================================ */
+.strip {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 4px;
+  background: var(--stamp);
+  border-block: 4px solid var(--stamp);
 }
+.strip__item {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  background: var(--surface);
+}
+.strip__item img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.strip__item--a { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+.strip__item--b { aspect-ratio: 4 / 5; }
 
-@media (min-width: 900px) {
-  .price-table--split {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 4rem;
+@media (min-width: 768px) {
+  .strip {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1.3fr);
+    height: clamp(22rem, 48vw, 36rem);
   }
+  .strip__item--a,
+  .strip__item--b,
+  .strip__item--c {
+    grid-column: auto;
+    aspect-ratio: auto;
+    height: 100%;
+  }
+}
 
-  .book__inner {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4rem;
+/* ============================================================
+   3. PRICE BOARD — single centred column
+   ============================================================ */
+.prices__col { max-width: 42rem; }
+.prices__title {
+  font-size: var(--step-2);
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+.price-table--board .price-row { padding: 1.15rem 0; }
+.price-table--board .price-row .name,
+.price-table--board .price-row .price {
+  font-size: clamp(1.4rem, 1.1rem + 1.4vw, 2.2rem);
+}
+
+/* ============================================================
+   4. HOW WE WORK — story left, hours right
+   ============================================================ */
+.how__grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
+.how__story,
+.how__side { min-width: 0; }
+.how h2 { font-size: var(--step-2); margin-bottom: 1.5rem; }
+.how__lede { margin-bottom: 1.5rem; }
+.how__side {
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 2px dashed var(--stamp);
+}
+.how__h3 {
+  font-size: var(--step--1);
+  letter-spacing: .22em;
+  color: var(--stamp);
+  margin: 0 0 .75rem;
+  font-variant: small-caps;
+  text-transform: lowercase;
+}
+.hours .price-row { gap: .5rem; padding: .7rem 0 .75rem; }
+.hours .price-row .name,
+.hours .price-row .price { font-size: var(--step-0); }
+.how__map {
+  margin-top: 2rem;
+  min-height: 12rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.how__map:empty { display: none; }
+.how__map iframe {
+  width: 100%;
+  min-height: 16rem;
+  display: block;
+  border: 0;
+}
+
+/* Customer words stay beside the story, not above the price board. */
+.quotes { margin-top: 2rem; }
+.quotes .rule { margin: 0 0 1.5rem; }
+.quotes figure { margin: 0 0 1.5rem; }
+.quotes figure:last-child { margin-bottom: 0; }
+.quotes blockquote { margin: 0; }
+.quotes blockquote p { margin: 0 0 .35rem; }
+.quotes__by {
+  color: var(--stamp);
+  font-variant: small-caps;
+  letter-spacing: .12em;
+  font-size: var(--step--1);
+}
+
+@media (min-width: 860px) {
+  .how__grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
     align-items: start;
   }
-
-  .book__form { padding: 2rem; }
-  .foot__inner { gap: 4rem; }
 }
 
-@media (max-width: 360px) {
-  .topbar__inner { justify-content: center; }
-  .topbar__nav { justify-content: center; }
-  [id] { scroll-margin-top: 8rem; }
+/* ============================================================
+   5. BOOKING — centred stamp beneath a chalk rule
+   ============================================================ */
+.book__col { max-width: 44rem; text-align: center; }
+.book .rule { margin: 0 0 2.5rem; }
+.book__title {
+  display: inline-block;
+  max-width: 100%;
+  padding: .55em .8em;
+  margin-bottom: 1.5rem;
+  border: 2px solid var(--stamp);
+  color: var(--stamp);
+  font-size: clamp(1.65rem, 5vw, 2.9rem);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: .12em;
+  line-height: 1.15;
+  transform: rotate(-1.5deg);
+  box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 4px var(--stamp);
+}
+.book__sub { margin: 0 auto 2rem; color: var(--muted); }
+.book__form {
+  min-width: 0;
+  text-align: left;
+  background: var(--surface);
+  border: 2px solid var(--stamp);
+  padding: clamp(1rem, 3vw, 2rem);
+  box-shadow: 6px 6px 0 var(--stamp-soft);
+}
+.book__form:empty { display: none; }
+.book__fallback { margin: 0 auto; color: var(--muted); }
+.book__form:not(:empty) + .book__fallback { display: none; }
+.book__form iframe { display: block; width: 100%; max-width: 100%; border: 0; }
+.book__form input,
+.book__form select,
+.book__form textarea,
+.book__form button { max-width: 100%; font: inherit; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot {
+  border-top: 4px solid var(--stamp);
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+.foot__grid { display: grid; gap: 2rem; }
+.foot__brand {
+  font-size: var(--step-1);
+  letter-spacing: -.01em;
+  margin-bottom: .75rem;
+}
+.foot__line { margin: 0; color: var(--muted); }
+
+@media (min-width: 768px) {
+  .foot__grid { grid-template-columns: 1fr 1fr; align-items: end; }
+  .foot__right { text-align: right; }
+  .foot__right .foot__line { margin-left: auto; }
+}
+
+@media (max-width: 359px) {
+  .container { width: calc(100% - 2rem); }
+  .top__nav { gap: .5rem 1rem; }
+  .hours .price-row { flex-wrap: wrap; }
+  .hours .price-row::before { display: none; }
+  .hours .price-row .price { margin-left: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -564,6 +434,15 @@ a.stamp:hover span, a.stamp:focus-visible span {
   *, *::before, *::after {
     transition: none !important;
     animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .price-table::before,
+  .price-row::after,
+  .rule--dashed {
+    background: none;
+    border-top: 2px dashed CanvasText;
   }
 }
 /* self-hosted fonts (subset, latin) */
