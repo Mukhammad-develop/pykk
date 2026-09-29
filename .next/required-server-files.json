@@ -295,7 +295,8 @@
     ],
     "outputFileTracingIncludes": {
       "/**": [
-        "./node_modules/drizzle-orm/**"
+        "./node_modules/drizzle-orm/**",
+        "./node_modules/@img/**"
       ]
     },
     "turbopack": {
