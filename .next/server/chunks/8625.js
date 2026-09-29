@@ -24,225 +24,24 @@
 <script src="https://${a.publicAppHost}/client-panel.js" defer></script>
 </body>
 </html>
-`}},14993:(a,b,c)=>{c.d(b,{Q:()=>k});var d=c(31421),e=c(57975),f=c(76760),g=c.n(f),h=c(28701);let i=(0,e.promisify)(d.execFile);async function j(a,b){let c=[...a],{stdout:d}=await i("git",c,{cwd:g().dirname((0,h.Sb)()),timeout:6e4,env:b?{...process.env,GIT_TERMINAL_PROMPT:"0"}:process.env});return d.trim()}async function k(a,b){let c=process.env.SITE_BUILD_GITHUB_TOKEN;if(!c)return{committed:!1,pushed:!1,message:"SITE_BUILD_GITHUB_TOKEN is not set — files are on the server only (not in git)"};let d=`https://x-access-token:${c}@github.com/Mukhammad-develop/pykk.git`;return(await j(["-c",`http.extraHeader=Authorization: Basic ${Buffer.from(`x-access-token:${c}`).toString("base64")}`,"pull","--ff-only",d,"main"]),await j(["add",`sites/${a}`]),await j(["status","--porcelain",`sites/${a}`]))?(await j(["-c","user.name=pykk-site-factory","-c","user.email=site-factory@pykk.uk","commit","-m",b]),await j(["push",d,"main"]),{committed:!0,pushed:!0,message:"Committed and pushed to git"}):{committed:!1,pushed:!0,message:"Site unchanged — already in git"}}},16699:(a,b,c)=>{c.d(b,{z:()=>h});var d=c(31421),e=c(57975),f=c(84585);let g=(0,e.promisify)(d.execFile);async function h(a,b="pykk.uk"){let c;if(!(0,f.Ac)(a))return{created:!1,sslStarted:!1,message:`Invalid slug "${a}" — refusing to create a subdomain`};let d=`${a}.${b}`;try{let{stdout:a}=await g("uapi",["SubDomain","listsubdomains","--output=json"],{timeout:3e4});c=a}catch(a){return{created:!1,sslStarted:!1,message:`uapi not available (${a.message}) — create the subdomain manually in cPanel`}}if(c.includes(d))return{created:!1,sslStarted:!0,message:`${d} already exists`};try{let{stdout:c}=await g("uapi",["SubDomain","addsubdomain",`domain=${a}`,`rootdomain=${b}`,`dir=pykk/sites/${a}`,"--output=json"],{timeout:3e4});if(!c.includes('"status":1'))return{created:!1,sslStarted:!1,message:`uapi failed to create ${d}: ${c.slice(0,200)}`}}catch(a){return{created:!1,sslStarted:!1,message:`uapi error creating ${d}: ${a.message}`}}let e=!1;try{await g("uapi",["SSL","start_autossl_check"],{timeout:3e4}),e=!0}catch{}return{created:!0,sslStarted:e,message:`Created ${d}${e?" and started AutoSSL":""}`}}},28701:(a,b,c)=>{c.d(b,{EV:()=>m,Sb:()=>j,cc:()=>n,d5:()=>l});var d=c(73024),e=c.n(d),f=c(76760),g=c.n(f);let h="\x3c!-- pykk:paused --\x3e",i=".pykk-paused";function j(){return(process.env.SITES_DIR||g().join(process.env.HOME??"~","pykk","sites")).replace(/^~(?=\/)/,process.env.HOME??"~")}function k(a,b=j()){return g().join(b,a,"index.html")}function l(a,b=j()){let c=k(a,b);return!!e().existsSync(c)&&e().readFileSync(c,"utf8").includes(h)}function m(a,b=j()){let c=k(a,b);if(!e().existsSync(c))return"no-site";if(l(a,b))return"already";let d=c+i;return e().existsSync(d)||e().renameSync(c,d),e().writeFileSync(c,`<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-${h}
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Temporarily turned off</title>
-<style>
-  body { margin: 0; min-height: 100vh; display: grid; place-items: center;
-         font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-         background: #0b0f14; color: #e8edf2; text-align: center; padding: 2rem; }
-  h1 { font-size: 1.5rem; margin: 0 0 .5rem; }
-  p { color: #9fb0c0; margin: 0; }
-</style>
-</head>
-<body>
-<main>
-  <h1>This website is temporarily turned off</h1>
-  <p>Please contact PYKK to bring it back.</p>
-</main>
-</body>
-</html>
-`),"suspended"}function n(a,b=j()){let c=k(a,b),d=c+i;return e().existsSync(c)||e().existsSync(d)?l(a,b)?(e().rmSync(c),e().existsSync(d)&&e().renameSync(d,c),"restored"):"not-suspended":"no-site"}},37927:(a,b,c)=>{c.d(b,{X:()=>q});var d=c(71733);let e=`
-.booking-grid { display: grid; gap: .75rem; }
-.booking-grid label { display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; color: var(--muted); }
-.booking-grid input, .booking-grid select {
-  background: var(--surface); color: var(--text); border: 1px solid var(--line);
-  border-radius: .5rem; padding: .75rem .8rem; font-size: 1rem; width: 100%;
-}
-.booking-grid input:focus, .booking-grid select:focus { border-color: var(--accent); outline: none; }
-.booking-submit { margin-top: 1rem; width: 100%; text-align: center; }
-.booking-error { margin-top: .75rem; background: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
-.booking-success { margin-top: .75rem; background: #064e3b; color: #a7f3d0; border: 1px solid #065f46; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
-@media (min-width: 36rem) {
-  .booking-grid { grid-template-columns: 1fr 1fr; }
-  .booking-note { grid-column: 1 / -1; }
-}
-`,f={scissors:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="8.1" y1="7.6" x2="20" y2="19"/><line x1="8.1" y1="16.4" x2="20" y2="5"/>',flame:'<path d="M12 2c1 4-4 6-4 10a4 4 0 0 0 8 0c0-2-1-3-1-3s3 1 3 5a6 6 0 0 1-12 0c0-6 6-8 6-12z"/>',clock:'<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="3" y1="10" x2="21" y2="10"/>',pin:'<path d="M12 22s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="11" r="2.5"/>',phone:'<path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/>',star:'<path d="M12 2l2.9 6.3 6.6.5-5 4.4 1.5 6.5L12 16.9 6 19.7l1.5-6.5-5-4.4 6.6-.5L12 2z"/>',check:'<circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.8 15.2 16 9.5"/>',sparkles:'<path d="M12 3l1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7L12 3z"/><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14z"/>',coffee:'<path d="M4 8h13v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8z"/><path d="M17 9h2a2.5 2.5 0 0 1 0 5h-2"/><line x1="6" y1="3" x2="6" y2="5"/><line x1="10" y1="3" x2="10" y2="5"/><line x1="14" y1="3" x2="14" y2="5"/>',leaf:'<path d="M5 19C5 11 10 5 19 5c0 9-5 14-14 14z"/><path d="M5 19c3-5 6-8 10-10"/>',heart:'<path d="M12 20s-7-4.5-9-9c-1.5-3.5 1-7 4.5-7 2 0 3.5 1 4.5 2.5C13 5 14.5 4 16.5 4c3.5 0 6 3.5 4.5 7-2 4.5-9 9-9 9z"/>',chat:'<path d="M21 12a8 8 0 0 1-8 8c-1.4 0-2.7-.3-3.9-.9L4 20l.9-5.1A8 8 0 1 1 21 12z"/>',camera:'<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/>',home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>'},g=Object.keys(f);function h(a,b="icon"){let c=f[a]??f.star;return`<svg class="${b}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${c}</svg>`}let i={barber_hair:[{icon:"scissors",title:"Sharp fades"},{icon:"flame",title:"Hot towel finish"},{icon:"clock",title:"Walk-ins welcome"}],beauty_spa:[{icon:"sparkles",title:"Unrushed treatments"},{icon:"leaf",title:"Gentle products"},{icon:"calendar",title:"Easy booking"}],cafe:[{icon:"coffee",title:"Proper coffee"},{icon:"heart",title:"Made with care"},{icon:"pin",title:"Right in town"}],restaurant:[{icon:"flame",title:"Cooked to order"},{icon:"heart",title:"Family recipes"},{icon:"pin",title:"Easy to find"}],cleaning:[{icon:"check",title:"Fully insured"},{icon:"sparkles",title:"Every corner"},{icon:"calendar",title:"Flexible slots"}],laundry:[{icon:"check",title:"Careful handling"},{icon:"clock",title:"Quick turnaround"},{icon:"calendar",title:"Regular pick-ups"}],retail:[{icon:"check",title:"Honest prices"},{icon:"heart",title:"Personal service"},{icon:"pin",title:"Easy to reach"}],local_services:[{icon:"check",title:"Trusted locally"},{icon:"clock",title:"On time, every time"},{icon:"pin",title:"Covering your area"}],other:[{icon:"check",title:"Trusted locally"},{icon:"heart",title:"Personal service"},{icon:"clock",title:"Flexible hours"}]};function j(a){return a.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}function k(a){return`tel:${a.replace(/[^+\d]/g,"")}`}let l={"dark-bold":{bg:"#14110d",text:"#ede6da",muted:"#b3a88f",accent:"#d9a441",accentText:"#14110d",surface:"#1c1913",line:"#3a3324",headingFont:"'Avenir Next Condensed','Arial Narrow',sans-serif",headingTransform:"uppercase"},"light-elegant":{bg:"#faf6f1",text:"#43333a",muted:"#7d6470",accent:"#a4576b",accentText:"#ffffff",surface:"#ffffff",line:"#e3d9d2",headingFont:"Georgia,'Times New Roman',serif",headingTransform:"none"},"warm-rustic":{bg:"#f8f2e4",text:"#3b2a1e",muted:"#7a6450",accent:"#33573c",accentText:"#f8f2e4",surface:"#fffaf0",line:"#d9cbb4",headingFont:"Georgia,'Times New Roman',serif",headingTransform:"none"},"bright-practical":{bg:"#ffffff",text:"#12283f",muted:"#546b85",accent:"#0b5cab",accentText:"#ffffff",surface:"#f5f8fc",line:"#d7e2ee",headingFont:"Helvetica,Arial,sans-serif",headingTransform:"none"}},m=`You are the PYKK website factory. You produce ONE complete, production-ready small-business website as exactly two files: index.html and styles.css. No explanations, no markdown fences with language tags other than exactly these two blocks:
-
-=== index.html ===
-(the file)
-=== styles.css ===
-(the file)
-
-ABSOLUTE RULES (a validator checks every one — failing any means rejection):
-1. Static HTML5 + one CSS file. No frameworks, no JavaScript, no CDNs, no webfonts, no image downloads — system font stacks only.
-2. Exactly one <h1>. Semantic landmarks (header, nav, main, section, footer) and a visually-hidden skip link. Mobile-first CSS, no horizontal scrolling at 360px. WCAG AA contrast (4.5:1). Tap targets at least 44px. Visible :focus-visible styles.
-3. <head> in this order: <meta charset="utf-8">, viewport, <meta name="robots" content="noindex">, <title> with the business name, meta description, <link rel="stylesheet" href="styles.css">. The <html> tag has lang="en-GB".
-4. UK English. NO invented facts: no fake reviews, testimonials, ratings, awards, "years of experience", or statistics. Only the facts provided in the intake. Reviews may appear ONLY if explicitly provided as real in the intake — use them verbatim, never write new ones.
-5. The public site sells the BUSINESS only. NEVER mention PYKK's billing, bonds, payments, grace periods, websites being turned off, or anything PYKK-internal — and NEVER the word "subscription". The only PYKK presence is the footer credit and the beacon (rules 8 and 9).
-6. Sections in this order: hero (business name, one honest tagline from the story, CTA to #contact; if a hero photo is provided, use it as a large backdrop image with a readable dark overlay); #features ("Why choose us" — 3 or 4 cards, each with an inline SVG icon copied EXACTLY from the ICON CATALOG below, a 2–5 word title, and one benefit line drawn from the story); #services (services & prices from the intake, formatted \xa3X.XX); #gallery (the provided photo files as <img src="images/FILENAME" loading="lazy"> with honest alt text — if photos exist this is a STAR section: the first photo large (full width or 2 columns wide), the rest in a tidy grid; if no photos, styled placeholder boxes captioned [[NEEDS INFO: photos]]); #reviews (ONLY if real reviews are provided — a "What customers say" section quoting them verbatim with the given names); #about (the story from the intake, expanded warmly but factually); #book (ONLY when booking is enabled — see rule 10); #visit (opening-hours table + address + a "Get directions" Google Maps link + the OPEN-NOW badge from rule 13); #contact (click-to-call tel:, mailto:, a WhatsApp https://wa.me/<digits> link, and any provided Instagram/Facebook links); footer.
-7. Footer: "\xa9 {business name} \xb7 Website by <a href="https://pykk.uk">PYKK</a>".
-8. Immediately before </body>: <script src="https://PUBLIC_APP_HOST/pv.js" data-site="SLUG" defer></script>
-9. Gallery images: use EXACTLY the photo filenames given. Do not invent other image files.
-10. When booking is enabled, the #book section must contain a form with id="booking-form" and data attributes data-slug="SLUG" and data-api="https://PUBLIC_APP_HOST", with fields named exactly: service (a <select> of the intake services), date (type="date"), time (a <select> with half-hour options 09:00–19:30), name, phone, note — followed by <p id="booking-error" hidden></p>, <p id="booking-success" hidden>Booked! We’ll confirm shortly — see you soon.</p>, a submit button with class "booking-submit", and the script tag <script src="https://PUBLIC_APP_HOST/booking.js" defer></script>. Never handle the booking yourself — that script does everything.
-11. CRAFT BAR — this is what separates an agency site from a template. Every one of these is expected:
-    a. The hero is NOT just a title: an eyebrow/kicker line (small-caps label, e.g. the town or business type), a strong headline, one supporting sentence, and a primary CTA. A provided hero photo fills the hero with a readable dark overlay.
-    b. Section rhythm: alternate section backgrounds (page bg vs a subtly different surface), generous vertical padding, a centered max-width container, and each section header has a small eyebrow label above the h2 (e.g. "PRICES", "GALLERY", "VISIT US").
-    c. Real depth per the mood: shadows/borders/radius exactly as the mood specifies — never flat default boxes.
-    d. Gallery: a proper grid (2–3 columns on desktop), images with object-fit: cover and a subtle hover zoom transition.
-    e. #visit embeds Google Maps when an address is provided: <iframe src="https://www.google.com/maps?q=URL_ENCODED_ADDRESS&output=embed" loading="lazy" title="Map" style="border:0"> — full width, ~300px tall, rounded per the mood — in ADDITION to the directions link.
-    f. When a phone number is provided, add a sticky mobile call button: <a class="sticky-call" href="tel:…">Call {business name}</a>, position: fixed at the bottom, visible ONLY on screens under 640px, high z-index, the accent colour.
-    g. The footer has two columns on desktop (left: business name + the PYKK credit; right: quick contact links) and stacks on mobile.
-    h. Hover/focus transitions of 150–250ms ease on interactive elements.
-12. OPTIONAL third block === script.js === (vanilla, max 60 lines, no libraries, no external URLs): only if it clearly improves the page — e.g. a mobile nav toggle or a simple gallery lightbox. Omit it otherwise.
-13. OPEN-NOW BADGE: in the #visit section include <span class="open-badge" data-open-badge></span> plus an INLINE <script> (this is the only inline script allowed) that embeds the intake hours as a JS object HOURS = {mon:'…',tue:'…',…} (use 'closed' for closed days, 'HH:MM–HH:MM' otherwise), picks today's entry with ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()], and sets the badge's text to "Open now" (class .open) or "Closed now" (class .closed) by comparing the current time against the range — or "Closed today" when the day is closed. Small, dependency-free.
-14. WRITE WITH A LOCAL VOICE. Confident and specific: "The sharpest fades in Watford", never "Welcome to our website". The hero tagline and section intros should sound like the proud owner, not a template.
-
-ICON CATALOG (copy the <svg> markup exactly; size and colour are styled via CSS):
-ICON_CATALOG_PLACEHOLDER`;function n(a){let b=a.match(/===\s*index\.html\s*===\s*([\s\S]*?)(?====\s*styles\.css\s*===|$)/i),c=a.match(/===\s*styles\.css\s*===\s*([\s\S]*?)(?====\s*script\.js\s*===|$)/i);if(!b||!c)return null;let d=b[1].trim().replace(/^```\w*\n?/,"").replace(/```$/,"").trim(),e=c[1].trim().replace(/^```\w*\n?/,"").replace(/```$/,"").trim();if(!d||!e)return null;let f=a.match(/===\s*script\.js\s*===\s*([\s\S]*?)$/i);return{html:d,css:e,js:(f?f[1].trim().replace(/^```\w*\n?/,"").replace(/```$/,"").trim():void 0)||void 0}}async function o(a,b={}){let c=process.env.OPENROUTER_API_KEY;if(!c)throw Error("OPENROUTER_API_KEY is not set");let d=process.env.OPENROUTER_MODEL||"~anthropic/claude-fable-latest",e=new AbortController,f=setTimeout(()=>e.abort(),24e4);try{let f=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{"content-type":"application/json",authorization:`Bearer ${c}`,"http-referer":"https://pykk.uk","x-title":"PYKK site factory"},body:JSON.stringify({model:d,messages:a,temperature:.4,max_tokens:b.maxTokens??8e3}),signal:e.signal});if(!f.ok){let a=await f.text().catch(()=>"");throw Error(`OpenRouter ${f.status}: ${a.slice(0,300)}`)}let g=await f.json(),h=g?.choices?.[0]?.message?.content;if("string"!=typeof h||h.length<500)throw Error("OpenRouter returned an empty or too-short answer");return h}finally{clearTimeout(f)}}let p=`static HTML+CSS only (no frameworks/CDNs/webfonts); one h1; semantic landmarks; mobile-first; AA contrast; noindex meta; lang="en-GB"; UK English; no invented facts/reviews/stats; never the word "subscription"; no PYKK-internal/bond content; footer "Website by PYKK" linking https://pykk.uk; beacon <script src="https://HOST/pv.js" data-site="SLUG" defer>; photos only from the provided filenames; booking form only if enabled (with the exact booking.js contract); craft bar: eyebrow labels, section rhythm, depth per mood, map embed when address, sticky mobile call button when phone, hover transitions, two-column footer; #features "Why choose us" icon cards (3–4 cards, each with an inline SVG icon from the catalog); open-now badge from the hours; confident LOCAL voice (never "Welcome to our website").`;async function q(a,b){let c=(process.env.PUBLIC_APP_HOST||"admin.pykk.uk").replace(/\/$/,""),f={slug:a.slug,publicAppHost:c},q=[];if(process.env.OPENROUTER_API_KEY)for(let e=1;e<=2;e++){let i={};try{var r,s,t;let j=Date.now(),k=await o(function(a,b){let c=(0,d.W1)(b.mood,a.type);return[{role:"system",content:"You are an award-winning web art director for UK local businesses. You design one-page sites that win clients, not templates. Be concrete and decisive. No generic advice."},{role:"user",content:`Create the art direction for a one-page website.
-Business: ${a.name} (${a.type.replace(/_/g," ")})
-Mood requested: "${c.label}" — ${c.direction}
-Story: ${b.additionalInfo||"not provided"}
-Photos available: ${b.photos.length}${b.heroPhoto?" (one will be the hero backdrop)":""}
-Takes bookings: ${b.extras.enableBooking?"yes":"no"}
-
-Answer in at most 180 words, exactly these fields:
-HERO VARIANT: one of [full-bleed photo hero | split hero (text left, photo right) | editorial centered hero] — pick what suits the photos and mood.
-TYPOGRAPHY: heading + body system stacks and the scale relationship (e.g. huge condensed display vs calm serif).
-LAYOUT: the section sequence that sells THIS business best (from: services/prices, gallery, reviews, about, booking, visit, contact) and why in one line.
-DISTINCTIVE DETAILS: exactly 3 concrete craft details (e.g. "price table as a dark ruled ledger", "gallery as a 2-col masonry with zoom hover", "quote-sized serif reviews").
-COLOUR SYSTEM: bg, surface, text, muted, accent, accent-text as hex — tuned to the mood but to THIS business.`}]}(a,b),{maxTokens:1500});i[`attempt${e}.conceptMs`]=Date.now()-j,j=Date.now();let l=await o(function(a,b,c,e,f){let i=(0,d.W1)(b.mood,a.type),j=d.EI.map(([a,c])=>`${c}: ${b.hours[a]||"not provided"}`).join("\n"),k=b.services.map(a=>`${a.name} — ${a.price?`\xa3${a.price}`:"price not provided"}`).join("\n"),l=Object.entries(b.extras).filter(([,a])=>a).map(([a,b])=>`${a}: ${b}`).join("\n"),n=b.reviews.length>0?b.reviews.map(a=>`"${a.text}" — ${a.author}`).join("\n"):"none provided — DO NOT include a reviews section",o=[b.socials.instagram&&`Instagram: ${b.socials.instagram}`,b.socials.facebook&&`Facebook: ${b.socials.facebook}`].filter(Boolean).join("\n")||"none",p=`Business: ${a.name} (type: ${a.type.replace(/_/g," ")}, slug: ${a.slug})
-Design mood "${i.label}": ${i.direction}
-Public app host for the beacon: ${c}
-Hero photo: ${b.heroPhoto&&b.photos.length>0?`use images/${b.photos[0]} as the hero backdrop`:"no hero backdrop"}
-Booking section: ${b.extras.enableBooking?"ENABLED — include it per rule 10":"disabled — do NOT include any booking form"}
-${f?`
-THE APPROVED ART DIRECTION — follow it faithfully (it satisfies the craft bar):
-${f}
-`:""}
-
-CONTACT
-Owner: ${b.ownerName||"not provided"}
-Phone: ${b.phone||"not provided"}
-WhatsApp: ${b.whatsapp||"not provided"}
-Email: ${b.email||"not provided"}
-SOCIALS
-${o}
-
-LOCATION
-Address: ${b.address||"not provided"}
-Landmark/town: ${b.landmark||"not provided"}
-
-OPENING HOURS
-${j}
-
-SERVICES & PRICES
-${k||"not provided"}
-
-EXTRAS
-${l||"none"}
-
-STORY / ABOUT
-${b.additionalInfo||"not provided"}
-
-REAL REVIEWS (client-supplied — use verbatim if present)
-${n}
-
-PHOTO FILES (use exactly these in the gallery, in this order)
-${b.photos.length>0?b.photos.join(", "):"none — use placeholder boxes"}
-
-For anything marked "not provided", use a visible [[NEEDS INFO: …]] placeholder — never invent it.
-${e&&e.length>0?`
-YOUR PREVIOUS ATTEMPT WAS REJECTED for these reasons — fix every one:
-- ${e.join("\n- ")}`:""}
-Now produce the two files.`;return[{role:"system",content:m.replace("PUBLIC_APP_HOST",c).replace("SLUG",a.slug).replace("ICON_CATALOG_PLACEHOLDER",g.map(a=>`${a}: ${h(a)}`).join("\n"))},{role:"user",content:p}]}(a,b,c,q.length>0?q:void 0,k),{maxTokens:32e3});i[`attempt${e}.buildMs`]=Date.now()-j;let u=n(l);if(!u){q.push(`attempt ${e}: could not find the two files in the model's answer`);continue}j=Date.now();let v=await o((r=u.html,s=u.css,t=p.replace("HOST",c).replace("SLUG",a.slug),[{role:"system",content:`You are the most demanding design QA in the industry. You review one-page sites for UK local businesses. You fix anything that is not excellent, then return the FULL corrected files in this exact format:
-=== index.html ===
-(corrected file)
-=== styles.css ===
-(corrected file)
-No commentary. If the site is already excellent, return the files unchanged.`},{role:"user",content:`Review this site against:
-1) THE RULES (all must hold):
-${t}
-2) THE ART DIRECTION (it should be faithfully executed):
-${k}
-${q.length>0?`3) THESE FAILURES MUST BE FIXED:
-- ${q.join("\n- ")}`:""}
-
-Weak craft is a failure too: flat sections, default-looking boxes, missing eyebrow labels, weak hero, cramped spacing, missing hover transitions, missing map embed when an address exists, missing sticky call button when a phone exists.
-
-THE SITE TO REVIEW:
-=== index.html ===
-${r}
-=== styles.css ===
-${s}`}]),{maxTokens:32e3});i[`attempt${e}.critiqueMs`]=Date.now()-j;let w=n(v)??u,x=function(a,b,c){let d=[],e=a.toLowerCase();return a.includes("<html")&&a.includes("</html>")||d.push("not a complete HTML document"),1!==(a.match(/<h1[\s>]/gi)??[]).length&&d.push("must contain exactly one <h1>"),a.includes('<meta name="robots" content="noindex">')||d.push("missing the noindex meta tag (preview mode)"),a.includes(`data-site="${c.slug}"`)||d.push(`beacon is missing data-site="${c.slug}"`),a.includes(`${c.publicAppHost}/pv.js`)||d.push(`beacon src must be https://${c.publicAppHost}/pv.js`),a.includes('href="https://pykk.uk"')||d.push('missing the "Website by PYKK" footer link to https://pykk.uk'),a.includes('id="features"')||d.push('missing the #features "Why choose us" icon-cards section'),(a.match(/<svg/g)??[]).length<3&&d.push("missing inline SVG icons (need at least 3)"),a.includes("{{")&&d.push("contains unfilled {{TOKEN}} placeholders"),e.includes("subscription")&&d.push('contains the forbidden word "subscription" — use "bond"'),/your bond|monthly bond|bond payment|bond with pykk/i.test(a)&&d.push("contains PYKK-internal bond content — the public site must sell the business only"),(!b||b.length<200)&&d.push("styles.css is missing or too small"),(b.match(/{/g)??[]).length===(b.match(/}/g)??[]).length&&b.trimEnd().endsWith("}")||d.push("styles.css looks truncated (unbalanced braces)"),a.trimEnd().toLowerCase().endsWith("</html>")||d.push("index.html looks truncated (does not end with </html>)"),(a.includes("lorem ipsum")||e.includes("lorem ipsum"))&&d.push("contains lorem ipsum"),a.includes('lang="en-GB"')||d.push('missing lang="en-GB"'),d}(w.html,w.css,f);if(0===x.length){let a=w.js;if(a){let b=function(a,b){let c=[];for(let d of(a.length>4e3&&c.push("script.js is too large (must stay tiny)"),a.includes("eval(")&&c.push("script.js uses eval()"),a.match(/https?:\/\/[^\s'"`)]+/g)??[]))d.includes(b)||d.includes("pykk.uk")||c.push(`script.js references an external URL: ${d.slice(0,60)}`);return c}(a,c);b.length>0&&(q.push(`script.js dropped: ${b.join(", ")}`),a=void 0)}return{...w,js:a,usedFallback:!1,attempts:e,failures:q,steps:i}}q.push(...x.map(a=>`attempt ${e}: ${a}`))}catch(a){q.push(`attempt ${e}: ${a.message.slice(0,200)}`)}}else q.push("OPENROUTER_API_KEY is not set");return{...function(a,b,c){var f;let g=j(a.name),m=a.slug,n=l[(0,d.W1)(b.mood,a.type).id],o=b.heroPhoto&&b.photos.length>0?b.photos[0]:null,p=b.services.length>0?b.services.map(a=>`          <li class="price-row"><span>${j(a.name)}</span><span class="leader"></span><span class="price">${a.price?`\xa3${j(a.price)}`:""}</span></li>`).join("\n"):'          <li class="price-row"><span>[[NEEDS INFO: services & prices]]</span></li>',q=d.EI.map(([a,c])=>{let d=b.hours[a]||"[[NEEDS INFO: hours]]";return`          <tr><th>${c}</th><td>${"closed"===d?"Closed":j(d)}</td></tr>`}).join("\n"),r=b.photos.length>0?b.photos.map((a,b)=>`          <figure><img src="images/${j(a)}" alt="${g} — photo ${b+1}" loading="lazy"></figure>`).join("\n"):'          <div class="photo-placeholder">[[NEEDS INFO: photos]]</div>',s=b.reviews.length>0?`  <section id="reviews" aria-labelledby="reviews-heading">
-    <h2 id="reviews-heading">What customers say</h2>
-    <div class="reviews">
-${b.reviews.map(a=>`      <blockquote>
-        <p>“${j(a.text)}”</p>
-        <footer>— ${j(a.author)}</footer>
-      </blockquote>`).join("\n")}
-    </div>
-  </section>`:"",t=[];b.extras.barberMode&&t.push("walk-ins"===b.extras.barberMode?"Walk-ins welcome.":"appointments"===b.extras.barberMode?"By appointment — book ahead.":"Walk-ins and appointments."),b.extras.appointmentOnly&&t.push("By appointment only."),b.extras.cafeService&&t.push("both"===b.extras.cafeService?"Eat in or takeaway.":"eat-in"===b.extras.cafeService?"Eat in.":"Takeaway."),b.extras.areasCovered&&t.push(`Covering ${j(b.extras.areasCovered)}.`),b.extras.callOut&&t.push(j(b.extras.callOut));let u=[];b.phone&&u.push(`          <a class="btn btn--primary" href="${k(b.phone)}">Call ${j(b.phone)}</a>`),b.whatsapp&&u.push(`          <a class="btn" href="${(f=b.whatsapp,`https://wa.me/${f.replace(/[^\d]/g,"")}`)}">WhatsApp us</a>`),b.email&&u.push(`          <a class="btn" href="mailto:${j(b.email)}">${j(b.email)}</a>`),b.socials.instagram&&u.push(`          <a class="btn" href="${j(b.socials.instagram)}" target="_blank" rel="noreferrer">Instagram ↗</a>`),b.socials.facebook&&u.push(`          <a class="btn" href="${j(b.socials.facebook)}" target="_blank" rel="noreferrer">Facebook ↗</a>`),0===u.length&&u.push("          <p>[[NEEDS INFO: contact details]]</p>");let v=b.address?`<p class="address">${j(b.address)}</p>
-          <a class="directions" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(b.address)}" target="_blank" rel="noreferrer">Get directions ↗</a>
-          <iframe class="map" src="https://www.google.com/maps?q=${encodeURIComponent(b.address)}&amp;output=embed" loading="lazy" title="Map" referrerpolicy="no-referrer-when-downgrade"></iframe>`:`<p class="address">[[NEEDS INFO: address]]${b.landmark?` (${j(b.landmark)})`:""}</p>`,w=b.additionalInfo?j(b.additionalInfo):`${g} is a friendly local ${a.type.replace(/_/g," ")}. ${t.join(" ")}`,x=(i[a.type]??i.other).map((a,b)=>`      <div class="feature-card">
-        ${h(a.icon)}
-        <h3>${j(a.title)}</h3>
-        ${t[b]?`<p>${j(t[b])}</p>`:""}
-      </div>`).join("\n"),y=JSON.stringify(b.hours).replace(/</g,"\\u003c"),z=`  <p class="open-now"><span class="open-badge" data-open-badge></span></p>
-  <script>const HOURS=${y};(function(){var b=document.querySelector('[data-open-badge]');if(!b)return;var k=['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];var v=HOURS[k];function set(t,c){b.textContent=t;b.className='open-badge '+c;}if(!v||v.toLowerCase()==='closed'){set('Closed today','closed');return;}var m=v.match(/(\\d{1,2}):(\\d{2})\\s*[–-]\\s*(\\d{1,2}):(\\d{2})/);if(!m){set('','closed');return;}var n=new Date(),t=n.getHours()*60+n.getMinutes(),o=(+m[1])*60+(+m[2]),c=(+m[3])*60+(+m[4]);set(t>=o&&t<c?'Open now':'Closed now',t>=o&&t<c?'open':'closed');})();</script>`;return{html:`<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>${g}</title>
-<meta name="description" content="${g} — a local ${a.type.replace(/_/g," ")} in the UK. Services, prices, opening hours and contact.">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <p class="brand">${g}</p>
-  <nav aria-label="Main">
-    <a href="#services">Services</a>
-    <a href="#gallery">Gallery</a>${b.extras.enableBooking?'\n    <a href="#book">Book</a>':""}
-    <a href="#visit">Visit</a>
-    <a href="#contact">Contact</a>
-  </nav>
-</header>
-<section class="hero${o?" hero--photo":""}" aria-label="Welcome"${o?` style="background-image: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)), url('images/${j(o)}')"`:""}>
-  <p class="eyebrow">${j(a.type.replace(/_/g," "))}${b.landmark?` \xb7 ${j(b.landmark)}`:""}</p>
-  <h1>${g}</h1>
-  <p class="tagline">${t.length>0?j(t.join(" ")):`A friendly local ${a.type.replace(/_/g," ")}.`}</p>
-  <a class="btn btn--primary" href="#contact">Get in touch</a>
-</section>
-<main id="main">
-  <section id="features" aria-labelledby="features-heading">
-    <h2 id="features-heading">Why choose us</h2>
-    <div class="feature-grid">
-${x}
-    </div>
-  </section>
-  <section id="services" aria-labelledby="services-heading">
-    <h2 id="services-heading">Services &amp; prices</h2>
-    <ul class="price-list">
-${p}
-    </ul>
-  </section>
-  <section id="gallery" aria-labelledby="gallery-heading">
-    <h2 id="gallery-heading">Gallery</h2>
-    <div class="gallery-grid">
-${r}
-    </div>
-  </section>
-${s}
-  <section id="about" aria-labelledby="about-heading">
-    <h2 id="about-heading">About</h2>
-    <p>${w}</p>
-  </section>
-${b.extras.enableBooking?function(a){let b=a.services.map(a=>`          <option value="${j(a.name)}">${j(a.name)}${a.price?` — \xa3${j(a.price)}`:""}</option>`).join("\n");return`  <section id="book" aria-labelledby="book-heading" class="booking">
-    <h2 id="book-heading">Book an appointment</h2>
+`}},14993:(a,b,c)=>{c.d(b,{Q:()=>k});var d=c(31421),e=c(57975),f=c(76760),g=c.n(f),h=c(28701);let i=(0,e.promisify)(d.execFile);async function j(a,b){let c=[...a],{stdout:d}=await i("git",c,{cwd:g().dirname((0,h.Sb)()),timeout:6e4,env:b?{...process.env,GIT_TERMINAL_PROMPT:"0"}:process.env});return d.trim()}async function k(a,b){let c=process.env.SITE_BUILD_GITHUB_TOKEN;if(!c)return{committed:!1,pushed:!1,message:"SITE_BUILD_GITHUB_TOKEN is not set — files are on the server only (not in git)"};let d=`https://x-access-token:${c}@github.com/Mukhammad-develop/pykk.git`;return(await j(["-c",`http.extraHeader=Authorization: Basic ${Buffer.from(`x-access-token:${c}`).toString("base64")}`,"pull","--ff-only",d,"main"]),await j(["add",`sites/${a}`]),await j(["status","--porcelain",`sites/${a}`]))?(await j(["-c","user.name=pykk-site-factory","-c","user.email=site-factory@pykk.uk","commit","-m",b]),await j(["push",d,"main"]),{committed:!0,pushed:!0,message:"Committed and pushed to git"}):{committed:!1,pushed:!0,message:"Site unchanged — already in git"}}},16699:(a,b,c)=>{c.d(b,{z:()=>h});var d=c(31421),e=c(57975),f=c(84585);let g=(0,e.promisify)(d.execFile);async function h(a,b="pykk.uk"){let c;if(!(0,f.Ac)(a))return{created:!1,sslStarted:!1,message:`Invalid slug "${a}" — refusing to create a subdomain`};let d=`${a}.${b}`;try{let{stdout:a}=await g("uapi",["SubDomain","listsubdomains","--output=json"],{timeout:3e4});c=a}catch(a){return{created:!1,sslStarted:!1,message:`uapi not available (${a.message}) — create the subdomain manually in cPanel`}}if(c.includes(d))return{created:!1,sslStarted:!0,message:`${d} already exists`};try{let{stdout:c}=await g("uapi",["SubDomain","addsubdomain",`domain=${a}`,`rootdomain=${b}`,`dir=pykk/sites/${a}`,"--output=json"],{timeout:3e4});if(!c.includes('"status":1'))return{created:!1,sslStarted:!1,message:`uapi failed to create ${d}: ${c.slice(0,200)}`}}catch(a){return{created:!1,sslStarted:!1,message:`uapi error creating ${d}: ${a.message}`}}let e=!1;try{await g("uapi",["SSL","start_autossl_check"],{timeout:3e4}),e=!0}catch{}return{created:!0,sslStarted:e,message:`Created ${d}${e?" and started AutoSSL":""}`}}},17479:(a,b,c)=>{c.d(b,{IG:()=>k,mi:()=>j,qE:()=>i});var d=c(73024),e=c.n(d),f=c(76760),g=c.n(f);let h=[{file:"inter-400.woff2",family:"Inter",weight:400},{file:"inter-700.woff2",family:"Inter",weight:700}],i={"dark-bold":{display:"Fraunces",body:"Inter",files:[{file:"fraunces-700.woff2",family:"Fraunces",weight:700},...h]},"light-elegant":{display:"Instrument Serif",body:"Inter",files:[{file:"instrument-serif-400.woff2",family:"Instrument Serif",weight:400},...h]},"warm-rustic":{display:"DM Serif Display",body:"Inter",files:[{file:"dm-serif-display-400.woff2",family:"DM Serif Display",weight:400},...h]},"bright-practical":{display:"Space Grotesk",body:"Inter",files:[{file:"space-grotesk-700.woff2",family:"Space Grotesk",weight:700},...h]}};function j(a){let b=a.files.map(a=>`@font-face {
+  font-family: '${a.family}';
+  src: url('fonts/${a.file}') format('woff2');
+  font-weight: ${a.weight};
+  font-style: normal;
+  font-display: swap;
+}`).join("\n");return`
+/* self-hosted fonts (subset, latin) */
+${b}
+body { font-family: '${a.body}', ui-sans-serif, system-ui, sans-serif; }
+h1, h2, h3, .brand, .display { font-family: '${a.display}', Georgia, serif; }
+`}function k(a,b){let c=g().join(b,"fonts");e().mkdirSync(c,{recursive:!0});let d=[];for(let b of a.files){let a=g().join(g().join(process.cwd(),"font-assets"),b.file);e().existsSync(a)&&(e().copyFileSync(a,g().join(c,b.file)),d.push(b.file))}return d}},20557:(a,b,c)=>{c.d(b,{M:()=>e,c:()=>f});var d=c(94845);function e(a){let b=d.Z,c=a.services.map(a=>`          <option value="${b(a.name)}">${b(a.name)}${a.price?` — \xa3${b(a.price)}`:""}</option>`).join("\n");return`  <section id="book" aria-label="Book an appointment" class="booking">
     <form id="booking-form" data-slug="${a.slug}" data-api="https://${a.publicAppHost}">
       <div class="booking-grid">
         <label>Service
           <select name="service" required>
           <option value="" disabled selected>Choose a service…</option>
-${b}
+${c}
           </select>
         </label>
         <label>Date
@@ -269,33 +68,350 @@ ${b}
       <button type="submit" class="btn btn--primary booking-submit">Book appointment</button>
     </form>
     <script src="https://${a.publicAppHost}/booking.js" defer></script>
-  </section>`}({slug:m,publicAppHost:c,services:b.services})+"\n":""}  <section id="visit" aria-labelledby="visit-heading">
-    <h2 id="visit-heading">Opening hours &amp; location</h2>
+  </section>`}let f=`
+.booking-grid { display: grid; gap: .9rem; }
+.booking-grid label { display: flex; flex-direction: column; gap: .4rem; font-size: .95rem; font-weight: 600; color: var(--text); }
+.booking-grid input, .booking-grid select {
+  background: var(--surface); color: var(--text); border: 1.5px solid var(--line);
+  border-radius: .6rem; padding: .85rem .9rem; font-size: 1.05rem; width: 100%;
+  transition: border-color .2s ease;
+}
+.booking-grid input:focus, .booking-grid select:focus { border-color: var(--accent); outline: none; }
+.booking-submit { margin-top: 1.2rem; width: 100%; text-align: center; padding: 1rem; font-size: 1.05rem; }
+.booking-error { margin-top: .75rem; background: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
+.booking-success { margin-top: .75rem; background: #064e3b; color: #a7f3d0; border: 1px solid #065f46; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
+@media (min-width: 36rem) {
+  .booking-grid { grid-template-columns: 1fr 1fr; }
+  .booking-note { grid-column: 1 / -1; }
+}
+`},28701:(a,b,c)=>{c.d(b,{EV:()=>m,Sb:()=>j,cc:()=>n,d5:()=>l});var d=c(73024),e=c.n(d),f=c(76760),g=c.n(f);let h="\x3c!-- pykk:paused --\x3e",i=".pykk-paused";function j(){return(process.env.SITES_DIR||g().join(process.env.HOME??"~","pykk","sites")).replace(/^~(?=\/)/,process.env.HOME??"~")}function k(a,b=j()){return g().join(b,a,"index.html")}function l(a,b=j()){let c=k(a,b);return!!e().existsSync(c)&&e().readFileSync(c,"utf8").includes(h)}function m(a,b=j()){let c=k(a,b);if(!e().existsSync(c))return"no-site";if(l(a,b))return"already";let d=c+i;return e().existsSync(d)||e().renameSync(c,d),e().writeFileSync(c,`<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+${h}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Temporarily turned off</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center;
+         font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+         background: #0b0f14; color: #e8edf2; text-align: center; padding: 2rem; }
+  h1 { font-size: 1.5rem; margin: 0 0 .5rem; }
+  p { color: #9fb0c0; margin: 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>This website is temporarily turned off</h1>
+  <p>Please contact PYKK to bring it back.</p>
+</main>
+</body>
+</html>
+`),"suspended"}function n(a,b=j()){let c=k(a,b),d=c+i;return e().existsSync(c)||e().existsSync(d)?l(a,b)?(e().rmSync(c),e().existsSync(d)&&e().renameSync(d,c),"restored"):"not-suspended":"no-site"}},66958:(a,b,c)=>{c.d(b,{X:()=>o});var d=c(94845),e=c(71733),f=c(79678);let g=`You are the lead designer at a small, excellent UK studio. Local business owners pay you \xa3500+ for a one-page site because yours never look like templates — each one looks like it could only belong to that shop.
+
+Your brief contains: a concept, a design direction, finished facts (prices, hours, story, real reviews), and photo filenames.
+
+How to work:
+1. Commit fully to the concept. When in doubt, make the choice that serves the concept, not the safe one.
+2. Build the page from a design system: a type scale with dramatic contrast (display type feels confident and large), a spacing rhythm, 2–3 colours used with discipline, and one signature detail a customer would remember.
+3. Choose each section's layout for its content. No two consecutive sections share a layout. A beautifully set price list sells more than any illustration. Four prices might become an oversized typographic list; two reviews might become one huge pull quote.
+4. AVOID the generic patterns unless the concept truly demands them: rows of three icon cards, alternating grey/white bands, eyebrow labels over every heading, centred-everything layouts.
+5. Mobile first: design for a 390px phone held one-handed, where the call and book actions are always within thumb reach. Then let it open up at larger widths.
+6. Write with a confident LOCAL voice — "The sharpest fades in Watford", never "Welcome to our website".
+
+Facts: state only what is in the brief. Reviews are verbatim. Never invent years, awards, numbers or credentials. If a claim isn't in the brief, leave it out. Never write the word "subscription" and never mention PYKK's billing.
+
+Output contract — exactly two blocks (plus an optional third):
+=== index.html ===
+(the file)
+=== styles.css ===
+(the file)
+=== script.js === (optional, vanilla, max 60 lines, no libraries)
+
+Mechanics:
+- The <html> tag gets lang="en-GB". The <head> contains, in this order: <meta charset="utf-8">, a viewport meta, <title> with the business name, <link rel="stylesheet" href="styles.css">.
+- Where the booking form belongs, place exactly the marker <!--BOOKING--> (only when booking is enabled in the brief). Never build a booking form yourself.
+- Where the map belongs, place exactly the marker <!--MAP--> (only when an address is in the brief). Never build a map embed yourself.
+- Do NOT add any analytics scripts, beacons, noindex tags, or footer credits — those are injected after you.
+- Use EXACTLY the photo filenames given, only in the gallery/hero. Do not invent other image files.
+
+Craft bar (what makes it feel \xa3500): dramatic type contrast, generous negative space, a real grid gallery with hover zoom, hover/focus transitions (150–250ms), a sticky mobile call button when a phone is provided, a two-column footer on desktop.`;function h(a,b,c,d,h,i){let j=(0,e.W1)(b.mood,a.type),k=e.EI.map(([a,c])=>`${c}: ${b.hours[a]||"not provided"}`).join("\n"),l=b.services.map(a=>`${a.name} — ${a.price?`\xa3${a.price}`:"price not provided"}`).join("\n"),m=Object.entries(b.extras).filter(([,a])=>a).map(([a,b])=>`${a}: ${b}`).join("\n"),n=b.reviews.length>0?b.reviews.map(a=>`"${a.text}" — ${a.author}`).join("\n"):"none provided — DO NOT include a reviews section",o=[b.socials.instagram&&`Instagram: ${b.socials.instagram}`,b.socials.facebook&&`Facebook: ${b.socials.facebook}`].filter(Boolean).join("\n")||"none";return[{role:"system",content:g},{role:"user",content:`Business: ${a.name} (a ${(0,f.D)(a.type)}, slug: ${a.slug})
+${i?`DESIGN FOUNDATION "${i.label}" — extend it freely, keep its spirit; do NOT rewrite or override it:
+${i.conceptHint}
+Its base stylesheet (build on top of this, adding sections and colour roles):
+${i.baseCss}
+`:`Design mood "${j.label}": ${j.direction}
+`}
+Hero photo: ${b.heroPhoto&&b.photos.length>0?`use images/${b.photos[0]} as the hero backdrop`:"no hero backdrop"}
+Booking: ${b.extras.enableBooking?"ENABLED — place the \x3c!--BOOKING--\x3e marker where the form belongs":"disabled — no \x3c!--BOOKING--\x3e marker"}
+Map: ${b.address?`place the <!--MAP--> marker (address: ${b.address})`:"no address — no \x3c!--MAP--\x3e marker"}
+${h?`
+THE APPROVED ART DIRECTION — commit to it faithfully:
+${h}
+`:""}
+CONTACT
+Owner: ${b.ownerName||"not provided"}
+Phone: ${b.phone||"not provided"}
+WhatsApp: ${b.whatsapp||"not provided"}
+Email: ${b.email||"not provided"}
+SOCIALS
+${o}
+
+LOCATION
+Address: ${b.address||"not provided"}
+Landmark/town: ${b.landmark||"not provided"}
+
+OPENING HOURS
+${k}
+
+SERVICES & PRICES
+${l||"not provided"}
+
+EXTRAS
+${m||"none"}
+
+STORY
+${b.additionalInfo||"not provided"}
+
+REAL REVIEWS (use verbatim if present)
+${n}
+
+PHOTO FILES (use exactly these, in this order)
+${b.photos.length>0?b.photos.join(", "):"none — use placeholder boxes"}
+
+For anything marked "not provided", use a visible [[NEEDS INFO: …]] placeholder — never invent it.
+${d&&d.length>0?`
+YOUR PREVIOUS ATTEMPT WAS REJECTED for these reasons — fix every one:
+- ${d.join("\n- ")}`:""}
+Now produce the files.`}]}function i(a){let b=a.match(/===\s*index\.html\s*===\s*([\s\S]*?)(?====\s*styles\.css\s*===|$)/i),c=a.match(/===\s*styles\.css\s*===\s*([\s\S]*?)(?====\s*script\.js\s*===|$)/i);if(!b||!c)return null;let d=b[1].trim().replace(/^```\w*\n?/,"").replace(/```$/,"").trim(),e=c[1].trim().replace(/^```\w*\n?/,"").replace(/```$/,"").trim();if(!d||!e)return null;let f=a.match(/===\s*script\.js\s*===\s*([\s\S]*?)$/i);return{html:d,css:e,js:(f?f[1].trim().replace(/^```\w*\n?/,"").replace(/```$/,"").trim():void 0)||void 0}}var j=c(75468);function k(a,b,c,d={}){let e=[],f=a.toLowerCase();return a.includes("<html")&&a.includes("</html>")||e.push("not a complete HTML document"),a.trimEnd().toLowerCase().endsWith("</html>")||e.push("index.html looks truncated (does not end with </html>)"),1!==(a.match(/<h1[\s>]/gi)??[]).length&&e.push("must contain exactly one <h1>"),a.includes("{{")&&e.push("contains unfilled {{TOKEN}} placeholders"),f.includes("subscription")&&e.push('contains the forbidden word "subscription" — use "bond"'),/your bond|monthly bond|bond payment|bond with pykk/i.test(a)&&e.push("contains PYKK-internal bond content — the public site must sell the business only"),(!b||b.length<200)&&e.push("styles.css is missing or too small"),(b.match(/{/g)??[]).length===(b.match(/}/g)??[]).length&&b.trimEnd().endsWith("}")||e.push("styles.css looks truncated (unbalanced braces)"),(a.includes("lorem ipsum")||f.includes("lorem ipsum"))&&e.push("contains lorem ipsum"),a.includes('lang="en-GB"')||e.push('missing lang="en-GB"'),d.shipped?(a.includes('<meta name="robots" content="noindex">')||e.push("missing the noindex meta tag (preview mode)"),a.includes('href="https://pykk.uk"')||e.push('missing the "Website by PYKK" footer link'),a.includes(`${c.publicAppHost}/pv.js`)&&a.includes(`data-site="${c.slug}"`)||e.push("missing the page-view beacon")):(a.includes('id="booking-form"')&&e.push("do not build the booking form — place the \x3c!--BOOKING--\x3e marker instead"),a.includes("google.com/maps")&&e.push("do not build the map embed — place the \x3c!--MAP--\x3e marker instead"),a.includes("/pv.js")&&e.push("do not add the beacon — it is injected in code"),a.includes('name="robots" content="noindex"')&&e.push("do not add the noindex tag — it is injected in code"),a.includes('href="https://pykk.uk"')&&e.push("do not add the footer credit — it is injected in code")),e}let l=`
+img { max-width: 100%; height: auto; display: block; }
+.container { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+section { padding-block: clamp(3rem, 8vw, 5.5rem); }
+h1, h2, h3 { line-height: 1.05; text-wrap: balance; }
+p { max-width: 62ch; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+`,m=[{id:"heritage-barber",moodId:"dark-bold",label:"Heritage Barber",conceptHint:"Near-black editorial: Fraunces display, amber accents, uppercase condensed headings, thin rules, a ruled price table with dotted leaders, sharp corners. Confident, masculine, heritage.",baseCss:`:root {
+  --bg: #14110d; --surface: #1c1913; --text: #ede6da; --muted: #b3a88f;
+  --accent: #d9a441; --accent-ink: #14110d; --line: #3a3324;
+  --display: clamp(2.75rem, 8.5vw, 5.5rem);
+  --step--1: clamp(.8rem, .77rem + .15vw, .9rem);
+  --step-0: clamp(1rem, .95rem + .25vw, 1.15rem);
+  --step-1: clamp(1.3rem, 1.1rem + 1vw, 1.9rem);
+  --step-2: clamp(1.8rem, 1.4rem + 2vw, 2.9rem);
+}
+body { background: var(--bg); color: var(--text); font-size: var(--step-0); line-height: 1.65; }
+h1, h2, h3, .brand { letter-spacing: .04em; text-transform: uppercase; }
+h1 { font-size: var(--display); letter-spacing: .02em; }
+h2 { font-size: var(--step-2); }
+.eyebrow { color: var(--accent); font-size: var(--step--1); letter-spacing: .18em; text-transform: uppercase; }
+.btn { display: inline-block; padding: .9em 1.6em; border: 2px solid var(--accent); color: var(--text); text-decoration: none; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.btn--primary { background: var(--accent); color: var(--accent-ink); }
+.rule { border: 0; border-top: 1px solid var(--line); margin-block: 2rem; }
+.price-table { border-top: 2px solid var(--accent); }
+.price-row { display: flex; align-items: baseline; gap: 1rem; padding: .8rem 0; border-bottom: 1px dashed var(--line); }
+.price-row .name { font-weight: 600; }
+.price-row .leader { flex: 1; border-bottom: 2px dotted #4a5a3c; transform: translateY(-5px); opacity: .6; }
+.price-row .price { color: var(--accent); font-weight: 800; white-space: nowrap; }
+.card { background: var(--surface); border: 1px solid var(--line); padding: 1.25rem; }
+${l}`},{id:"luxe-beauty",moodId:"light-elegant",label:"Luxe Beauty",conceptHint:"Light spa elegance: Instrument Serif, cream and dusty rose, airy whitespace, 18px soft cards, pill buttons, italic pull quotes. Calm and premium.",baseCss:`:root {
+  --bg: #faf6f1; --surface: #ffffff; --text: #43333a; --muted: #7d6470;
+  --accent: #a4576b; --accent-ink: #ffffff; --sage: #7d8b76; --line: #e3d9d2;
+  --display: clamp(2.5rem, 7vw, 4.6rem);
+  --step--1: clamp(.8rem, .77rem + .15vw, .9rem);
+  --step-0: clamp(1rem, .95rem + .25vw, 1.12rem);
+  --step-1: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  --step-2: clamp(1.7rem, 1.35rem + 1.8vw, 2.6rem);
+}
+body { background: var(--bg); color: var(--text); font-size: var(--step-0); line-height: 1.7; }
+h1 { font-size: var(--display); font-weight: 400; }
+h2 { font-size: var(--step-2); font-weight: 400; }
+.eyebrow { color: var(--accent); font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; }
+.btn { display: inline-block; padding: .85em 1.7em; border-radius: 999px; border: 1.5px solid var(--accent); color: var(--accent); text-decoration: none; font-weight: 600; }
+.btn--primary { background: var(--accent); color: var(--accent-ink); }
+.card { background: var(--surface); border-radius: 18px; padding: 1.5rem; box-shadow: 0 10px 30px -18px rgba(67, 51, 58, .25); }
+.price-row { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.price-row .price { color: var(--accent); font-weight: 600; white-space: nowrap; }
+blockquote { font-style: italic; border-left: 3px solid var(--sage); padding-left: 1.2rem; color: var(--muted); }
+${l}`},{id:"cafe-menu",moodId:"warm-rustic",label:"Warm Caf\xe9 Menu",conceptHint:"Paper-menu warmth: DM Serif, cream paper stock, forest and terracotta, dashed hand-drawn rules, dotted leaders in the menu, stamp-style bordered CTAs. Cosy and appetising.",baseCss:`:root {
+  --bg: #f8f2e4; --surface: #fffaf0; --text: #3b2a1e; --muted: #7a6450;
+  --accent: #33573c; --accent-ink: #f8f2e4; --accent2: #b0502a; --line: #d9cbb4;
+  --display: clamp(2.6rem, 7.5vw, 4.8rem);
+  --step--1: clamp(.8rem, .77rem + .15vw, .9rem);
+  --step-0: clamp(1rem, .95rem + .25vw, 1.15rem);
+  --step-1: clamp(1.25rem, 1.05rem + 1vw, 1.8rem);
+  --step-2: clamp(1.75rem, 1.35rem + 2vw, 2.7rem);
+}
+body { background: var(--bg); color: var(--text); font-size: var(--step-0); line-height: 1.66; }
+h1 { font-size: var(--display); }
+h2 { font-size: var(--step-2); }
+.eyebrow { color: var(--accent2); font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase; font-weight: 700; }
+.btn { display: inline-block; padding: .8em 1.5em; border: 3px double var(--accent); color: var(--accent); text-decoration: none; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: var(--surface); }
+.btn--primary { background: var(--accent); color: var(--accent-ink); }
+.rule { border: 0; border-top: 2px dashed var(--line); margin-block: 2.2rem; }
+.menu-item { display: flex; align-items: baseline; gap: .8rem; padding: .6rem 0; }
+.menu-item .leader { flex: 1; border-bottom: 2px dotted var(--muted); transform: translateY(-4px); opacity: .55; }
+.menu-item .price { color: var(--accent2); font-weight: 800; white-space: nowrap; }
+.card { background: var(--surface); border: 1px solid var(--line); padding: 1.4rem; }
+.stamp { display: inline-block; padding: .35em .9em; border: 3px double var(--accent2); color: var(--accent2); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; transform: rotate(-2deg); }
+${l}`},{id:"clean-services",moodId:"bright-practical",label:"Clean Services",conceptHint:"Bright trustworthy utility: Space Grotesk, white and strong blue, 4px left-accent cards, solid blue CTAs, pills for quick facts. Crisp and practical.",baseCss:`:root {
+  --bg: #ffffff; --surface: #f5f8fc; --text: #12283f; --muted: #546b85;
+  --accent: #0b5cab; --accent-ink: #ffffff; --highlight: #f2b705; --line: #d7e2ee;
+  --display: clamp(2.4rem, 7vw, 4.4rem);
+  --step--1: clamp(.8rem, .77rem + .15vw, .9rem);
+  --step-0: clamp(1rem, .95rem + .25vw, 1.12rem);
+  --step-1: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  --step-2: clamp(1.7rem, 1.35rem + 1.8vw, 2.6rem);
+}
+body { background: var(--bg); color: var(--text); font-size: var(--step-0); line-height: 1.65; }
+h1 { font-size: var(--display); font-weight: 700; }
+h2 { font-size: var(--step-2); font-weight: 700; }
+.eyebrow { color: var(--accent); font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase; font-weight: 700; }
+.btn { display: inline-block; padding: .9em 1.6em; border-radius: 8px; background: var(--accent); color: var(--accent-ink); text-decoration: none; font-weight: 700; }
+.btn--ghost { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+.card { background: var(--surface); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.25rem 1.4rem; }
+.price-row { display: flex; justify-content: space-between; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid var(--line); }
+.price-row .price { color: var(--accent); font-weight: 700; white-space: nowrap; }
+.pill { display: inline-block; padding: .3em .9em; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: var(--step--1); font-weight: 600; }
+${l}`}];function n(a,b){let c=m.find(b=>b.id===a);if(c)return c;let d={barber_hair:"heritage-barber",beauty_spa:"luxe-beauty",cafe:"cafe-menu",restaurant:"cafe-menu",cleaning:"clean-services",laundry:"clean-services",retail:"clean-services",local_services:"clean-services",other:"heritage-barber"};return m.find(a=>a.id===(d[b??""]??"heritage-barber"))}async function o(a,b){let g=(process.env.PUBLIC_APP_HOST||"admin.pykk.uk").replace(/\/$/,""),l={slug:a.slug,publicAppHost:g},m=[];if(process.env.OPENROUTER_API_KEY)for(let d=1;d<=2;d++){let q={};try{var o,p;let r=Date.now(),s=await (0,j.O)(function(a,b){let c=(0,e.W1)(b.mood,a.type);return[{role:"system",content:'You are an award-winning web art director for UK local businesses. You have exactly one job here: give the page its IDEA — one sentence that makes it belong to this shop. Everything else follows from that sentence. Be decisive and specific. Example of the standard: "The price list is the hero, set like a 1960s barbershop board, because Marco\'s prices are his pitch."'},{role:"user",content:`Business: ${a.name} (a ${(0,f.D)(a.type)}${b.landmark?` in ${b.landmark}`:""})
+Mood requested: "${c.label}" — ${c.direction}
+Story: ${b.additionalInfo||"not provided"}
+Photos: ${b.photos.length}${b.heroPhoto?" (one will be the hero backdrop)":""}
+Takes bookings: ${b.extras.enableBooking?"yes":"no"}
+
+Answer in at most 140 words, exactly these fields:
+ARCHETYPE: one of [heritage-barber | luxe-beauty | cafe-menu | clean-services] — pick the closest starting point, adapted freely.
+THE IDEA: one sentence — the concept that makes this site belong to THIS shop.
+HERO ELEMENT: the single thing that leads the page (a photo, the price board, the owner, or the headline) and why.
+TYPE: a type scale relationship (e.g. huge condensed display vs calm serif body) — dramatic contrast.
+PALETTE: 3 colours + 1 neutral with roles (page, surface, text, accent), hex values tuned to the mood.
+SIGNATURE: one motif or detail a customer would remember.
+SECTION PLAN: the section sequence, where NO two consecutive sections share a layout, and the ONE thing each section does with its content.`}]}(a,b),{maxTokens:1500});q[`attempt${d}.conceptMs`]=Date.now()-r;let t=n(s.match(/ARCHETYPE:\s*([a-z-]+)/i)?.[1],a.type);r=Date.now();let u=await (0,j.O)(h(a,b,g,m.length>0?m:void 0,s,t),{maxTokens:32e3});q[`attempt${d}.buildMs`]=Date.now()-r;let v=i(u);if(!v){m.push(`attempt ${d}: could not find the two files in the model's answer`);continue}r=Date.now();let w=await (0,j.O)((o=v.html,p=v.css,[{role:"system",content:`You are the most demanding design director in the country, reviewing a one-page site for a paying local business. You judge TASTE and CONCEPT FIDELITY, never compliance. Fix anything that feels weak, then return the FULL corrected files in this exact format:
+=== index.html ===
+(corrected file)
+=== styles.css ===
+(corrected file)
+No commentary. If the site is already excellent, return the files unchanged.`},{role:"user",content:`THE CONCEPT (the site must embody it):
+${s}
+${m.length>0?`
+THE VALIDATOR REJECTED THE PREVIOUS VERSION FOR:
+- ${m.join("\n- ")}
+Fix every one.`:""}
+
+Ask of every section: does this feel crafted for THIS business, or like a template? Kill filler copy, dead space, flat hierarchy, repetitive layouts, and any of these generic patterns (rows of three icon cards, alternating grey/white bands, eyebrows over every heading, centred-everything). Keep the booking/map markers <!--BOOKING--> and <!--MAP--> exactly as they are if present. Keep the lang="en-GB" attribute. Keep every fact verbatim.
+
+THE SITE:
+=== index.html ===
+${o}
+=== styles.css ===
+${p}`}]),{maxTokens:32e3});q[`attempt${d}.critiqueMs`]=Date.now()-r;let x=i(w)??v,y=k(x.html,x.css,l);if(0===y.length){r=Date.now();try{let{lookAndCritique:d}=await c.e(175).then(c.bind(c,10175)),e=await d(x.html,x.css);if(e){let c=await (0,j.O)([...h(a,b,g,void 0,s,t),{role:"user",content:`A senior designer looked at the rendered page (desktop + mobile screenshots) and demands these visual fixes — apply every one WITHOUT breaking anything and WITHOUT touching the markers:
+${e.critique}
+
+Here are the files to revise:
+=== index.html ===
+${x.html}
+=== styles.css ===
+${x.css}`}],{maxTokens:32e3}),d=i(c);d&&0===k(d.html,d.css,l).length&&(x.html=d.html,x.css=d.css,d.js&&(x.js=d.js))}}catch(a){m.push(`eyes pass skipped: ${a.message.slice(0,120)}`)}q[`attempt${d}.eyesMs`]=Date.now()-r;let e=x.js;if(e){let a=function(a,b){let c=[];for(let d of(a.length>4e3&&c.push("script.js is too large (must stay tiny)"),a.includes("eval(")&&c.push("script.js uses eval()"),a.match(/https?:\/\/[^\s'"`)]+/g)??[]))d.includes(b)||d.includes("pykk.uk")||c.push(`script.js references an external URL: ${d.slice(0,60)}`);return c}(e,g);a.length>0&&(m.push(`script.js dropped: ${a.join(", ")}`),e=void 0)}return{...x,js:e,usedFallback:!1,attempts:d,failures:m,archetype:t,steps:q}}m.push(...y.map(a=>`attempt ${d}: ${a}`))}catch(a){m.push(`attempt ${d}: ${a.message.slice(0,200)}`)}}else m.push("OPENROUTER_API_KEY is not set");return{...(0,d.D)(a,b,g),usedFallback:!0,attempts:0,failures:m,archetype:n(void 0,a.type),steps:{}}}},71733:(a,b,c)=>{c.d(b,{EI:()=>g,W1:()=>e,tX:()=>f});let d=[{id:"dark-bold",label:"Dark & bold",hint:"dramatic, confident, night-time energy",direction:"Dark, masculine, sharp: near-black background #14110d, warm off-white text #ede6da, amber accent #d9a441. Hero: amber small-caps eyebrow, huge condensed uppercase headline (Avenir Next Condensed / Arial Narrow, letter-spacing), thin amber rules above and below. Buttons: 2px solid amber borders, sharp corners, amber fill on the primary. Sections: separated by thin #3a3324 rules, sharp-cornered cards on #1c1913. Price list: ruled table with dotted amber leaders."},{id:"light-elegant",label:"Light & elegant",hint:"calm, airy, premium spa feel",direction:"Light, calm, elegant: cream background #faf6f1, deep plum-grey text #43333a, dusty rose accent #a4576b, soft sage #7d8b76. Hero: rose small-caps eyebrow, large Georgia serif headline, generous whitespace. Buttons: pill-shaped, rose solid primary. Cards: white, 18px radius, soft single shadow. Sections separated by whitespace and hairline #e3d9d2 rules — an airy, premium feel."},{id:"warm-rustic",label:"Warm & rustic",hint:"cosy, welcoming, handcrafted",direction:"Warm, rustic, appetising: paper background #f8f2e4, dark brown text #3b2a1e, forest green accent #33573c, terracotta secondary #b0502a. Hero: terracotta small-caps eyebrow, big Georgia serif headline. Sections separated by dashed hand-drawn-style rules. Menu/price list with dotted leaders. CTA: 3px double-bordered stamp-style button, uppercase letter-spacing. Cards on #fffaf0 with 1px #d9cbb4 borders."},{id:"bright-practical",label:"Bright & practical",hint:"clean, fresh, trustworthy",direction:"Bright, practical, trustworthy: white background, navy text #12283f, strong blue accent #0b5cab, warm yellow #f2b705 highlights on dark areas only. Hero: blue small-caps eyebrow, bold Helvetica/Arial headline, solid blue CTA. Cards: #f5f8fc with a 4px left blue accent border, 8px radius. Clean grid, big tap targets, footer on navy #12283f with white text."}];function e(a,b){let c=d.find(b=>b.id===a);if(c)return c;let e={barber_hair:"dark-bold",beauty_spa:"light-elegant",cafe:"warm-rustic",restaurant:"warm-rustic",cleaning:"bright-practical",laundry:"bright-practical",retail:"bright-practical",local_services:"bright-practical",other:"dark-bold"};return d.find(a=>a.id===(e[b??""]??"dark-bold"))}let f={ownerName:"",phone:"",whatsapp:"",email:"",address:"",landmark:"",hours:{},services:[],additionalInfo:"",mood:"",reviews:[],socials:{instagram:"",facebook:""},heroPhoto:!1,extras:{},photos:[]},g=[["mon","Monday"],["tue","Tuesday"],["wed","Wednesday"],["thu","Thursday"],["fri","Friday"],["sat","Saturday"],["sun","Sunday"]]},75468:(a,b,c)=>{async function d(a,b={}){let c=process.env.OPENROUTER_API_KEY;if(!c)throw Error("OPENROUTER_API_KEY is not set");let e=process.env.OPENROUTER_MODEL||"~anthropic/claude-fable-latest",f=new AbortController,g=setTimeout(()=>f.abort(),24e4);try{let d=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{"content-type":"application/json",authorization:`Bearer ${c}`,"http-referer":"https://pykk.uk","x-title":"PYKK site factory"},body:JSON.stringify({model:e,messages:a,temperature:.4,max_tokens:b.maxTokens??8e3}),signal:f.signal});if(!d.ok){let a=await d.text().catch(()=>"");throw Error(`OpenRouter ${d.status}: ${a.slice(0,300)}`)}let g=await d.json(),h=g?.choices?.[0]?.message?.content;if("string"!=typeof h||h.length<500)throw Error("OpenRouter returned an empty or too-short answer");return h}finally{clearTimeout(g)}}async function e(a,b){let c=process.env.OPENROUTER_API_KEY;if(!c)throw Error("OPENROUTER_API_KEY is not set");let d=process.env.OPENROUTER_MODEL||"~anthropic/claude-fable-latest",e=new AbortController,f=setTimeout(()=>e.abort(),12e4);try{let f=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{"content-type":"application/json",authorization:`Bearer ${c}`,"http-referer":"https://pykk.uk","x-title":"PYKK site factory (eyes)"},body:JSON.stringify({model:d,messages:[{role:"user",content:[{type:"text",text:a},...b.map(a=>({type:"image_url",image_url:{url:`data:${a.mediaType};base64,${a.data}`}}))]}],temperature:.2,max_tokens:1500}),signal:e.signal});if(!f.ok){let a=await f.text().catch(()=>"");throw Error(`OpenRouter vision ${f.status}: ${a.slice(0,200)}`)}let g=await f.json();return g?.choices?.[0]?.message?.content??""}finally{clearTimeout(f)}}c.d(b,{O:()=>d,callOpenRouterVision:()=>e})},79678:(a,b,c)=>{c.d(b,{D:()=>f,n:()=>g});var d=c(20557),e=c(94845);function f(a){return({barber_hair:"barbershop",beauty_spa:"beauty salon",cafe:"caf\xe9",restaurant:"restaurant",cleaning:"cleaning service",laundry:"laundry service",retail:"local shop",local_services:"local services business",other:"local business"})[a]??"local business"}function g(a,b){let c=a;if(/<meta\s+charset/i.test(c)||(c=c.replace(/<head>/i,'<head>\n<meta charset="utf-8">')),/name="viewport"/i.test(c)||(c=c.replace(/<head>/i,'<head>\n<meta name="viewport" content="width=device-width, initial-scale=1">')),/name="robots"\s+content="noindex"/i.test(c)||(c=c.replace(/(<meta\s+name="viewport"[^>]*>)/i,`$1
+<meta name="robots" content="noindex">`)),!/<meta\s+name="description"/i.test(c)&&b.description&&(c=c.replace(/(<meta\s+name="robots"[^>]*>)/i,`$1
+<meta name="description" content="${(0,e.Z)(b.description)}">`)),c.includes("\x3c!--BOOKING--\x3e")){let a=b.bookingEnabled?(0,d.M)({slug:b.slug,publicAppHost:b.publicAppHost,services:b.services}):"";c=c.replace("\x3c!--BOOKING--\x3e",a)}if(c.includes("\x3c!--MAP--\x3e")){let a=b.address?`<iframe class="map" src="https://www.google.com/maps?q=${encodeURIComponent(b.address)}&amp;output=embed" loading="lazy" title="Map" referrerpolicy="no-referrer-when-downgrade"></iframe>`:"";c=c.replace("\x3c!--MAP--\x3e",a)}let f='<a href="https://pykk.uk">PYKK</a>';return c.includes('href="https://pykk.uk"')||(c=c.includes("</footer>")?c.replace("</footer>",`  <p>Website by ${f}</p>
+</footer>`):c.replace("</main>",`</main>
+<footer>
+  <p>Website by ${f}</p>
+</footer>`)),c.includes("/pv.js")||(c=c.replace("</body>",`<script src="https://${b.publicAppHost}/pv.js" data-site="${b.slug}" defer></script>
+</body>`)),c}},84585:(a,b,c)=>{c.d(b,{Ac:()=>f});let d=["www","admin","app","api","mail","webmail","cpanel","ftp","pay","status","pykk","internal"],e=/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/;function f(a){return e.test(a)&&!d.includes(a)}},88625:(a,b,c)=>{c.a(a,async(a,d)=>{try{c.d(b,{S:()=>v});var e=c(73024),f=c.n(e),g=c(76760),h=c.n(g),i=c(11737),j=c(77319),k=c(74608),l=c(28701),m=c(3426),n=c(66958),o=c(14993),p=c(16699),q=c(13009),r=c(79678),s=c(17479),t=c(71733),u=a([i,j,k,m]);async function v(a){let b=(0,j.L)(),c=(await b.select().from(k.businesses).where((0,i.eq)(k.businesses.id,a)).limit(1))[0];if(!c)return;let d=async c=>{await b.update(k.businesses).set({websiteStatus:"failed",websiteNote:c.slice(0,255)}).where((0,i.eq)(k.businesses.id,a)),await (0,m.M)({actor:"system",action:"website.build_failed",entity:"business",entityId:a,after:{note:c}})};await b.update(k.businesses).set({websiteStatus:"building",websiteNote:null}).where((0,i.eq)(k.businesses.id,a));try{let d={...t.tX,...c.intakeJson??{}},e=await (0,n.X)(c,d),g=(process.env.PUBLIC_APP_HOST||"admin.pykk.uk").replace(/\/$/,""),j=(0,r.n)(e.html,{slug:c.slug,businessName:c.name,description:`${c.name} — a local ${(0,r.D)(c.type)} in the UK.`,publicAppHost:g,bookingEnabled:!!d.extras.enableBooking,services:d.services,address:d.address}),u=h().join((0,l.Sb)(),c.slug);f().mkdirSync(h().join(u,"admin"),{recursive:!0});let v=`?v=${Date.now()}`,w=j.replace(/href="styles\.css(\?[^"]*)?"/g,`href="styles.css${v}"`).replace(/src="script\.js(\?[^"]*)?"/g,`src="script.js${v}"`);f().writeFileSync(h().join(u,"index.html"),w);let x=s.qE[e.archetype.moodId];f().writeFileSync(h().join(u,"styles.css"),e.css+(0,s.mi)(x)),(0,s.IG)(x,u),e.js?f().writeFileSync(h().join(u,"script.js"),e.js):f().existsSync(h().join(u,"script.js"))&&f().rmSync(h().join(u,"script.js")),f().writeFileSync(h().join(u,"admin","index.html"),(0,q.Q)({slug:c.slug,publicAppHost:g}));let y=await (0,o.Q)(c.slug,`Add site: ${c.name} (site factory)`),z=await (0,p.z)(c.slug),A=[e.usedFallback?"fallback template used":"AI-drafted",y.message,z.message].join(" \xb7 ");await b.update(k.businesses).set({websiteStatus:e.usedFallback?"live_fallback":"live",websiteBuiltAt:new Date,websiteNote:A.slice(0,255)}).where((0,i.eq)(k.businesses.id,a)),await (0,m.M)({actor:"system",action:"website.built",entity:"business",entityId:a,after:{usedFallback:e.usedFallback,attempts:e.attempts,steps:e.steps,failures:e.failures.slice(0,6),note:A}})}catch(a){await d(a.message)}}[i,j,k,m]=u.then?(await u)():u,d()}catch(a){d(a)}})},94845:(a,b,c)=>{c.d(b,{Z:()=>i,D:()=>l});var d=c(71733),e=c(20557),f=c(79678);let g={scissors:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="8.1" y1="7.6" x2="20" y2="19"/><line x1="8.1" y1="16.4" x2="20" y2="5"/>',flame:'<path d="M12 2c1 4-4 6-4 10a4 4 0 0 0 8 0c0-2-1-3-1-3s3 1 3 5a6 6 0 0 1-12 0c0-6 6-8 6-12z"/>',clock:'<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="3" y1="10" x2="21" y2="10"/>',pin:'<path d="M12 22s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="11" r="2.5"/>',phone:'<path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/>',star:'<path d="M12 2l2.9 6.3 6.6.5-5 4.4 1.5 6.5L12 16.9 6 19.7l1.5-6.5-5-4.4 6.6-.5L12 2z"/>',check:'<circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.8 15.2 16 9.5"/>',sparkles:'<path d="M12 3l1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7L12 3z"/><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14z"/>',coffee:'<path d="M4 8h13v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8z"/><path d="M17 9h2a2.5 2.5 0 0 1 0 5h-2"/><line x1="6" y1="3" x2="6" y2="5"/><line x1="10" y1="3" x2="10" y2="5"/><line x1="14" y1="3" x2="14" y2="5"/>',leaf:'<path d="M5 19C5 11 10 5 19 5c0 9-5 14-14 14z"/><path d="M5 19c3-5 6-8 10-10"/>',heart:'<path d="M12 20s-7-4.5-9-9c-1.5-3.5 1-7 4.5-7 2 0 3.5 1 4.5 2.5C13 5 14.5 4 16.5 4c3.5 0 6 3.5 4.5 7-2 4.5-9 9-9 9z"/>',chat:'<path d="M21 12a8 8 0 0 1-8 8c-1.4 0-2.7-.3-3.9-.9L4 20l.9-5.1A8 8 0 1 1 21 12z"/>',camera:'<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/>',home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>'};Object.keys(g);let h={barber_hair:[{icon:"scissors",title:"Sharp fades"},{icon:"flame",title:"Hot towel finish"},{icon:"clock",title:"Walk-ins welcome"}],beauty_spa:[{icon:"sparkles",title:"Unrushed treatments"},{icon:"leaf",title:"Gentle products"},{icon:"calendar",title:"Easy booking"}],cafe:[{icon:"coffee",title:"Proper coffee"},{icon:"heart",title:"Made with care"},{icon:"pin",title:"Right in town"}],restaurant:[{icon:"flame",title:"Cooked to order"},{icon:"heart",title:"Family recipes"},{icon:"pin",title:"Easy to find"}],cleaning:[{icon:"check",title:"Fully insured"},{icon:"sparkles",title:"Every corner"},{icon:"calendar",title:"Flexible slots"}],laundry:[{icon:"check",title:"Careful handling"},{icon:"clock",title:"Quick turnaround"},{icon:"calendar",title:"Regular pick-ups"}],retail:[{icon:"check",title:"Honest prices"},{icon:"heart",title:"Personal service"},{icon:"pin",title:"Easy to reach"}],local_services:[{icon:"check",title:"Trusted locally"},{icon:"clock",title:"On time, every time"},{icon:"pin",title:"Covering your area"}],other:[{icon:"check",title:"Trusted locally"},{icon:"heart",title:"Personal service"},{icon:"clock",title:"Flexible hours"}]};function i(a){return a.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}function j(a){return`tel:${a.replace(/[^+\d]/g,"")}`}let k={"dark-bold":{bg:"#14110d",text:"#ede6da",muted:"#b3a88f",accent:"#d9a441",accentText:"#14110d",surface:"#1c1913",line:"#3a3324",headingFont:"'Avenir Next Condensed','Arial Narrow',sans-serif",headingTransform:"uppercase"},"light-elegant":{bg:"#faf6f1",text:"#43333a",muted:"#7d6470",accent:"#a4576b",accentText:"#ffffff",surface:"#ffffff",line:"#e3d9d2",headingFont:"Georgia,'Times New Roman',serif",headingTransform:"none"},"warm-rustic":{bg:"#f8f2e4",text:"#3b2a1e",muted:"#7a6450",accent:"#33573c",accentText:"#f8f2e4",surface:"#fffaf0",line:"#d9cbb4",headingFont:"Georgia,'Times New Roman',serif",headingTransform:"none"},"bright-practical":{bg:"#ffffff",text:"#12283f",muted:"#546b85",accent:"#0b5cab",accentText:"#ffffff",surface:"#f5f8fc",line:"#d7e2ee",headingFont:"Helvetica,Arial,sans-serif",headingTransform:"none"}};function l(a,b,c){var l;let m=i,n=m(a.name),o=a.slug,p=k[(0,d.W1)(b.mood,a.type).id],q=b.heroPhoto&&b.photos.length>0?b.photos[0]:null,r=b.services.length>0?b.services.map(a=>`          <li class="price-row"><span>${m(a.name)}</span><span class="leader"></span><span class="price">${a.price?`\xa3${m(a.price)}`:""}</span></li>`).join("\n"):'          <li class="price-row"><span>[[NEEDS INFO: services & prices]]</span></li>',s=d.EI.map(([a,c])=>{let d=b.hours[a]||"[[NEEDS INFO: hours]]";return`          <tr><th>${c}</th><td>${"closed"===d?"Closed":m(d)}</td></tr>`}).join("\n"),t=b.photos.length>0?b.photos.map((a,b)=>`          <figure><img src="images/${m(a)}" alt="${n} — photo ${b+1}" loading="lazy"></figure>`).join("\n"):'          <div class="photo-placeholder">[[NEEDS INFO: photos]]</div>',u=b.reviews.length>0?`  <section id="reviews" aria-labelledby="reviews-heading">
+    <h2 id="reviews-heading">What customers say</h2>
+    <div class="reviews">
+${b.reviews.map(a=>`      <blockquote>
+        <p>“${m(a.text)}”</p>
+        <footer>— ${m(a.author)}</footer>
+      </blockquote>`).join("\n")}
+    </div>
+  </section>`:"",v=[];b.extras.barberMode&&v.push("walk-ins"===b.extras.barberMode?"Walk-ins welcome.":"appointments"===b.extras.barberMode?"By appointment — book ahead.":"Walk-ins and appointments."),b.extras.appointmentOnly&&v.push("By appointment only."),b.extras.cafeService&&v.push("both"===b.extras.cafeService?"Eat in or takeaway.":"eat-in"===b.extras.cafeService?"Eat in.":"Takeaway."),b.extras.areasCovered&&v.push(`Covering ${m(b.extras.areasCovered)}.`),b.extras.callOut&&v.push(m(b.extras.callOut));let w=[];b.phone&&w.push(`          <a class="btn btn--primary" href="${j(b.phone)}">Call ${m(b.phone)}</a>`),b.whatsapp&&w.push(`          <a class="btn" href="${(l=b.whatsapp,`https://wa.me/${l.replace(/[^\d]/g,"")}`)}">WhatsApp us</a>`),b.email&&w.push(`          <a class="btn" href="mailto:${m(b.email)}">${m(b.email)}</a>`),b.socials.instagram&&w.push(`          <a class="btn" href="${m(b.socials.instagram)}" target="_blank" rel="noreferrer">Instagram ↗</a>`),b.socials.facebook&&w.push(`          <a class="btn" href="${m(b.socials.facebook)}" target="_blank" rel="noreferrer">Facebook ↗</a>`),0===w.length&&w.push("          <p>[[NEEDS INFO: contact details]]</p>");let x=b.address?`<p class="address">${m(b.address)}</p>
+          <a class="directions" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(b.address)}" target="_blank" rel="noreferrer">Get directions ↗</a>
+          <iframe class="map" src="https://www.google.com/maps?q=${encodeURIComponent(b.address)}&amp;output=embed" loading="lazy" title="Map" referrerpolicy="no-referrer-when-downgrade"></iframe>`:`<p class="address">[[NEEDS INFO: address]]${b.landmark?` (${m(b.landmark)})`:""}</p>`,y=b.additionalInfo?m(b.additionalInfo):`${n} is a friendly local ${(0,f.D)(a.type)}. ${v.join(" ")}`,z=(h[a.type]??h.other).map((a,b)=>`      <div class="feature-card">
+        ${function(a,b="icon"){let c=g[a]??g.star;return`<svg class="${b}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${c}</svg>`}(a.icon)}
+        <h3>${m(a.title)}</h3>
+        ${v[b]?`<p>${m(v[b])}</p>`:""}
+      </div>`).join("\n"),A=JSON.stringify(b.hours).replace(/</g,"\\u003c"),B=`  <p class="open-now"><span class="open-badge" data-open-badge></span></p>
+  <script>const HOURS=${A};(function(){var b=document.querySelector('[data-open-badge]');if(!b)return;var k=['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];var v=HOURS[k];function set(t,c){b.textContent=t;b.className='open-badge '+c;}if(!v||v.toLowerCase()==='closed'){set('Closed today','closed');return;}var m=v.match(/(\\d{1,2}):(\\d{2})\\s*[–-]\\s*(\\d{1,2}):(\\d{2})/);if(!m){set('','closed');return;}var n=new Date(),t=n.getHours()*60+n.getMinutes(),o=(+m[1])*60+(+m[2]),c=(+m[3])*60+(+m[4]);set(t>=o&&t<c?'Open now':'Closed now',t>=o&&t<c?'open':'closed');})();</script>`;return{html:`<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>${n}</title>
+<meta name="description" content="${n} — a local ${(0,f.D)(a.type)} in the UK. Services, prices, opening hours and contact.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <p class="brand">${n}</p>
+  <nav aria-label="Main">
+    <a href="#services">Services</a>
+    <a href="#gallery">Gallery</a>${b.extras.enableBooking?'\n    <a href="#book">Book</a>':""}
+    <a href="#visit">Visit</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<section class="hero${q?" hero--photo":""}" aria-label="Welcome"${q?` style="background-image: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)), url('images/${m(q)}')"`:""}>
+  <p class="eyebrow">${m((0,f.D)(a.type))}${b.landmark?` \xb7 ${m(b.landmark)}`:""}</p>
+  <h1>${n}</h1>
+  <p class="tagline">${v.length>0?m(v.join(" ")):`A friendly local ${(0,f.D)(a.type)}.`}</p>
+  <a class="btn btn--primary" href="#contact">Get in touch</a>
+</section>
+<main id="main">
+  <section id="features" aria-labelledby="features-heading">
+    <h2 id="features-heading">Why choose us</h2>
+    <div class="feature-grid">
 ${z}
+    </div>
+  </section>
+  <section id="services" aria-labelledby="services-heading">
+    <h2 id="services-heading">Services &amp; prices</h2>
+    <ul class="price-list">
+${r}
+    </ul>
+  </section>
+  <section id="gallery" aria-labelledby="gallery-heading">
+    <h2 id="gallery-heading">Gallery</h2>
+    <div class="gallery-grid">
+${t}
+    </div>
+  </section>
+${u}
+  <section id="about" aria-labelledby="about-heading">
+    <h2 id="about-heading">About</h2>
+    <p>${y}</p>
+  </section>
+${b.extras.enableBooking?(0,e.M)({slug:o,publicAppHost:c,services:b.services})+"\n":""}  <section id="visit" aria-labelledby="visit-heading">
+    <h2 id="visit-heading">Opening hours &amp; location</h2>
+${B}
     <table class="hours">
-${q}
+${s}
     </table>
-${v}
+${x}
   </section>
   <section id="contact" aria-labelledby="contact-heading">
     <h2 id="contact-heading">Contact</h2>
     <div class="contact-actions">
-${u.join("\n")}
+${w.join("\n")}
     </div>
   </section>
 </main>
 <footer>
-  <p>\xa9 ${g} \xb7 Website by <a href="https://pykk.uk">PYKK</a></p>
+  <p>\xa9 ${n} \xb7 Website by <a href="https://pykk.uk">PYKK</a></p>
 </footer>
-${b.phone?`<a class="sticky-call" href="${k(b.phone)}">Call ${g}</a>
-`:""}<script src="https://${c}/pv.js" data-site="${m}" defer></script>
+${b.phone?`<a class="sticky-call" href="${j(b.phone)}">Call ${n}</a>
+`:""}<script src="https://${c}/pv.js" data-site="${o}" defer></script>
 </body>
 </html>
 `,css:`:root {
-  --bg: ${n.bg}; --text: ${n.text}; --muted: ${n.muted};
-  --accent: ${n.accent}; --accent-text: ${n.accentText};
-  --surface: ${n.surface}; --line: ${n.line};
-  --heading-font: ${n.headingFont}; --heading-transform: ${n.headingTransform};
+  --bg: ${p.bg}; --text: ${p.text}; --muted: ${p.muted};
+  --accent: ${p.accent}; --accent-text: ${p.accentText};
+  --surface: ${p.surface}; --line: ${p.line};
+  --heading-font: ${p.headingFont}; --heading-transform: ${p.headingTransform};
 }
 * { box-sizing: border-box; margin: 0; }
 html { scroll-behavior: smooth; }
@@ -390,5 +506,5 @@ footer a { color: var(--accent); }
 .gallery-grid figure:hover img { transform: scale(1.04); }
 .btn { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
 @media (min-width: 40rem) { .contact-actions { flex-direction: row; flex-wrap: wrap; } }
-${b.extras.enableBooking?e:""}
-`}}(a,b,c),usedFallback:!0,attempts:0,failures:q,steps:{}}}},71733:(a,b,c)=>{c.d(b,{EI:()=>g,W1:()=>e,tX:()=>f});let d=[{id:"dark-bold",label:"Dark & bold",hint:"dramatic, confident, night-time energy",direction:"Dark, masculine, sharp: near-black background #14110d, warm off-white text #ede6da, amber accent #d9a441. Hero: amber small-caps eyebrow, huge condensed uppercase headline (Avenir Next Condensed / Arial Narrow, letter-spacing), thin amber rules above and below. Buttons: 2px solid amber borders, sharp corners, amber fill on the primary. Sections: separated by thin #3a3324 rules, sharp-cornered cards on #1c1913. Price list: ruled table with dotted amber leaders."},{id:"light-elegant",label:"Light & elegant",hint:"calm, airy, premium spa feel",direction:"Light, calm, elegant: cream background #faf6f1, deep plum-grey text #43333a, dusty rose accent #a4576b, soft sage #7d8b76. Hero: rose small-caps eyebrow, large Georgia serif headline, generous whitespace. Buttons: pill-shaped, rose solid primary. Cards: white, 18px radius, soft single shadow. Sections separated by whitespace and hairline #e3d9d2 rules — an airy, premium feel."},{id:"warm-rustic",label:"Warm & rustic",hint:"cosy, welcoming, handcrafted",direction:"Warm, rustic, appetising: paper background #f8f2e4, dark brown text #3b2a1e, forest green accent #33573c, terracotta secondary #b0502a. Hero: terracotta small-caps eyebrow, big Georgia serif headline. Sections separated by dashed hand-drawn-style rules. Menu/price list with dotted leaders. CTA: 3px double-bordered stamp-style button, uppercase letter-spacing. Cards on #fffaf0 with 1px #d9cbb4 borders."},{id:"bright-practical",label:"Bright & practical",hint:"clean, fresh, trustworthy",direction:"Bright, practical, trustworthy: white background, navy text #12283f, strong blue accent #0b5cab, warm yellow #f2b705 highlights on dark areas only. Hero: blue small-caps eyebrow, bold Helvetica/Arial headline, solid blue CTA. Cards: #f5f8fc with a 4px left blue accent border, 8px radius. Clean grid, big tap targets, footer on navy #12283f with white text."}];function e(a,b){let c=d.find(b=>b.id===a);if(c)return c;let e={barber_hair:"dark-bold",beauty_spa:"light-elegant",cafe:"warm-rustic",restaurant:"warm-rustic",cleaning:"bright-practical",laundry:"bright-practical",retail:"bright-practical",local_services:"bright-practical",other:"dark-bold"};return d.find(a=>a.id===(e[b??""]??"dark-bold"))}let f={ownerName:"",phone:"",whatsapp:"",email:"",address:"",landmark:"",hours:{},services:[],additionalInfo:"",mood:"",reviews:[],socials:{instagram:"",facebook:""},heroPhoto:!1,extras:{},photos:[]},g=[["mon","Monday"],["tue","Tuesday"],["wed","Wednesday"],["thu","Thursday"],["fri","Friday"],["sat","Saturday"],["sun","Sunday"]]},84585:(a,b,c)=>{c.d(b,{Ac:()=>f});let d=["www","admin","app","api","mail","webmail","cpanel","ftp","pay","status","pykk","internal"],e=/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/;function f(a){return e.test(a)&&!d.includes(a)}},88625:(a,b,c)=>{c.a(a,async(a,d)=>{try{c.d(b,{S:()=>t});var e=c(73024),f=c.n(e),g=c(76760),h=c.n(g),i=c(11737),j=c(77319),k=c(74608),l=c(28701),m=c(3426),n=c(37927),o=c(14993),p=c(16699),q=c(13009),r=c(71733),s=a([i,j,k,m]);async function t(a){let b=(0,j.L)(),c=(await b.select().from(k.businesses).where((0,i.eq)(k.businesses.id,a)).limit(1))[0];if(!c)return;let d=async c=>{await b.update(k.businesses).set({websiteStatus:"failed",websiteNote:c.slice(0,255)}).where((0,i.eq)(k.businesses.id,a)),await (0,m.M)({actor:"system",action:"website.build_failed",entity:"business",entityId:a,after:{note:c}})};await b.update(k.businesses).set({websiteStatus:"building",websiteNote:null}).where((0,i.eq)(k.businesses.id,a));try{let d={...r.tX,...c.intakeJson??{}},e=await (0,n.X)(c,d),g=(process.env.PUBLIC_APP_HOST||"admin.pykk.uk").replace(/\/$/,""),j=h().join((0,l.Sb)(),c.slug);f().mkdirSync(h().join(j,"admin"),{recursive:!0});let s=`?v=${Date.now()}`,t=e.html.replace(/href="styles\.css(\?[^"]*)?"/g,`href="styles.css${s}"`).replace(/src="script\.js(\?[^"]*)?"/g,`src="script.js${s}"`);f().writeFileSync(h().join(j,"index.html"),t),f().writeFileSync(h().join(j,"styles.css"),e.css),e.js?f().writeFileSync(h().join(j,"script.js"),e.js):f().existsSync(h().join(j,"script.js"))&&f().rmSync(h().join(j,"script.js")),f().writeFileSync(h().join(j,"admin","index.html"),(0,q.Q)({slug:c.slug,publicAppHost:g}));let u=await (0,o.Q)(c.slug,`Add site: ${c.name} (site factory)`),v=await (0,p.z)(c.slug),w=[e.usedFallback?"fallback template used":"AI-drafted",u.message,v.message].join(" \xb7 ");await b.update(k.businesses).set({websiteStatus:e.usedFallback?"live_fallback":"live",websiteBuiltAt:new Date,websiteNote:w.slice(0,255)}).where((0,i.eq)(k.businesses.id,a)),await (0,m.M)({actor:"system",action:"website.built",entity:"business",entityId:a,after:{usedFallback:e.usedFallback,attempts:e.attempts,steps:e.steps,failures:e.failures.slice(0,6),note:w}})}catch(a){await d(a.message)}}[i,j,k,m]=s.then?(await s)():s,d()}catch(a){d(a)}})}};
+${b.extras.enableBooking?e.c:""}
+`}}}};
