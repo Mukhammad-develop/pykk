@@ -1,158 +1,161 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<meta name="description" content="Barber Shop — a local barbershop in the UK.">
-  <title>Barber Shop — Watford</title>
-  <link rel="stylesheet" href="styles.css?v=1790695608191">
+<title>Barber Shop — Clean fades. No fuss.</title>
+<meta name="description" content="Barber Shop — great haircuts, clean fades, and friendly service. See the cut list and opening hours. No fuss, just a quality cut.">
+<link rel="stylesheet" href="styles.css?v=1790702891199">
 </head>
-<body>
+<body data-business="testbarbershop">
 
-  <header class="top">
-    <div class="container top__inner">
-      <a class="brand" href="#top">Barber Shop <span class="brand__town">Watford</span></a>
-      <nav class="top__nav" aria-label="Page">
-        <a href="#prices">The board</a>
-        <a href="#shop">The shop</a>
-        <a class="top__call" href="tel:07570123456">07570 123456</a>
-      </nav>
+<a class="skip-link" href="#top">Skip to content</a>
+
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="#top">Barber Shop</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a href="#prices">Cut list</a>
+      <a href="#book">Booking</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" tabindex="-1">
+
+  <!-- 1 · HERO — the headline is the poster -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__inner">
+      <h1 class="hero__title" id="hero-title">Clean fades.<br>No fuss.</h1>
+      <p class="eyebrow">Great haircuts · Friendly service</p>
+      <p class="hero__lede">The cut list, plain and simple.</p>
+      <div class="hero__actions">
+        <a class="stamp" href="#book" aria-label="Booked — see booking information"><span>Booked</span></a>
+        <a class="btn btn--ghost" href="#prices">See the cut list</a>
+      </div>
+      <p class="hero__pin" aria-hidden="true"></p>
     </div>
-  </header>
+  </section>
 
-  <main id="top">
-
-    <!-- 1. HERO — the headline is the sign -->
-    <section class="hero">
-      <div class="container hero__inner">
-        <p class="eyebrow eyebrow--terracotta">Walk in. Sit down. Look sharp.</p>
-        <h1>A quality cut.<br>No fuss.</h1>
-        <a class="btn btn--stamp hero__stamp" href="#book">Book a chair</a>
-        <p class="hero__meta">12 High Street, Watford &nbsp;·&nbsp; Mon–Fri 09:00–20:00 &nbsp;·&nbsp; <a href="tel:07570123456">07570 123456</a></p>
+  <!-- 2 · THE CUT LIST -->
+  <section class="prices" id="prices" aria-labelledby="prices-title">
+    <div class="container">
+      <hr class="rule rule--dashed">
+      <div class="prices__head">
+        <h2 id="prices-title">The cut list</h2>
+        <p class="prices__note">Monday–Friday, 09:00-20:00.</p>
       </div>
-      <div class="container"><hr class="torn"></div>
-    </section>
+      <ul class="price-table price-table--split" role="list">
+        <li class="price-row"><span class="name">Trimming</span><span class="leader" aria-hidden="true"></span><span class="price">£80</span></li>
+        <li class="price-row"><span class="name">Beard</span><span class="leader" aria-hidden="true"></span><span class="price">£50</span></li>
+        <li class="price-row"><span class="name">Grooming</span><span class="leader" aria-hidden="true"></span><span class="price">£60</span></li>
+        <li class="price-row"><span class="name">Hairstyle</span><span class="leader" aria-hidden="true"></span><span class="price">£40</span></li>
+        <li class="price-row"><span class="name">Styling</span><span class="leader" aria-hidden="true"></span><span class="price">£120</span></li>
+      </ul>
+    </div>
+  </section>
 
-    <!-- 2. PRICE BOARD — one narrow column, dotted leaders -->
-    <section class="board" id="prices">
-      <div class="container board__inner">
-        <h2>Same prices, every day</h2>
-        <p class="board__note">No packages, no small print. Pick a line, take a seat.</p>
-        <div class="price-table">
-          <div class="price-row">
-            <div class="name">Hairstyle<small>A proper cut, shaped to you and finished clean.</small></div>
-            <span class="leader" aria-hidden="true"></span>
-            <span class="price">£40</span>
-          </div>
-          <div class="price-row">
-            <div class="name">Beard<small>Lined up, shaped and taken down to the length you want.</small></div>
-            <span class="leader" aria-hidden="true"></span>
-            <span class="price">£50</span>
-          </div>
-          <div class="price-row">
-            <div class="name">Grooming<small>The full tidy — hair, neck and edges sorted in one sitting.</small></div>
-            <span class="leader" aria-hidden="true"></span>
-            <span class="price">£60</span>
-          </div>
-          <div class="price-row">
-            <div class="name">Trimming<small>Precision trim to keep the shape sharp between cuts.</small></div>
-            <span class="leader" aria-hidden="true"></span>
-            <span class="price">£80</span>
-          </div>
-          <div class="price-row">
-            <div class="name">Styling<small>Cut and styled through — for when it has to look right.</small></div>
-            <span class="leader" aria-hidden="true"></span>
-            <span class="price">£120</span>
-          </div>
-        </div>
+  <!-- 3 · THREE NOTES ON THE CUT LIST -->
+  <section class="promises" aria-label="Cuts and care">
+    <div class="container">
+      <ul class="promise-grid" role="list">
+        <li class="promise">
+          <span class="promise__num" aria-hidden="true">01</span>
+          <h2>Fades</h2>
+          <p>Great haircuts, clean fades, and friendly service.</p>
+        </li>
+        <li class="promise">
+          <span class="promise__num" aria-hidden="true">02</span>
+          <h2>Beards</h2>
+          <p>Beard — £50.</p>
+        </li>
+        <li class="promise">
+          <span class="promise__num" aria-hidden="true">03</span>
+          <h2>Styling</h2>
+          <p>Styling — £120.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4 · STORY -->
+  <section class="story" id="story" aria-label="Our story">
+    <div class="container story__inner">
+      <blockquote class="story__quote">
+        <p>“No fuss, just a quality cut in a relaxed atmosphere.”</p>
+      </blockquote>
+      <div class="story__body">
+        <p>We’re a local barbershop focused on great haircuts, clean fades, and friendly service. We take pride in our work and make sure every customer leaves looking and feeling their best. No fuss, just a quality cut in a relaxed atmosphere.</p>
       </div>
-      <div class="container"><hr class="torn"></div>
-    </section>
+    </div>
+  </section>
 
-    <!-- 3. THREE TICKETS — a promise each, with a word from the chair -->
-    <section class="tickets">
-      <div class="container">
-        <div class="tickets__grid">
-          <article class="card card--ticket">
-            <p class="eyebrow">Fades</p>
-            <h3>Blended, not blocky.</h3>
-            <p>Skin to length with no hard line where there shouldn't be one. We take the time it takes.</p>
-            <blockquote class="ticket__quote">
-              <p>“Best fade in town!”</p>
-              <footer>— Samuel  <p>Website by <a href="https://pykk.uk">PYKK</a></p>
-</footer>
-            </blockquote>
-          </article>
-          <article class="card card--ticket">
-            <p class="eyebrow">Classic</p>
-            <h3>Cut to last.</h3>
-            <p>Scissor work and clean edges that still look right a fortnight on. Nothing you'll have to explain.</p>
-            <blockquote class="ticket__quote">
-              <p>“Amazing service?”</p>
-              <footer>— Joshua</footer>
-            </blockquote>
-          </article>
-          <article class="card card--ticket">
-            <p class="eyebrow">Beard</p>
-            <h3>Shaped, not shaved off.</h3>
-            <p>Lined, tapered and evened out so it frames your face instead of hiding it.</p>
-            <blockquote class="ticket__quote">
-              <p>“I always do my beard and I am fully satisfied!”</p>
-              <footer>— Mukhammed</footer>
-            </blockquote>
-          </article>
-        </div>
+  <!-- CUSTOMER REVIEWS -->
+  <section class="reviews" aria-labelledby="reviews-title">
+    <div class="container">
+      <h2 class="reviews__title" id="reviews-title">Customer words</h2>
+      <ol class="review-list" role="list">
+        <li class="review">
+          <p class="review__text">Best fade in town!</p>
+          <p class="review__by">Daniel</p>
+        </li>
+        <li class="review">
+          <p class="review__text">I always do my beard and I am fully satisfied!</p>
+          <p class="review__by">Mukhammed</p>
+        </li>
+        <li class="review">
+          <p class="review__text">Amazing service?</p>
+          <p class="review__by">Joshua</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 5 · BOOKING STRIP — the green band -->
+  <section class="book" id="book" aria-labelledby="book-title">
+    <div class="container book__inner">
+      <div class="book__hours">
+        <h2 id="book-title">Booking &amp; hours</h2>
+        <table class="hours">
+          <caption>Opening hours</caption>
+          <tbody>
+            <tr><th scope="row">Monday</th><td>09:00-20:00</td></tr>
+            <tr><th scope="row">Tuesday</th><td>09:00-20:00</td></tr>
+            <tr><th scope="row">Wednesday</th><td>09:00-20:00</td></tr>
+            <tr><th scope="row">Thursday</th><td>09:00-20:00</td></tr>
+            <tr><th scope="row">Friday</th><td>09:00-20:00</td></tr>
+            <tr><th scope="row">Saturday</th><td>closed</td></tr>
+            <tr><th scope="row">Sunday</th><td>closed</td></tr>
+          </tbody>
+        </table>
+        <p class="stamp stamp--paper book__stamp" aria-hidden="true"><span>Booked</span></p>
       </div>
-      <div class="container"><hr class="torn"></div>
-    </section>
-
-    <!-- 4. SPLIT — story left, hours & address right -->
-    <section class="shop" id="shop">
-      <div class="container shop__inner">
-        <div class="shop__story">
-          <h2>Relaxed chair, sharp finish</h2>
-          <p>We’re a local barbershop focused on great haircuts, clean fades, and friendly service. We take pride in our work and make sure every customer leaves looking and feeling their best. No fuss, just a quality cut in a relaxed atmosphere.</p>
-          <p class="shop__owner">Run by Jane Smith.</p>
-          <ul class="shop__social">
-            <li><a href="https://instagram.com/barbershop" rel="noopener">Instagram</a></li>
-            <li><a href="https://facebook.com/barbershop" rel="noopener">Facebook</a></li>
-            <li><a href="mailto:jane@gmail.com">jane@gmail.com</a></li>
-          </ul>
-        </div>
-
-        <div class="shop__divider" aria-hidden="true"></div>
-
-        <div class="shop__details">
-          <h3 class="shop__label">Hours</h3>
-          <dl class="hours">
-            <div class="hours__row"><dt>Monday – Friday</dt><dd>09:00–20:00</dd></div>
-            <div class="hours__row hours__row--closed"><dt>Saturday &amp; Sunday</dt><dd>Closed</dd></div>
-          </dl>
-
-          <h3 class="shop__label">Find us</h3>
-          <address class="shop__address">12 High Street<br>Watford</address>
-          <div class="map">
-            <iframe class="map" src="https://www.google.com/maps?q=12%20High%20street%2C%20Watford&amp;output=embed" loading="lazy" title="Map" referrerpolicy="no-referrer-when-downgrade"></iframe>
-          </div>
-        </div>
-      </div>
-      <div class="container"><hr class="torn"></div>
-    </section>
-
-    <!-- 5. BOOKING BAND — green field -->
-    <section class="book" id="book">
-      <div class="container book__inner">
-        <div class="book__intro">
-          <h2>Take a chair</h2>
-          <p>Pick a time and it's yours. Prefer to talk? Ring or message and we'll sort it.</p>
-          <p class="book__fallback">
-            <a class="btn btn--stamp" href="tel:07570123456">Call 07570 123456</a>
-            <a class="book__wa" href="https://wa.me/447570123456" rel="noopener">WhatsApp us</a>
-          </p>
-        </div>
-        <div class="book__form">
-            <section id="book" aria-label="Book an appointment" class="booking">
+      <div class="book__form">
+        <div class="book__widget">  <section id="book" aria-label="Book an appointment" class="booking">
+<style>
+#book .booking-grid { display: grid; gap: .9rem; margin-top: 1rem; }
+#book .booking-grid label { display: flex; flex-direction: column; gap: .4rem; font-size: .95rem; font-weight: 600; }
+#book .booking-grid input, #book .booking-grid select {
+  width: 100%; box-sizing: border-box; background: #fff; color: #1a1a1a;
+  border: 1.5px solid rgba(0,0,0,.22); border-radius: .55rem;
+  padding: .8rem .9rem; font-size: 1.05rem; font-family: inherit;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+#book .booking-grid input:focus, #book .booking-grid select:focus {
+  border-color: currentColor; outline: none; box-shadow: 0 0 0 3px rgba(0,0,0,.08);
+}
+#book .booking-submit { margin-top: 1.2rem; width: 100%; text-align: center; padding: 1rem; font-size: 1.05rem; cursor: pointer; }
+#book .booking-error { margin-top: .75rem; background: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
+#book .booking-success { margin-top: .75rem; background: #064e3b; color: #a7f3d0; border: 1px solid #065f46; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
+#book .booking-submit { background: var(--accent, #33573c); color: #fff; border: none; border-radius: .55rem; font-weight: 700; }
+#book .booking-submit:hover { filter: brightness(1.1); }
+#book .booking-submit:disabled { opacity: .55; }
+@media (min-width: 36rem) {
+  #book .booking-grid { grid-template-columns: 1fr 1fr; }
+  #book .booking-note { grid-column: 1 / -1; }
+}
+</style>
     <form id="booking-form" data-slug="testbarbershop" data-api="https://admin.pykk.uk">
       <div class="booking-grid">
         <label>Service
@@ -210,37 +213,24 @@
       <button type="submit" class="btn btn--primary booking-submit">Book appointment</button>
     </form>
     <script src="https://admin.pykk.uk/booking.js" defer></script>
-  </section>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="foot">
-    <div class="container foot__inner">
-      <div class="foot__col">
-        <p class="brand">Barber Shop</p>
-        <p class="foot__tag">A quality cut. No fuss.</p>
-        <address class="foot__addr">12 High Street, Watford</address>
-      </div>
-      <div class="foot__col foot__col--right">
-        <ul class="foot__list">
-          <li><a href="tel:07570123456">07570 123456</a></li>
-          <li><a href="https://wa.me/447570123456" rel="noopener">WhatsApp</a></li>
-          <li><a href="mailto:jane@gmail.com">jane@gmail.com</a></li>
-          <li><a href="https://instagram.com/barbershop" rel="noopener">Instagram</a></li>
-          <li><a href="https://facebook.com/barbershop" rel="noopener">Facebook</a></li>
-        </ul>
-        <p class="foot__hours">Mon–Fri 09:00–20:00 · Sat &amp; Sun closed</p>
+  </section></div>
+        <p class="book__fallback">Online booking is not available on this page.</p>
       </div>
     </div>
-  </footer>
+  </section>
 
-  <div class="thumb" aria-label="Quick actions">
-    <a class="thumb__call" href="tel:07570123456">Call</a>
-    <a class="thumb__book" href="#book">Book a chair</a>
+</main>
+
+<footer class="foot">
+  <div class="container foot__inner">
+    <div class="foot__col">
+      <p class="brand">Barber Shop</p>
+      <p class="foot__note">Monday–Friday, 09:00-20:00.<br>Saturday &amp; Sunday: closed.</p>
+    </div>
+    <div class="foot__col foot__map"><iframe class="map" src="https://www.google.com/maps?q=12%20High%20street%2C%20Watford&amp;output=embed" loading="lazy" title="Map" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
   </div>
+  <p>Website by <a href="https://pykk.uk">PYKK</a></p>
+</footer>
 
 <script src="https://admin.pykk.uk/pv.js" data-site="testbarbershop" defer></script>
 </body>
