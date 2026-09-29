@@ -2,6 +2,21 @@
 
 Short reasons for technical choices, newest first.
 
+- **Mechanics live in code, taste lives in the prompt (Opus pass).** The model
+  never sees beacon/noindex/footer/map/booking rules — `injectMechanics` adds
+  them deterministically, and the model places `<!--BOOKING-->`/`<!--MAP-->`
+  markers instead. The validator has two modes: raw model output vs shipped
+  output. The creative prompt is Opus's lean "£500 studio" brief; a compliance
+  document became a design brief.
+- **Self-hosted fonts per archetype** (OFL subsets copied into each site) —
+  Opus: system fonts are the biggest "default look" driver. Typography is
+  bought for ~112 KB per site with zero external requests.
+- **The pipeline has eyes now:** Playwright screenshot → vision-model taste
+  critique → one revision pass. Gracefully skipped with no browser binary, so
+  builds never fail because of it.
+- **An archetype library beats freeform for a product.** Four hand-tuned
+  foundations (tokens, type scale, components); art direction chooses and
+  adapts. Freeform varies too much; this is the reliability floor.
 - **The host's nginx caches static files, so every build cache-busts asset URLs**
   (`styles.css?v=<build time>`). Learned the hard way: a good rebuild was
   invisible for ~15 minutes because nginx kept serving the previous build to

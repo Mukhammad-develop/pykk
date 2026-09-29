@@ -1,6 +1,7 @@
 import type { businesses } from '@/db/schema'
 import { DAY_ORDER, moodById, type MoodId, type SiteIntake } from './intake'
 import { renderBookingForm, BOOKING_CSS } from './booking-form'
+import { typeLabel } from './mechanics'
 import { FEATURE_CARDS, iconSvg } from './icons'
 
 // The guaranteed floor of the site factory: a complete, correct, honest site
@@ -147,7 +148,7 @@ ${intake.reviews
 
   const aboutText = intake.additionalInfo
     ? e(intake.additionalInfo)
-    : `${name} is a friendly local ${business.type.replace(/_/g, ' ')}. ${extraLines.join(' ')}`
+    : `${name} is a friendly local ${typeLabel(business.type)}. ${extraLines.join(' ')}`
 
   const cards = FEATURE_CARDS[business.type] ?? FEATURE_CARDS.other
   const featureCards = cards
@@ -171,7 +172,7 @@ ${intake.reviews
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>${name}</title>
-<meta name="description" content="${name} — a local ${business.type.replace(/_/g, ' ')} in the UK. Services, prices, opening hours and contact.">
+<meta name="description" content="${name} — a local ${typeLabel(business.type)} in the UK. Services, prices, opening hours and contact.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -186,9 +187,9 @@ ${intake.reviews
   </nav>
 </header>
 <section class="hero${heroPhoto ? ' hero--photo' : ''}" aria-label="Welcome"${heroPhoto ? ` style="background-image: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)), url('images/${e(heroPhoto)}')"` : ''}>
-  <p class="eyebrow">${e(business.type.replace(/_/g, ' '))}${intake.landmark ? ` · ${e(intake.landmark)}` : ''}</p>
+  <p class="eyebrow">${e(typeLabel(business.type))}${intake.landmark ? ` · ${e(intake.landmark)}` : ''}</p>
   <h1>${name}</h1>
-  <p class="tagline">${extraLines.length > 0 ? e(extraLines.join(' ')) : `A friendly local ${business.type.replace(/_/g, ' ')}.`}</p>
+  <p class="tagline">${extraLines.length > 0 ? e(extraLines.join(' ')) : `A friendly local ${typeLabel(business.type)}.`}</p>
   <a class="btn btn--primary" href="#contact">Get in touch</a>
 </section>
 <main id="main">

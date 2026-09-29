@@ -7,15 +7,16 @@ type Business = typeof businesses.$inferSelect
 const business = { id: 1, name: 'Fade & Co.', slug: 'fadeandco', type: 'barber_hair' } as Business
 
 describe('buildPrompt', () => {
-  it('embeds the rules, the slug, the host and forbids "subscription" and bond content', () => {
+  it('embeds the lean rules: markers, no beacon/beacon credit, forbids "subscription"', () => {
     const [system, user] = buildPrompt(business, { ...EMPTY_INTAKE, phone: '07123456789' }, 'admin.pykk.uk')
-    expect(system.content).toContain('data-site="fadeandco"')
-    expect(system.content).toContain('admin.pykk.uk/pv.js')
-    expect(system.content.toLowerCase()).toContain('never the word "subscription"')
-    expect(system.content).toContain('NEVER mention PYKK')
-    expect(system.content).toContain('Reviews may appear ONLY if explicitly provided')
+    expect(system.content).toContain('<!--BOOKING-->')
+    expect(system.content).toContain('<!--MAP-->')
+    expect(system.content).toContain('lead designer')
+    expect(system.content).toContain('never look like templates')
+    expect(system.content.toLowerCase()).toContain('never write the word "subscription"')
+    expect(system.content).toContain('Do NOT add any analytics scripts, beacons')
     expect(user.content).toContain('07123456789')
-    expect(user.content).toContain('barber')
+    expect(user.content).toContain('barbershop')
   })
   it('uses the chosen mood direction', () => {
     const [, user] = buildPrompt(business, { ...EMPTY_INTAKE, mood: 'light-elegant' }, 'admin.pykk.uk')
@@ -27,10 +28,10 @@ describe('buildPrompt', () => {
       business,
       { ...EMPTY_INTAKE, reviews: [{ author: 'Sam', text: 'Great cut.' }] },
       'admin.pykk.uk',
-      ['missing noindex'],
+      ['missing marker'],
     )
     expect(user.content).toContain('"Great cut." — Sam')
-    expect(user.content).toContain('missing noindex')
+    expect(user.content).toContain('missing marker')
     expect(user.content).toContain('REJECTED')
   })
 })

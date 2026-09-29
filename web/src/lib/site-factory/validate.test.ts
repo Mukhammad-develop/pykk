@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateSite } from './validate'
+import { validateSite, validateScript } from './validate'
 
 const ctx = { slug: 'fadeandco', publicAppHost: 'admin.pykk.uk' }
 
@@ -8,60 +8,62 @@ const goodHtml = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
 <title>Fade &amp; Co.</title>
-<meta name="description" content="x">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <main><h1>Fade &amp; Co.</h1>
-<section id="features"><h2>Why choose us</h2><div><svg></svg><svg></svg><svg></svg></div></section>
-<section id="about"><h2>About</h2><p>honest text</p></section>
+<section><h2>Prices</h2><p>honest text</p></section>
 </main>
-<footer>© Fade &amp; Co. · Website by <a href="https://pykk.uk">PYKK</a></footer>
-<script src="https://admin.pykk.uk/pv.js" data-site="fadeandco" defer></script>
 </body>
 </html>`
 const goodCss = 'body { color: #111; background: #fff; font-family: sans-serif; }' + '/* x */'.repeat(40) + '\nfooter { padding: 1rem; }\n'
 
-describe('validateSite', () => {
-  it('accepts a compliant site', () => {
+describe('validateSite (slim, post-Opus rules)', () => {
+  it('accepts compliant model output (mechanics come later, not required)', () => {
     expect(validateSite(goodHtml, goodCss, ctx)).toEqual([])
   })
-  it('rejects a missing/wrong beacon slug', () => {
-    const html = goodHtml.replace('data-site="fadeandco"', 'data-site="wrong"')
-    expect(validateSite(html, goodCss, ctx).join(' ')).toContain('data-site="fadeandco"')
+  it('accepts shipped output with mechanics present', () => {
+    const shipped = goodHtml
+      .replace('<meta name="viewport" content="width=device-width, initial-scale=1">', '<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="robots" content="noindex">')
+      .replace('</body>', '<footer><a href="https://pykk.uk">PYKK</a></footer>\n<script src="https://admin.pykk.uk/pv.js" data-site="fadeandco" defer></script>\n</body>')
+    expect(validateSite(shipped, goodCss, ctx, { shipped: true })).toEqual([])
   })
-  it('rejects the forbidden word "subscription"', () => {
-    const html = goodHtml.replace('honest text', 'subscription text')
-    expect(validateSite(html, goodCss, ctx).join(' ')).toContain('subscription')
+  it('rejects shipped output missing the mechanics', () => {
+    expect(validateSite(goodHtml, goodCss, ctx, { shipped: true }).join(' ')).toContain('noindex')
+    expect(validateSite(goodHtml, goodCss, ctx, { shipped: true }).join(' ')).toContain('PYKK')
+    expect(validateSite(goodHtml, goodCss, ctx, { shipped: true }).join(' ')).toContain('beacon')
   })
-  it('rejects PYKK-internal bond content on the public site', () => {
-    const withBond = goodHtml.replace('</main>', '<section id="bond"><h2>Your bond with PYKK</h2><p>monthly bond stuff</p></section></main>')
-    const failures = validateSite(withBond, goodCss, ctx).join(' ')
-    expect(failures).toContain('bond')
-    expect(failures).toContain('PYKK-internal')
+  it('rejects truncation of html or css', () => {
+    expect(validateSite(goodHtml.replace('</body>\n</html>', '<div class="unfinish'), goodCss, ctx).join(' ')).toContain('truncated')
+    expect(validateSite(goodHtml, goodCss + '\n.hero {\n  background: ', ctx).join(' ')).toContain('truncated')
   })
-  it('rejects missing noindex, footer link and tokens', () => {
-    expect(validateSite(goodHtml.replace('<meta name="robots" content="noindex">', ''), goodCss, ctx).join(' ')).toContain('noindex')
-    expect(validateSite(goodHtml.replace('href="https://pykk.uk"', 'href="https://example.com"'), goodCss, ctx).join(' ')).toContain('PYKK')
-    expect(validateSite(goodHtml + '{{SITE_NAME}}', goodCss, ctx).join(' ')).toContain('{{TOKEN}}')
+  it('rejects the forbidden word "subscription" and bond content', () => {
+    expect(validateSite(goodHtml.replace('honest text', 'subscription text'), goodCss, ctx).join(' ')).toContain('subscription')
+    expect(validateSite(goodHtml.replace('honest text', 'your bond with PYKK'), goodCss, ctx).join(' ')).toContain('bond')
   })
-  it('rejects missing h1, multiple h1s, and thin css', () => {
+  it('rejects missing h1 and multiple h1s', () => {
     expect(validateSite(goodHtml.replace('<h1>', '<h2>').replace('</h1>', '</h2>'), goodCss, ctx).join(' ')).toContain('<h1>')
     expect(validateSite(goodHtml.replace('</main>', '<h1>Two</h1></main>'), goodCss, ctx).join(' ')).toContain('exactly one')
+  })
+  it('rejects hand-built mechanics — the model must use markers', () => {
+    expect(validateSite(goodHtml.replace('</main>', '<form id="booking-form"></form></main>'), goodCss, ctx).join(' ')).toContain('<!--BOOKING-->')
+    expect(validateSite(goodHtml.replace('</main>', '<iframe src="https://www.google.com/maps?q=x&output=embed"></iframe></main>'), goodCss, ctx).join(' ')).toContain('<!--MAP-->')
+    expect(validateSite(goodHtml.replace('</main>', '<script src="https://admin.pykk.uk/pv.js"></script></main>'), goodCss, ctx).join(' ')).toContain('beacon')
+  })
+  it('rejects thin css and lorem ipsum', () => {
     expect(validateSite(goodHtml, 'body{}', ctx).join(' ')).toContain('styles.css')
+    expect(validateSite(goodHtml.replace('honest text', 'lorem ipsum dolor'), goodCss, ctx).join(' ')).toContain('lorem ipsum')
   })
-  it('rejects a missing features section or too few icons', () => {
-    const noFeatures = goodHtml.replace(/<section id="features">[\s\S]*?<\/section>/, '')
-    expect(validateSite(noFeatures, goodCss, ctx).join(' ')).toContain('#features')
-    const noIcons = goodHtml.replace(/<svg><\/svg>/g, '')
-    expect(validateSite(noIcons, goodCss, ctx).join(' ')).toContain('SVG')
+})
+
+describe('validateScript', () => {
+  it('accepts a tiny local script', () => {
+    expect(validateScript('document.addEventListener("click",()=>{})', 'admin.pykk.uk')).toEqual([])
   })
-  it('rejects truncated files (the LLM ran out of tokens)', () => {
-    const truncatedCss = goodCss + '\n.hero {\n  background: '
-    expect(validateSite(goodHtml, truncatedCss, ctx).join(' ')).toContain('truncated')
-    const truncatedHtml = goodHtml.replace('</body>\n</html>', '<div class="unfinish')
-    expect(validateSite(truncatedHtml, goodCss, ctx).join(' ')).toContain('truncated')
+  it('rejects big, eval-y and externally-referencing scripts', () => {
+    expect(validateScript('x'.repeat(5000), 'admin.pykk.uk').join(' ')).toContain('too large')
+    expect(validateScript('eval("1")', 'admin.pykk.uk').join(' ')).toContain('eval')
+    expect(validateScript('fetch("https://evil.com/x")', 'admin.pykk.uk').join(' ')).toContain('external')
   })
 })

@@ -14,8 +14,7 @@ export function renderBookingForm(opts: {
     .map((s) => `          <option value="${e(s.name)}">${e(s.name)}${s.price ? ` — £${e(s.price)}` : ''}</option>`)
     .join('\n')
 
-  return `  <section id="book" aria-labelledby="book-heading" class="booking">
-    <h2 id="book-heading">Book an appointment</h2>
+  return `  <section id="book" aria-label="Book an appointment" class="booking">
     <form id="booking-form" data-slug="${opts.slug}" data-api="https://${opts.publicAppHost}">
       <div class="booking-grid">
         <label>Service
@@ -53,14 +52,15 @@ ${options}
 
 // The CSS every booking form needs (uses the site's own variables).
 export const BOOKING_CSS = `
-.booking-grid { display: grid; gap: .75rem; }
-.booking-grid label { display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; color: var(--muted); }
+.booking-grid { display: grid; gap: .9rem; }
+.booking-grid label { display: flex; flex-direction: column; gap: .4rem; font-size: .95rem; font-weight: 600; color: var(--text); }
 .booking-grid input, .booking-grid select {
-  background: var(--surface); color: var(--text); border: 1px solid var(--line);
-  border-radius: .5rem; padding: .75rem .8rem; font-size: 1rem; width: 100%;
+  background: var(--surface); color: var(--text); border: 1.5px solid var(--line);
+  border-radius: .6rem; padding: .85rem .9rem; font-size: 1.05rem; width: 100%;
+  transition: border-color .2s ease;
 }
 .booking-grid input:focus, .booking-grid select:focus { border-color: var(--accent); outline: none; }
-.booking-submit { margin-top: 1rem; width: 100%; text-align: center; }
+.booking-submit { margin-top: 1.2rem; width: 100%; text-align: center; padding: 1rem; font-size: 1.05rem; }
 .booking-error { margin-top: .75rem; background: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
 .booking-success { margin-top: .75rem; background: #064e3b; color: #a7f3d0; border: 1px solid #065f46; border-radius: .5rem; padding: .6rem .8rem; font-size: .9rem; }
 @media (min-width: 36rem) {

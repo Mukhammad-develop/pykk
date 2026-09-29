@@ -133,6 +133,7 @@ jobs:
           if [ -f web/deploy/migrate.mjs ]; then cp web/deploy/migrate.mjs release/migrate.mjs; fi
           if [ -d web/drizzle ]; then cp -R web/drizzle release/drizzle; fi
           if [ -f web/deploy/create-admin.mjs ]; then cp web/deploy/create-admin.mjs release/create-admin.mjs; fi
+          if [ -d web/font-assets ]; then cp -R web/font-assets release/font-assets; fi
 
           # Keeps the server's own .env and tmp/ out of git's way on the deploy branch
           printf '.env\ntmp/\n' > release/.gitignore

@@ -37,8 +37,8 @@ const intake = {
 describe('renderBaselineSite', () => {
   const { html, css } = renderBaselineSite(business, intake, 'admin.pykk.uk')
 
-  it('produces a site that passes the validator', () => {
-    expect(validateSite(html, css, { slug: 'fadeandco', publicAppHost: 'admin.pykk.uk' })).toEqual([])
+  it('produces a site that passes the shipped-output validator', () => {
+    expect(validateSite(html, css, { slug: 'fadeandco', publicAppHost: 'admin.pykk.uk' }, { shipped: true })).toEqual([])
   })
   it('escapes HTML in user data', () => {
     expect(html).not.toContain('Co. <script>') // the raw name must never appear unescaped

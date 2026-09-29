@@ -131,6 +131,23 @@
   across all clients. Availability logic is unit-tested (closed days, past,
   collisions, clock change); full flow rehearsed on Node 22 — 106 tests pass.
 
+- **The Opus pass — pipeline rebuilt from expert review** (29 Sep 2026): Claude
+  Opus reviewed the whole factory and named the real problems (compliance-first
+  prompt, template-recipe craft bar, blind pipeline, no fonts). Implemented in
+  full: **Stage 1** — mechanics moved into code (`injectMechanics`: beacon,
+  noindex, head essentials, footer; booking/map become `<!--BOOKING-->` /
+  `<!--MAP-->` markers the code substitutes), slim two-mode validator, Opus's lean
+  "£500 studio" creative prompt. **Stage 2** — self-hosted OFL font pairings per
+  archetype (Fraunces, DM Serif, Instrument Serif, Space Grotesk + Inter, subset
+  woff2 copied per site). **Stage 3** — "the eyes": Playwright screenshot of the
+  built page → vision-model taste critique → one revision pass (graceful skip
+  with no browser). **Stage 4** — archetype library v1 (heritage-barber,
+  luxe-beauty, cafe-menu, clean-services): art direction chooses and *adapts* a
+  hand-tuned design foundation instead of inventing from scratch. Facts cleanup
+  ("barber hair" → "barbershop"). Booking form polished from the eyes' own
+  critique. Rehearsal on Node 22: all stage checks pass; eyes returned a real
+  senior-designer critique of the rendered page.
+
 - **Reference-grade pass** (29 Sep 2026): sites now get inline **SVG icon feature
   cards** ("Why choose us" with a 15-icon catalog, enforced by the validator), a
   live **"Open now / Closed" badge** computed from the business's hours in the
