@@ -1,5 +1,6 @@
 import type { businesses } from '@/db/schema'
 import { DAY_ORDER, moodById, type SiteIntake } from './intake'
+import { iconCatalog } from './icons'
 import type { ChatMessage } from './openrouter'
 
 type Business = typeof businesses.$inferSelect
@@ -17,7 +18,7 @@ ABSOLUTE RULES (a validator checks every one — failing any means rejection):
 3. <head> in this order: <meta charset="utf-8">, viewport, <meta name="robots" content="noindex">, <title> with the business name, meta description, <link rel="stylesheet" href="styles.css">. The <html> tag has lang="en-GB".
 4. UK English. NO invented facts: no fake reviews, testimonials, ratings, awards, "years of experience", or statistics. Only the facts provided in the intake. Reviews may appear ONLY if explicitly provided as real in the intake — use them verbatim, never write new ones.
 5. The public site sells the BUSINESS only. NEVER mention PYKK's billing, bonds, payments, grace periods, websites being turned off, or anything PYKK-internal — and NEVER the word "subscription". The only PYKK presence is the footer credit and the beacon (rules 8 and 9).
-6. Sections in this order: hero (business name, one honest tagline from the story, CTA to #contact; if a hero photo is provided, use it as a large backdrop image with a readable dark overlay); #services (services & prices from the intake, formatted £X.XX); #gallery (the provided photo files as <img src="images/FILENAME" loading="lazy"> with honest alt text; if no photos, use styled placeholder boxes captioned [[NEEDS INFO: photos]]); #reviews (ONLY if real reviews are provided — a "What customers say" section quoting them verbatim with the given names); #about (the story from the intake, expanded warmly but factually); #book (ONLY when booking is enabled — see rule 10); #visit (opening-hours table + address + a "Get directions" Google Maps link); #contact (click-to-call tel:, mailto:, a WhatsApp https://wa.me/<digits> link, and any provided Instagram/Facebook links); footer.
+6. Sections in this order: hero (business name, one honest tagline from the story, CTA to #contact; if a hero photo is provided, use it as a large backdrop image with a readable dark overlay); #features ("Why choose us" — 3 or 4 cards, each with an inline SVG icon copied EXACTLY from the ICON CATALOG below, a 2–5 word title, and one benefit line drawn from the story); #services (services & prices from the intake, formatted £X.XX); #gallery (the provided photo files as <img src="images/FILENAME" loading="lazy"> with honest alt text — if photos exist this is a STAR section: the first photo large (full width or 2 columns wide), the rest in a tidy grid; if no photos, styled placeholder boxes captioned [[NEEDS INFO: photos]]); #reviews (ONLY if real reviews are provided — a "What customers say" section quoting them verbatim with the given names); #about (the story from the intake, expanded warmly but factually); #book (ONLY when booking is enabled — see rule 10); #visit (opening-hours table + address + a "Get directions" Google Maps link + the OPEN-NOW badge from rule 13); #contact (click-to-call tel:, mailto:, a WhatsApp https://wa.me/<digits> link, and any provided Instagram/Facebook links); footer.
 7. Footer: "© {business name} · Website by <a href="https://pykk.uk">PYKK</a>".
 8. Immediately before </body>: <script src="https://PUBLIC_APP_HOST/pv.js" data-site="SLUG" defer></script>
 9. Gallery images: use EXACTLY the photo filenames given. Do not invent other image files.
@@ -31,7 +32,12 @@ ABSOLUTE RULES (a validator checks every one — failing any means rejection):
     f. When a phone number is provided, add a sticky mobile call button: <a class="sticky-call" href="tel:…">Call {business name}</a>, position: fixed at the bottom, visible ONLY on screens under 640px, high z-index, the accent colour.
     g. The footer has two columns on desktop (left: business name + the PYKK credit; right: quick contact links) and stacks on mobile.
     h. Hover/focus transitions of 150–250ms ease on interactive elements.
-12. OPTIONAL third block === script.js === (vanilla, max 60 lines, no libraries, no external URLs): only if it clearly improves the page — e.g. a mobile nav toggle or a simple gallery lightbox. Omit it otherwise.`
+12. OPTIONAL third block === script.js === (vanilla, max 60 lines, no libraries, no external URLs): only if it clearly improves the page — e.g. a mobile nav toggle or a simple gallery lightbox. Omit it otherwise.
+13. OPEN-NOW BADGE: in the #visit section include <span class="open-badge" data-open-badge></span> plus an INLINE <script> (this is the only inline script allowed) that embeds the intake hours as a JS object HOURS = {mon:'…',tue:'…',…} (use 'closed' for closed days, 'HH:MM–HH:MM' otherwise), picks today's entry with ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()], and sets the badge's text to "Open now" (class .open) or "Closed now" (class .closed) by comparing the current time against the range — or "Closed today" when the day is closed. Small, dependency-free.
+14. WRITE WITH A LOCAL VOICE. Confident and specific: "The sharpest fades in Watford", never "Welcome to our website". The hero tagline and section intros should sound like the proud owner, not a template.
+
+ICON CATALOG (copy the <svg> markup exactly; size and colour are styled via CSS):
+ICON_CATALOG_PLACEHOLDER`
 
 export function buildPrompt(
   business: Business,
@@ -105,7 +111,7 @@ ${
 Now produce the two files.`
 
   return [
-    { role: 'system', content: SYSTEM_PROMPT.replace('PUBLIC_APP_HOST', publicAppHost).replace('SLUG', business.slug) },
+    { role: 'system', content: SYSTEM_PROMPT.replace('PUBLIC_APP_HOST', publicAppHost).replace('SLUG', business.slug).replace('ICON_CATALOG_PLACEHOLDER', iconCatalog()) },
     { role: 'user', content: user },
   ]
 }

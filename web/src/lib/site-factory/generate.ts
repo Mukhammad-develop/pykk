@@ -19,7 +19,7 @@ export interface GenerateResult {
   steps: Record<string, number>
 }
 
-const SYSTEM_RULES_DIGEST = `static HTML+CSS only (no frameworks/CDNs/webfonts); one h1; semantic landmarks; mobile-first; AA contrast; noindex meta; lang="en-GB"; UK English; no invented facts/reviews/stats; never the word "subscription"; no PYKK-internal/bond content; footer "Website by PYKK" linking https://pykk.uk; beacon <script src="https://HOST/pv.js" data-site="SLUG" defer>; photos only from the provided filenames; booking form only if enabled (with the exact booking.js contract); craft bar: eyebrow labels, section rhythm, depth per mood, map embed when address, sticky mobile call button when phone, hover transitions, two-column footer.`
+const SYSTEM_RULES_DIGEST = `static HTML+CSS only (no frameworks/CDNs/webfonts); one h1; semantic landmarks; mobile-first; AA contrast; noindex meta; lang="en-GB"; UK English; no invented facts/reviews/stats; never the word "subscription"; no PYKK-internal/bond content; footer "Website by PYKK" linking https://pykk.uk; beacon <script src="https://HOST/pv.js" data-site="SLUG" defer>; photos only from the provided filenames; booking form only if enabled (with the exact booking.js contract); craft bar: eyebrow labels, section rhythm, depth per mood, map embed when address, sticky mobile call button when phone, hover transitions, two-column footer; #features "Why choose us" icon cards (3–4 cards, each with an inline SVG icon from the catalog); open-now badge from the hours; confident LOCAL voice (never "Welcome to our website").`
 
 // The multi-step pipeline (founder-approved: tokens and build time are cheap):
 // art direction → full build → critique-and-rewrite → validate → one retry →

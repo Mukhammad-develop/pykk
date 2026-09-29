@@ -16,6 +16,8 @@ export function validateSite(html: string, css: string, ctx: SiteCheckContext): 
   if (!html.includes(`data-site="${ctx.slug}"`)) failures.push(`beacon is missing data-site="${ctx.slug}"`)
   if (!html.includes(`${ctx.publicAppHost}/pv.js`)) failures.push(`beacon src must be https://${ctx.publicAppHost}/pv.js`)
   if (!html.includes('href="https://pykk.uk"')) failures.push('missing the "Website by PYKK" footer link to https://pykk.uk')
+  if (!html.includes('id="features"')) failures.push('missing the #features "Why choose us" icon-cards section')
+  if ((html.match(/<svg/g) ?? []).length < 3) failures.push('missing inline SVG icons (need at least 3)')
   if (html.includes('{{')) failures.push('contains unfilled {{TOKEN}} placeholders')
   if (lower.includes('subscription')) failures.push('contains the forbidden word "subscription" — use "bond"')
   // The bond pitch is PYKK-internal: it belongs in the client area, never on

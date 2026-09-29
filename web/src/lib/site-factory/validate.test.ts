@@ -15,6 +15,7 @@ const goodHtml = `<!DOCTYPE html>
 </head>
 <body>
 <main><h1>Fade &amp; Co.</h1>
+<section id="features"><h2>Why choose us</h2><div><svg></svg><svg></svg><svg></svg></div></section>
 <section id="about"><h2>About</h2><p>honest text</p></section>
 </main>
 <footer>© Fade &amp; Co. · Website by <a href="https://pykk.uk">PYKK</a></footer>
@@ -50,6 +51,12 @@ describe('validateSite', () => {
     expect(validateSite(goodHtml.replace('<h1>', '<h2>').replace('</h1>', '</h2>'), goodCss, ctx).join(' ')).toContain('<h1>')
     expect(validateSite(goodHtml.replace('</main>', '<h1>Two</h1></main>'), goodCss, ctx).join(' ')).toContain('exactly one')
     expect(validateSite(goodHtml, 'body{}', ctx).join(' ')).toContain('styles.css')
+  })
+  it('rejects a missing features section or too few icons', () => {
+    const noFeatures = goodHtml.replace(/<section id="features">[\s\S]*?<\/section>/, '')
+    expect(validateSite(noFeatures, goodCss, ctx).join(' ')).toContain('#features')
+    const noIcons = goodHtml.replace(/<svg><\/svg>/g, '')
+    expect(validateSite(noIcons, goodCss, ctx).join(' ')).toContain('SVG')
   })
   it('rejects truncated files (the LLM ran out of tokens)', () => {
     const truncatedCss = goodCss + '\n.hero {\n  background: '

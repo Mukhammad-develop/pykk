@@ -1,6 +1,7 @@
 import type { businesses } from '@/db/schema'
 import { DAY_ORDER, moodById, type MoodId, type SiteIntake } from './intake'
 import { renderBookingForm, BOOKING_CSS } from './booking-form'
+import { FEATURE_CARDS, iconSvg } from './icons'
 
 // The guaranteed floor of the site factory: a complete, correct, honest site
 // rendered deterministically from the intake, in the client's chosen mood.
@@ -148,6 +149,21 @@ ${intake.reviews
     ? e(intake.additionalInfo)
     : `${name} is a friendly local ${business.type.replace(/_/g, ' ')}. ${extraLines.join(' ')}`
 
+  const cards = FEATURE_CARDS[business.type] ?? FEATURE_CARDS.other
+  const featureCards = cards
+    .map(
+      (card, i) => `      <div class="feature-card">
+        ${iconSvg(card.icon)}
+        <h3>${e(card.title)}</h3>
+        ${extraLines[i] ? `<p>${e(extraLines[i])}</p>` : ''}
+      </div>`,
+    )
+    .join('\n')
+
+  const hoursJson = JSON.stringify(intake.hours).replace(/</g, '\\u003c')
+  const openNowScript = `  <p class="open-now"><span class="open-badge" data-open-badge></span></p>
+  <script>const HOURS=${hoursJson};(function(){var b=document.querySelector('[data-open-badge]');if(!b)return;var k=['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];var v=HOURS[k];function set(t,c){b.textContent=t;b.className='open-badge '+c;}if(!v||v.toLowerCase()==='closed'){set('Closed today','closed');return;}var m=v.match(/(\\d{1,2}):(\\d{2})\\s*[–-]\\s*(\\d{1,2}):(\\d{2})/);if(!m){set('','closed');return;}var n=new Date(),t=n.getHours()*60+n.getMinutes(),o=(+m[1])*60+(+m[2]),c=(+m[3])*60+(+m[4]);set(t>=o&&t<c?'Open now':'Closed now',t>=o&&t<c?'open':'closed');})();</script>`
+
   const html = `<!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -176,6 +192,12 @@ ${intake.reviews
   <a class="btn btn--primary" href="#contact">Get in touch</a>
 </section>
 <main id="main">
+  <section id="features" aria-labelledby="features-heading">
+    <h2 id="features-heading">Why choose us</h2>
+    <div class="feature-grid">
+${featureCards}
+    </div>
+  </section>
   <section id="services" aria-labelledby="services-heading">
     <h2 id="services-heading">Services &amp; prices</h2>
     <ul class="price-list">
@@ -195,6 +217,7 @@ ${reviewBlocks}
   </section>
 ${intake.extras.enableBooking ? renderBookingForm({ slug, publicAppHost, services: intake.services }) + '\n' : ''}  <section id="visit" aria-labelledby="visit-heading">
     <h2 id="visit-heading">Opening hours &amp; location</h2>
+${openNowScript}
     <table class="hours">
 ${hourRows}
     </table>
@@ -277,6 +300,20 @@ h2 { font-size: 1.35rem; margin-bottom: 1rem; border-bottom: 2px solid var(--lin
 .hours { width: 100%; max-width: 22rem; border-collapse: collapse; }
 .hours th, .hours td { text-align: left; padding: .4rem 0; border-bottom: 1px solid var(--line); }
 .hours td { text-align: right; color: var(--muted); }
+.open-now { margin-bottom: .75rem; }
+.open-badge {
+  display: inline-block; padding: .25rem .8rem; border-radius: 999px; font-size: .82rem; font-weight: 700;
+  background: #dcfce7; color: #166534; border: 1px solid #86efac;
+}
+.open-badge.closed { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; }
+.feature-card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: .6rem; padding: 1rem;
+  display: flex; flex-direction: column; gap: .45rem;
+}
+.feature-card .icon { width: 26px; height: 26px; color: var(--accent); }
+.feature-card h3 { font-size: .95rem; }
+.feature-card p { color: var(--muted); font-size: .85rem; }
 .address { margin-top: 1rem; color: var(--muted); }
 .directions { display: inline-block; margin-top: .5rem; color: var(--accent); padding: .5rem 0; }
 .contact-actions { display: flex; flex-direction: column; gap: .75rem; }

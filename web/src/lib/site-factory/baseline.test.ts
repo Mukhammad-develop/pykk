@@ -41,7 +41,7 @@ describe('renderBaselineSite', () => {
     expect(validateSite(html, css, { slug: 'fadeandco', publicAppHost: 'admin.pykk.uk' })).toEqual([])
   })
   it('escapes HTML in user data', () => {
-    expect(html).not.toContain('<script>')
+    expect(html).not.toContain('Co. <script>') // the raw name must never appear unescaped
     expect(html).toContain('&lt;script&gt;')
   })
   it('includes intake facts: prices, hours, contact links, photos', () => {
