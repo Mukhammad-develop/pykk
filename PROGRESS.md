@@ -150,6 +150,12 @@
 - **The model council** (29 Sep 2026, founder's idea): after the critique pass,
   every build is reviewed and surgically fixed by Opus, Kimi K3 and GPT-6 Astra
   in turn (`COUNCIL_MODELS`, validated after each pass, graceful skips).
+- **"Edit with AI"** (29 Sep 2026): the founder types a change on the Website
+  factory page ("make the footer dark green") and the model applies it
+  surgically to the existing site — validated twice, cache-busted, committed,
+  logged — no rebuild. Also: the booking form is now fully self-contained (own
+  `<style>`), so it renders correctly on AI-built pages (it was unstyled before
+  because AI stylesheets never define our CSS variables).
 
 - **Reference-grade pass** (29 Sep 2026): sites now get inline **SVG icon feature
   cards** ("Why choose us" with a 15-icon catalog, enforced by the validator), a

@@ -2,6 +2,14 @@
 
 Short reasons for technical choices, newest first.
 
+- **"Edit with AI" for surgical changes, rebuilds for big ones.** The founder
+  types a change ("make the footer dark green"); `edit-website` loads the current
+  files, applies it with the model, validates twice (raw + shipped), writes with
+  a cache-bust, commits, and logs it. No concept regeneration, no full pipeline.
+- **The booking form is fully self-contained** (its own `<style>` in the markup).
+  AI-written stylesheets never define our CSS variables, so the old
+  variable-driven form rendered unstyled on AI builds; now it styles itself on
+  any palette (with a `--accent` hook for the submit button).
 - **A model council reviews every build** (founder's idea): after the critique
   pass, `~anthropic/claude-opus-latest`, `moonshotai/kimi-k3` and
   `openai/gpt-6-astra` each review and surgically fix the site in turn. Every

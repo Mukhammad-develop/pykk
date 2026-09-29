@@ -7,6 +7,7 @@ import { businesses } from '@/db/schema'
 import { EMPTY_INTAKE, type SiteIntake } from '@/lib/site-factory/intake'
 import { IntakeForm } from './intake-form'
 import { BuildPanel } from './build-panel'
+import { AiEditCard } from './ai-edit-card'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,6 +50,8 @@ export default async function WebsitePage({ params }: { params: Promise<{ id: st
         initialNote={business.websiteNote}
         hasIntake={business.intakeJson != null}
       />
+
+      {business.websiteStatus !== 'none' && <AiEditCard businessId={business.id} />}
 
       <IntakeForm businessId={business.id} businessType={business.type} initialIntake={intake} />
     </div>

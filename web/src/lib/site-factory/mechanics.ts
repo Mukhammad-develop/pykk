@@ -57,6 +57,10 @@ export function injectMechanics(html: string, ctx: MechanicsContext): string {
     )
   }
 
+  // If the model hand-built a Google Maps embed instead of using the marker,
+  // convert it back so the canonical component is used (auto-fix, not reject).
+  out = out.replace(/<iframe[^>]*google\.com\/maps[^>]*>(?:\s*<\/iframe>)?/gi, '<!--MAP-->')
+
   // Markers → real components.
   if (out.includes('<!--BOOKING-->')) {
     const form = ctx.bookingEnabled

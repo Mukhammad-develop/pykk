@@ -1,6 +1,6 @@
 import type { businesses } from '@/db/schema'
 import { DAY_ORDER, moodById, type MoodId, type SiteIntake } from './intake'
-import { renderBookingForm, BOOKING_CSS } from './booking-form'
+import { renderBookingForm } from './booking-form'
 import { typeLabel } from './mechanics'
 import { FEATURE_CARDS, iconSvg } from './icons'
 
@@ -338,7 +338,6 @@ footer a { color: var(--accent); }
 .gallery-grid figure:hover img { transform: scale(1.04); }
 .btn { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
 @media (min-width: 40rem) { .contact-actions { flex-direction: row; flex-wrap: wrap; } }
-${intake.extras.enableBooking ? BOOKING_CSS : ''}
 `
 
   return { html, css }
