@@ -42,7 +42,7 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
         t0 = Date.now()
         const answer = await callOpenRouter(
           buildPrompt(business, intake, host, failures.length > 0 ? failures : undefined, concept),
-          { maxTokens: 10000 },
+          { maxTokens: 32000 },
         )
         steps[`attempt${attempt}.buildMs`] = Date.now() - t0
         const files = extractFiles(answer)
@@ -55,7 +55,7 @@ export async function generateSite(business: Business, intake: SiteIntake): Prom
         t0 = Date.now()
         const critiquedAnswer = await callOpenRouter(
           buildCritiquePrompt(files.html, files.css, concept, SYSTEM_RULES_DIGEST.replace('HOST', host).replace('SLUG', business.slug), failures),
-          { maxTokens: 10000 },
+          { maxTokens: 32000 },
         )
         steps[`attempt${attempt}.critiqueMs`] = Date.now() - t0
         const finalFiles = extractFiles(critiquedAnswer) ?? files

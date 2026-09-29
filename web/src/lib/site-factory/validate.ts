@@ -24,6 +24,16 @@ export function validateSite(html: string, css: string, ctx: SiteCheckContext): 
     failures.push('contains PYKK-internal bond content — the public site must sell the business only')
   }
   if (!css || css.length < 200) failures.push('styles.css is missing or too small')
+  // Truncation check: an LLM that runs out of tokens leaves unbalanced braces
+  // and a file that ends mid-rule. Never ship that.
+  const openBraces = (css.match(/{/g) ?? []).length
+  const closeBraces = (css.match(/}/g) ?? []).length
+  if (openBraces !== closeBraces || !css.trimEnd().endsWith('}')) {
+    failures.push('styles.css looks truncated (unbalanced braces)')
+  }
+  if (!html.trimEnd().toLowerCase().endsWith('</html>')) {
+    failures.push('index.html looks truncated (does not end with </html>)')
+  }
   if (html.includes('lorem ipsum') || lower.includes('lorem ipsum')) failures.push('contains lorem ipsum')
   if (!html.includes('lang="en-GB"')) failures.push('missing lang="en-GB"')
 

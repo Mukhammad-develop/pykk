@@ -21,7 +21,7 @@ const goodHtml = `<!DOCTYPE html>
 <script src="https://admin.pykk.uk/pv.js" data-site="fadeandco" defer></script>
 </body>
 </html>`
-const goodCss = 'body { color: #111; background: #fff; font-family: sans-serif; }' + '/* x */'.repeat(40)
+const goodCss = 'body { color: #111; background: #fff; font-family: sans-serif; }' + '/* x */'.repeat(40) + '\nfooter { padding: 1rem; }\n'
 
 describe('validateSite', () => {
   it('accepts a compliant site', () => {
@@ -50,5 +50,11 @@ describe('validateSite', () => {
     expect(validateSite(goodHtml.replace('<h1>', '<h2>').replace('</h1>', '</h2>'), goodCss, ctx).join(' ')).toContain('<h1>')
     expect(validateSite(goodHtml.replace('</main>', '<h1>Two</h1></main>'), goodCss, ctx).join(' ')).toContain('exactly one')
     expect(validateSite(goodHtml, 'body{}', ctx).join(' ')).toContain('styles.css')
+  })
+  it('rejects truncated files (the LLM ran out of tokens)', () => {
+    const truncatedCss = goodCss + '\n.hero {\n  background: '
+    expect(validateSite(goodHtml, truncatedCss, ctx).join(' ')).toContain('truncated')
+    const truncatedHtml = goodHtml.replace('</body>\n</html>', '<div class="unfinish')
+    expect(validateSite(truncatedHtml, goodCss, ctx).join(' ')).toContain('truncated')
   })
 })
